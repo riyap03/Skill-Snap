@@ -1,0 +1,237 @@
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #fdfcff;
+  color: #1f1f1f;
+}
+
+
+.heading {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #7f5af0;
+  text-align: center;
+}
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background-color: #ffffff;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-link {
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #7f5af0;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #f2f1ff;
+  color: #5d3fd3;
+}
+
+
+.Roadmap {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+}
+
+.Roadmap select {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background: #f7f7ff;
+  transition: 0.3s;
+}
+
+.Roadmap select:focus {
+  outline: none;
+  border-color: #7f5af0;
+  box-shadow: 0 0 0 3px rgba(127, 90, 240, 0.1);
+}
+
+.selected  {
+  background-color: #f2f1ff;
+  padding: 14px 18px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: 0.2s ease;
+}
+
+.selected:hover {
+  transform: translateY(-2px);
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+  accent-color: #7f5af0;
+  cursor: pointer;
+}
+
+.display {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+}
+
+h1{
+  font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
+  justify-content: center;
+  margin-left: 400px;
+  padding: 3rem;
+  font-size: 6rem;
+}
+
+p{
+font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+margin-left: 400px;
+padding: 5rem;
+font-size: 2rem;
+}
+/* === Portfolio Component === */
+
+.Form {
+  max-width: 650px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+/* Heading */
+.heading {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #7f5af0;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
+}
+
+/* Inputs */
+.Form-name,
+.Form-skills,
+.Form-projects {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  border-radius: 14px;
+  border: 1px solid #ccc;
+  background: #f9f9ff;
+  transition: 0.3s ease;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.Form-name:focus,
+.Form-skills:focus,
+.Form-projects:focus {
+  outline: none;
+  border-color: #7f5af0;
+  box-shadow: 0 0 0 3px rgba(127, 90, 240, 0.15);
+}
+
+
+.Form-skills,
+.Form-projects {
+  resize: vertical;
+  min-height: 100px;
+}
+
+
+.display {
+  margin-top: 2rem;
+  background: #f4f2ff;
+  padding: 1.2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.Name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #5d3fd3;
+  margin-bottom: 0.5rem;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', Verdana, sans-serif;
+}
+
+
+.display p {
+  margin: 0.4rem 0;
+  font-size: 1rem;
+  color: #444;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+
+
+
+.download-btn {
+  display: block;
+  margin: 1rem auto;
+  padding: 10px 18px;
+  font-size: 1rem;
+  background: #7f5af0;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.download-btn:hover {
+  background: #5d3fd3;
+}
+.progress-container {
+  width: 100%;
+  background: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 12px;
+  margin: 1rem 0;
+}
+
+.progress-bar {
+  height: 12px;
+  background: linear-gradient(90deg, #7f5af0, #2cb67d);
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+}
