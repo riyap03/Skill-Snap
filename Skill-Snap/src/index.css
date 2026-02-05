@@ -45,6 +45,89 @@ body {
   flex: 1;
   padding-top: 80px;
 }
+/* Test Popup */
+
+.test-popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.popup-card button {
+  margin: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.popup-card button:first-of-type {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.popup-card button:last-of-type {
+  background-color: #e5e7eb;
+  color: black;
+}
+
+/* ===== SkillSnap Test Styles ===== */
+
+.test-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f8;
+}
+
+.test-card {
+  width: 450px;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.start-btn,
+.submit-btn {
+  padding: 12px 20px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.answers {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.answers button {
+  padding: 10px 15px;
+  border: none;
+  background: #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
 /* Navigation */
 .nav-container {
@@ -125,6 +208,100 @@ body {
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+}
+/* User Menu */
+.user-menu {
+  position: relative;
+}
+
+.user-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.75rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.user-btn:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 12px var(--color-glow);
+}
+
+.user-avatar {
+  font-size: 1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.chevron {
+  font-size: 0.75rem;
+  transition: transform 0.25s ease;
+}
+
+.chevron.rotate {
+  transform: rotate(180deg);
+}
+
+/* Dropdown */
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  min-width: 180px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 0.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  animation: dropdownFade 0.2s ease;
+  z-index: 100;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.6rem;
+  text-align: left;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.dropdown-item.danger {
+  color: #f87171;
+}
+
+.dropdown-item.danger:hover {
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
 }
 
 /* Home Page */
@@ -463,12 +640,38 @@ body {
   color: var(--color-text-muted);
   font-size: 0.875rem;
 }
+.rm-actions {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.rm-btn {
+  background: #6c5ce7; /* same purple/primary tone as your pills or progress highlights */
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.rm-btn:hover:enabled {
+  background: #5a4bcf; /* slightly darker on hover */
+}
+
+.rm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 /* Portfolio Page */
 .portfolio-wrap {
   max-width: 1200px;
   margin: 0 auto;
   padding: 3rem 2rem;
+  padding-top: 70px;
 }
 
 .portfolio-header {
@@ -772,3 +975,121 @@ body {
 }
 
 
+
+
+
+/* Container */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--color-bg-main);
+}
+
+/* Card */
+.auth-card {
+  max-width: 400px;
+  width: 100%;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Title */
+.auth-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 12px var(--color-glow));
+}
+
+/* Subtitle */
+.auth-subtitle {
+  text-align: center;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Divider text */
+.auth-divider {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 1rem 0;
+}
+
+/* Input fields */
+.auth-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  outline: none;
+  margin-bottom: 0.75rem;
+  transition: border 0.3s ease;
+}
+
+.auth-input:focus {
+  border-color: var(--color-primary-light);
+}
+
+/* Buttons */
+.auth-btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: white;
+  box-shadow: 0 4px 20px var(--color-glow);
+}
+
+.auth-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px var(--color-glow);
+}
+
+.auth-btn-google {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.auth-btn-google:hover {
+  border-color: var(--color-primary);
+}
+
+/* Toggle link */
+.auth-toggle {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-top: 1.5rem;
+}
+
+.auth-toggle button {
+  color: var(--color-primary-light);
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -1,53 +1,70 @@
-
-// import {Routes,Route} from "react-router-dom";
-
-// import Home from './pages/Home';
-// import Roadmap from "./pages/RoadMap";
-// import Portfolio from './pages/Portfolio';
-// import Navbar from './components/Navbar';
-
-
-// function App() {
- 
-
-//   return (
-//     <>
-//       <Navbar />
-//       <Routes>
-//         <Route path="/" element={<Home />} />
-//         <Route path="/Roadmap" element={<Roadmap />} />
-//         <Route path="/Portfolio" element={<Portfolio />} />
-//       </Routes>
-//     </>
-//   )
-// }
-
-// export default App
-
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
-import Roadmap from "./pages/RoadMap";
+import Roadmap from './pages/RoadMap';
 import Portfolio from './pages/Portfolio';
-import Navbar from './components/Navbar';
+import Navigation from './components/Navbar';
+import Login from './pages/Login';
+import PrivateRoute from './components/PrivateRoute';
+import Test from './pages/Test';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link, } from "react-router-dom";
+function App() {
+  const location = useLocation();
+  const hideNav = location.pathname === '/login';
+  const [showTestPrompt, setShowTestPrompt] = useState(false);
 
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
- function App() {
+ axios
+  .get("http://localhost:5000/api/progress/check", {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  .then((res) => {
+    if (!res.data.hasTakenTest) {
+      setShowTestPrompt(true);
+    }
+  })
+  .catch(() => {});
+}, []);
+
   return (
     <>
-      <Navbar />
+      {!hideNav && <Navigation />}
+{showTestPrompt && (
+  <div className="test-modal">
+    <div className="test-box">
+      <h2>Before you start your roadmap…</h2>
+      <p>
+        SkillSnap needs to understand your level. Take a small test first.
+      </p>
+
+      <button onClick={() => window.location.href = "/test"}>
+        Take Test
+      </button>
+
+      <button onClick={() => setShowTestPrompt(false)}>
+        Later
+      </button>
+    </div>
+  </div>
+)}
+
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/roadmap" element={<Roadmap />} />
-        <Route path="/portfolio" element={<Portfolio />} />
+        {/* Public */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Private */}
+        <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
+        <Route path="/portfolio" element={<PrivateRoute><Portfolio /></PrivateRoute>} />
+        <Route path="/roadmap" element={<PrivateRoute><Roadmap /></PrivateRoute>} />
+        <Route path="/test" element={<Test />} />
+
       </Routes>
     </>
   );
 }
 
-
-
-
-export default App ;
- 
+export default App;
