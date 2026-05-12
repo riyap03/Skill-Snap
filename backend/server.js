@@ -15,8 +15,28 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+const allowedOrigins = (process.env.CLIENT_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 
 // === API routes first ===
 app.use("/api/roadmaps", roadmapRoutes);
@@ -28,13 +48,13 @@ app.use("/api/user", userRoutes);
   app.use("/api/portfolio", portfolioRoutes);
 
 // === Serve React static files ===
-const clientPath = path.join(process.cwd(), "client/dist");
-app.use(express.static(clientPath));
+// const clientPath = path.join(process.cwd(), "client/dist");
+// app.use(express.static(clientPath));
 
-// === Catch-all for React SPA ===
-app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(clientPath, "index.html"));
-}); 
+// // === Catch-all for React SPA ===
+// app.get(/^(?!\/api).*/, (req, res) => {
+//   res.sendFile(path.join(clientPath, "index.html"));
+// }); 
 
 // Connect to MongoDB
 mongoose
