@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
-const API_URL = "http://localhost:5000/api/auth";
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
@@ -37,7 +37,7 @@ export default function Login() {
           try {
             setError("");
             setIsSubmitting(true);
-            const res = await axios.post(`${API_URL}/google`, {
+            const res = await axios.post(apiUrl("/api/auth/google"), {
               credential: response.credential,
             });
             saveSession(res.data);
@@ -107,7 +107,9 @@ export default function Login() {
       setIsSubmitting(true);
       setError("");
 
-      const url = isSignup ? `${API_URL}/register` : `${API_URL}/login`;
+      const url = isSignup
+        ? apiUrl("/api/auth/register")
+        : apiUrl("/api/auth/login");
       const payload = {
         email: formData.email.trim(),
         password: formData.password,

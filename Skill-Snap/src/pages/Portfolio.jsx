@@ -7,6 +7,7 @@ import {
   Tag,
   Sparkles,
 } from "lucide-react";
+import { apiUrl } from "../config/api";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([
@@ -30,7 +31,6 @@ export default function Portfolio() {
   ]);
 
   const [showAddForm, setShowAddForm] = useState(false);
-
   const [newProject, setNewProject] = useState({
     title: "",
     description: "",
@@ -84,7 +84,7 @@ const portfolioLink =
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "http://localhost:5000/api/portfolio/generate",
+        apiUrl("/api/portfolio/generate"),
         {
           projects,
         },

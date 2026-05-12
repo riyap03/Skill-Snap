@@ -9,6 +9,7 @@ import Test from './pages/Test';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import PublicPortfolio from "./pages/PublicPortfolio";
+import { apiUrl } from "./config/api";
 
 function App() {
   const location = useLocation();
@@ -20,7 +21,7 @@ useEffect(() => {
   if (!token) return;
 
  axios
-  .get("http://localhost:5000/api/progress/check", {
+  .get(apiUrl("/api/progress/check"), {
     headers: { Authorization: `Bearer ${token}` },
   })
   .then((res) => {

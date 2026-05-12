@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
 export default function PublicPortfolio() {
   const { username } = useParams();
@@ -10,7 +11,7 @@ export default function PublicPortfolio() {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:5000/api/portfolio/${username}`
+        apiUrl(`/api/portfolio/${username}`)
       )
       .then((res) => {
         setPortfolio(res.data);

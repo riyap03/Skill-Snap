@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
 import {
   LineChart,
@@ -37,7 +38,7 @@ export default function Roadmap() {
     const checkTest = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/progress/check",
+          apiUrl("/api/progress/check"),
           getAuthHeader()
         );
 
@@ -56,7 +57,7 @@ export default function Roadmap() {
     const loadRoadmaps = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/roadmaps",
+          apiUrl("/api/roadmaps"),
           getAuthHeader()
         );
 
@@ -102,19 +103,19 @@ export default function Roadmap() {
         const [roadmapRes, statsRes, insightRes, projectsRes] =
           await Promise.all([
             axios.get(
-              `http://localhost:5000/api/roadmaps/${slug}`,
+              apiUrl(`/api/roadmaps/${slug}`),
               getAuthHeader()
             ),
             axios.get(
-              `http://localhost:5000/api/roadmaps/${slug}/stats?range=weekly`,
+              apiUrl(`/api/roadmaps/${slug}/stats?range=weekly`),
               getAuthHeader()
             ),
             axios.get(
-              `http://localhost:5000/api/roadmaps/${slug}/insights`,
+              apiUrl(`/api/roadmaps/${slug}/insights`),
               getAuthHeader()
             ),
             axios.get(
-              "http://localhost:5000/api/roadmaps/projects/recommend",
+              apiUrl("/api/roadmaps/projects/recommend"),
               getAuthHeader()
             ),
           ]);
@@ -148,7 +149,7 @@ export default function Roadmap() {
 
     try {
       const res = await axios.patch(
-        `http://localhost:5000/api/roadmaps/${slug}/skill`,
+        apiUrl(`/api/roadmaps/${slug}/skill`),
         { skillName: skill, status: newStatus },
         getAuthHeader()
       );
@@ -159,15 +160,15 @@ export default function Roadmap() {
 
       const [statsRes, insightRes, projectsRes] = await Promise.all([
         axios.get(
-          `http://localhost:5000/api/roadmaps/${slug}/stats?range=weekly`,
+          apiUrl(`/api/roadmaps/${slug}/stats?range=weekly`),
           getAuthHeader()
         ),
         axios.get(
-          `http://localhost:5000/api/roadmaps/${slug}/insights`,
+          apiUrl(`/api/roadmaps/${slug}/insights`),
           getAuthHeader()
         ),
         axios.get(
-          "http://localhost:5000/api/roadmaps/projects/recommend",
+          apiUrl("/api/roadmaps/projects/recommend"),
           getAuthHeader()
         ),
       ]);
@@ -188,7 +189,7 @@ export default function Roadmap() {
 
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/roadmaps/${slug}/export`,
+        apiUrl(`/api/roadmaps/${slug}/export`),
         { ...getAuthHeader(), responseType: "blob" }
       );
 

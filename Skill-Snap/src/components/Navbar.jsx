@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Home, Map, Briefcase, User, LogOut, Sparkles } from 'lucide-react';
 import axios from 'axios';
+import { apiUrl } from '../config/api';
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function Navigation() {
   try {
     const token = localStorage.getItem("token");
 
-    await axios.delete("http://localhost:5000/api/auth/delete", {
+    await axios.delete(apiUrl("/api/auth/delete"), {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
 export default function Test() {
   const [started, setStarted] = useState(false);
@@ -37,7 +38,7 @@ export default function Test() {
     const token = localStorage.getItem("token");
 
     await axios.post(
-      "http://localhost:5000/api/progress",
+      apiUrl("/api/progress"),
       {
         topic: "Arrays",
         score: score,
