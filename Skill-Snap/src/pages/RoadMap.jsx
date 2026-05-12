@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ROADMAPS } from "../data/roadmaps";
+
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
 export default function Roadmap() {
+  const [roadmaps, setRoadmaps] = useState([]);
   const [selected, setSelected] = useState("");
   const [checked, setChecked] = useState({});
+  const [skillOrder, setSkillOrder] = useState([]);
+  const [plan, setPlan] = useState(null);
   const [stats, setStats] = useState(null);
   const [insight, setInsight] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [showTestPopup, setShowTestPopup] = useState(false);
 
   const navigate = useNavigate();
@@ -17,13 +32,10 @@ export default function Roadmap() {
     return { headers: { Authorization: `Bearer ${token}` } };
   };
 
-  // Check if user has taken test
+  // check test
   useEffect(() => {
     const checkTest = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
         const res = await axios.get(
           "http://localhost:5000/api/progress/check",
           getAuthHeader()
@@ -33,55 +45,101 @@ export default function Roadmap() {
           setShowTestPopup(true);
         }
       } catch (err) {
-        console.error("Failed to check test status", err);
+        console.error(err);
       }
     };
 
     checkTest();
   }, []);
 
+  useEffect(() => {
+    const loadRoadmaps = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/roadmaps",
+          getAuthHeader()
+        );
+
+        setRoadmaps(res.data.roadmaps || []);
+      } catch {
+        setRoadmaps([]);
+      }
+    };
+
+    loadRoadmaps();
+  }, []);
+
   const slugify = (name) =>
     name.replace(/\s+/g, "-").replace(/\//g, "-").toLowerCase();
 
-  // Fetch roadmap, stats, and insights whenever selected changes
+  const applyPlan = (roadmapPlan) => {
+    setPlan(roadmapPlan);
+    setChecked(roadmapPlan.skills || {});
+    setSkillOrder(
+      roadmapPlan.skillOrder || Object.keys(roadmapPlan.skills || {})
+    );
+  };
+
+  // fetch adaptive roadmap data from backend
   useEffect(() => {
     if (!selected) {
       setChecked({});
+      setSkillOrder([]);
+      setPlan(null);
       setStats(null);
       setInsight(null);
+      setProjects([]);
+      setError("");
       return;
     }
 
     const slug = slugify(selected);
+    setLoading(true);
+    setError("");
 
-    // Fetch roadmap skills
-    axios
-      .get(`http://localhost:5000/api/roadmaps/${slug}`, getAuthHeader())
-      .then((res) => {
-        if (res.data.skills) {
-          setChecked(res.data.skills);
-        } else {
-          setChecked(
-            Object.fromEntries(ROADMAPS[selected].map((s) => [s, false]))
-          );
-        }
-      })
-      .catch(() => console.error("Failed to fetch roadmap"));
+    const loadRoadmap = async () => {
+      try {
+        const [roadmapRes, statsRes, insightRes, projectsRes] =
+          await Promise.all([
+            axios.get(
+              `http://localhost:5000/api/roadmaps/${slug}`,
+              getAuthHeader()
+            ),
+            axios.get(
+              `http://localhost:5000/api/roadmaps/${slug}/stats?range=weekly`,
+              getAuthHeader()
+            ),
+            axios.get(
+              `http://localhost:5000/api/roadmaps/${slug}/insights`,
+              getAuthHeader()
+            ),
+            axios.get(
+              "http://localhost:5000/api/roadmaps/projects/recommend",
+              getAuthHeader()
+            ),
+          ]);
 
-    // Fetch weekly stats
-    axios
-      .get(`http://localhost:5000/api/roadmaps/${slug}/stats?range=weekly`, getAuthHeader())
-      .then((res) => setStats(res.data))
-      .catch(() => setStats(null));
+        applyPlan(roadmapRes.data);
+        setStats(statsRes.data);
+        setInsight(insightRes.data.message);
+        setProjects(projectsRes.data.projects || []);
+      } catch {
+        setChecked({});
+        setSkillOrder([]);
+        setPlan(null);
+        setStats(null);
+        setInsight(null);
+        setProjects([]);
+        setError("Roadmap could not be loaded. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Fetch AI insight
-    axios
-      .get(`http://localhost:5000/api/roadmaps/${slug}/insights`, getAuthHeader())
-      .then((res) => setInsight(res.data.message))
-      .catch(() => setInsight(null));
+    loadRoadmap();
   }, [selected]);
 
-  // Toggle skill completion
+  // toggle skill
   const toggleSkill = async (skill) => {
     const newStatus = !checked[skill];
     const slug = slugify(selected);
@@ -89,44 +147,73 @@ export default function Roadmap() {
     setChecked((prev) => ({ ...prev, [skill]: newStatus }));
 
     try {
-      await axios.patch(
+      const res = await axios.patch(
         `http://localhost:5000/api/roadmaps/${slug}/skill`,
         { skillName: skill, status: newStatus },
         getAuthHeader()
       );
-    } catch (err) {
+
+      if (res.data.skills) {
+        applyPlan(res.data);
+      }
+
+      const [statsRes, insightRes, projectsRes] = await Promise.all([
+        axios.get(
+          `http://localhost:5000/api/roadmaps/${slug}/stats?range=weekly`,
+          getAuthHeader()
+        ),
+        axios.get(
+          `http://localhost:5000/api/roadmaps/${slug}/insights`,
+          getAuthHeader()
+        ),
+        axios.get(
+          "http://localhost:5000/api/roadmaps/projects/recommend",
+          getAuthHeader()
+        ),
+      ]);
+
+      setStats(statsRes.data);
+      setInsight(insightRes.data.message);
+      setProjects(projectsRes.data.projects || []);
+    } catch {
       setChecked((prev) => ({ ...prev, [skill]: !newStatus }));
-      console.error("Failed to update skill", err);
     }
   };
 
-  // Export PDF
+  // export PDF
   const exportPDF = async () => {
     if (!selected) return;
+
     const slug = slugify(selected);
 
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         `http://localhost:5000/api/roadmaps/${slug}/export`,
         { ...getAuthHeader(), responseType: "blob" }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${slug}-progress.pdf`);
-      document.body.appendChild(link);
+      link.download = `${slug}-roadmap.pdf`;
       link.click();
-      link.remove();
     } catch (err) {
-      console.error("Failed to export PDF", err);
+      console.error(err);
     }
   };
 
-  // Progress calculation
-  const total = selected ? ROADMAPS[selected].length : 0;
-  const completed = Object.values(checked).filter(Boolean).length;
-  const progress = total ? Math.round((completed / total) * 100) : 0;
+  const total = plan?.total ?? (selected ? Object.keys(checked).length : 0);
+  const completed =
+    plan?.completed ?? Object.values(checked).filter(Boolean).length;
+  const progress =
+    plan?.progress ?? (total ? Math.round((completed / total) * 100) : 0);
+
+  const chartData = stats
+    ? Object.entries(stats).map(([date, value]) => ({
+        date,
+        value,
+      }))
+    : [];
 
   return (
     <>
@@ -135,8 +222,12 @@ export default function Roadmap() {
           <div className="popup-card">
             <h3>Before starting roadmap...</h3>
             <p>SkillSnap needs to understand your level.</p>
-            <button onClick={() => navigate("/test")}>Take Diagnostic Test</button>
-            <button onClick={() => setShowTestPopup(false)}>Skip for now</button>
+            <button onClick={() => navigate("/test")}>
+              Take Test
+            </button>
+            <button onClick={() => setShowTestPopup(false)}>
+              Skip
+            </button>
           </div>
         </div>
       )}
@@ -144,77 +235,91 @@ export default function Roadmap() {
       <section className="roadmap-wrap">
         <div className="roadmap-card">
           <h2 className="roadmap-title">Choose Your Roadmap</h2>
-          <p className="roadmap-subtitle">
-            Select a learning path and track your progress as you master each skill.
-          </p>
 
-          <div className="rm-select-wrap">
-            <select
-              className="rm-select"
-              value={selected}
-              onChange={(e) => setSelected(e.target.value)}
-            >
-              <option value="">— Select a roadmap —</option>
-              {Object.keys(ROADMAPS).map((name) => (
-                <option key={name} value={name}>{name}</option>
-              ))}
-            </select>
-            <span className="rm-select-glow" />
-          </div>
+          <select
+            className="rm-select"
+            value={selected}
+            onChange={(e) => setSelected(e.target.value)}
+          >
+            <option value="">Select roadmap</option>
+            {roadmaps.map((roadmap) => (
+              <option key={roadmap.roadmapName} value={roadmap.roadmapName}>
+                {roadmap.title}
+              </option>
+            ))}
+          </select>
 
-          {selected && (
-            <div className="skills-grid">
-              {ROADMAPS[selected].map((skill) => {
-                const id = `skill-${skill.replace(/\s+/g, "-").toLowerCase()}`;
-                return (
-                  <label className="skill-pill" htmlFor={id} key={skill}>
-                    <input
-                      id={id}
-                      type="checkbox"
-                      checked={!!checked[skill]}
-                      onChange={() => toggleSkill(skill)}
-                    />
-                    <span className="pill-face">{skill}</span>
-                  </label>
-                );
-              })}
-            </div>
-          )}
+          {/* SKILLS */}
+          {loading && <p className="insight-area">Loading your roadmap...</p>}
 
-          {selected && (
-            <div className="progress-area">
-              <div className="progress-head">
-                <span className="progress-label">Progress</span>
-                <span className="progress-value">{progress}%</span>
-              </div>
-              <div
-                className="progress-shell"
-                role="progressbar"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={progress}
-              >
-                <div className="progress-fill" style={{ width: `${progress}%` }} />
-              </div>
-              {!!total && (
-                <p className="progress-sub">
-                  {completed} / {total} steps completed
-                </p>
+          {error && <p className="insight-area">{error}</p>}
+
+          {selected && plan && (
+            <div className="insight-area">
+              <p>
+                Level: {plan.level} | Pace: {plan.pace?.pace || "new"} |
+                Weekly target: {plan.weeklyTarget}
+              </p>
+              {plan.nextFocus?.length > 0 && (
+                <p>Next focus: {plan.nextFocus.join(", ")}</p>
               )}
             </div>
           )}
 
-          {selected && stats && (
-            <div className="stats-area">
-              <h4 className="stats-title">Weekly Stats</h4>
-              <pre className="stats-json">{JSON.stringify(stats, null, 2)}</pre>
+          {selected && !loading && (
+            <div className="skills-grid">
+              {skillOrder.map((skill) => (
+                <label key={skill} className="skill-pill">
+                  <input
+                    type="checkbox"
+                    checked={!!checked[skill]}
+                    onChange={() => toggleSkill(skill)}
+                  />
+                  <span className="pill-face">{skill}</span>
+                </label>
+              ))}
             </div>
           )}
 
-          {selected && insight && (
+          {/* PROGRESS */}
+          {selected && (
+            <div className="progress-area">
+              <h3>Progress: {progress}%</h3>
+              <p>
+                {completed} / {total} completed
+              </p>
+            </div>
+          )}
+
+          {/* STATS CHART */}
+          {chartData.length > 0 && (
+            <div className="stats-area">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#7c3aed"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
+          {/* INSIGHT */}
+          {insight && (
             <div className="insight-area">
-              <h4 className="insight-title">AI Insight</h4>
-              <p className="insight-text">{insight}</p>
+              <p>{insight}</p>
+            </div>
+          )}
+
+          {projects.length > 0 && (
+            <div className="insight-area">
+              <p>Recommended projects: {projects.join(", ")}</p>
             </div>
           )}
         </div>
@@ -226,7 +331,7 @@ export default function Roadmap() {
           disabled={!selected}
           className="btn btn-secondary"
         >
-          Export as PDF
+          Export PDF
         </button>
       </div>
     </>

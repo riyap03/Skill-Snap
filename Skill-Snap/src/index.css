@@ -49,24 +49,24 @@ body {
 
 .test-popup {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
 }
 
 .popup-card {
   background: white;
-  padding: 2rem;
+  padding: 20px;
   border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
+  width: 300px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
-
 .popup-card button {
   margin: 0.5rem;
   padding: 0.6rem 1.2rem;
@@ -88,46 +88,76 @@ body {
 /* ===== SkillSnap Test Styles ===== */
 
 .test-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: #f4f6f8;
+  justify-content: center;
+  background: #0f172a;
+  font-family: Arial, sans-serif;
+  color: white;
 }
 
 .test-card {
-  width: 450px;
-  background: white;
+  width: 420px;
+  background: #111827;
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   text-align: center;
+}
+
+.test-card h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #a78bfa;
 }
 
 .start-btn,
 .submit-btn {
-  padding: 12px 20px;
+  padding: 10px 20px;
   border: none;
-  background: #4a90e2;
+  border-radius: 10px;
+  background: #7c3aed;
   color: white;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
+  margin-top: 15px;
+  transition: 0.3s;
+}
+
+.start-btn:hover,
+.submit-btn:hover {
+  background: #5b21b6;
+}
+
+.question h3 {
+  margin: 15px 0;
+  font-size: 18px;
 }
 
 .answers {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .answers button {
-  padding: 10px 15px;
+  padding: 10px;
+  border-radius: 8px;
   border: none;
-  background: #e0e0e0;
-  border-radius: 6px;
+  background: #1f2937;
+  color: white;
   cursor: pointer;
+  transition: 0.2s;
 }
+
+.answers button:hover {
+  background: #374151;
+}
+
+.result {
+  margin-top: 20px;
+}
+
 
 /* Navigation */
 .nav-container {
@@ -137,7 +167,7 @@ body {
   right: 0;
   z-index: 50;
   background: rgba(15, 15, 35, 0.8);
-  backdrop-filter: blur(12px);
+
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -261,7 +291,7 @@ body {
   border-radius: 1rem;
   padding: 0.5rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
+
   animation: dropdownFade 0.2s ease;
   z-index: 100;
 }
@@ -1055,6 +1085,12 @@ body {
   transition: all 0.3s ease;
 }
 
+.auth-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
+
 .auth-btn-primary {
   background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
   color: white;
@@ -1080,6 +1116,18 @@ body {
   border-color: var(--color-primary);
 }
 
+.auth-google-wrap {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.auth-error {
+  color: #fca5a5;
+  font-size: 0.875rem;
+  margin: -0.25rem 0 0.75rem;
+}
+
 /* Toggle link */
 .auth-toggle {
   text-align: center;
@@ -1092,4 +1140,106 @@ body {
   color: var(--color-primary-light);
   font-weight: 600;
   cursor: pointer;
+}
+.public-portfolio {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 20px;
+  color: white;
+}
+
+.portfolio-hero {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.portfolio-hero h1 {
+  font-size: 52px;
+  margin-bottom: 12px;
+}
+
+.hero-bio {
+  opacity: 0.8;
+  max-width: 700px;
+  margin: auto;
+  line-height: 1.7;
+}
+
+.hero-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.hero-links a {
+  color: white;
+}
+
+.portfolio-section {
+  margin-top: 50px;
+}
+
+.portfolio-section h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.skills-wrap {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.skill-pill {
+  background: #1f1f1f;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.project-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-top a {
+  color: white;
+}
+
+.project-card p {
+  margin: 18px 0;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.project-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  opacity: 0.7;
+}
+
+.portfolio-loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
 }

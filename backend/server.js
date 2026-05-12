@@ -6,11 +6,10 @@ import path from "path";
 
 import roadmapRoutes from "./routes/roadmap.js"; 
 import authRoutes from "./routes/auth.js";
-// import RoadmapProgress from "../models/RoadmapProgress.js";
+
 import progressRoutes from "./routes/progress.js";
 import userRoutes from "./routes/user.js";
-
-
+import portfolioRoutes from "./routes/portfolio.routes.js";
 dotenv.config();
 
 const app = express();
@@ -23,10 +22,10 @@ app.use(express.json());
 app.use("/api/roadmaps", roadmapRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/progress", progressRoutes);
-// app.use("/api/roadmap-progress", RoadmapProgress);
+
 app.use("/api/user", userRoutes);
 
-  
+  app.use("/api/portfolio", portfolioRoutes);
 
 // === Serve React static files ===
 const clientPath = path.join(process.cwd(), "client/dist");

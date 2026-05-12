@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Test from './pages/Test';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import PublicPortfolio from "./pages/PublicPortfolio";
 
 function App() {
   const location = useLocation();
@@ -61,6 +62,10 @@ useEffect(() => {
         <Route path="/portfolio" element={<PrivateRoute><Portfolio /></PrivateRoute>} />
         <Route path="/roadmap" element={<PrivateRoute><Roadmap /></PrivateRoute>} />
         <Route path="/test" element={<Test />} />
+        <Route
+  path="/portfolio/:username"
+  element={<PublicPortfolio />}
+/>
 
       </Routes>
     </>
