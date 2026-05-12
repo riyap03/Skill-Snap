@@ -21,3 +21,9 @@ dist-ssr
 .vscode
 .idea
 .DS_Store
+
+# codex / ai tool logs
+.codex/
+codex*
+*.log
+logs/
