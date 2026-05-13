@@ -35,7 +35,7 @@ useEffect(() => {
   return (
     <>
       {!hideNav && <Navigation />}
-{showTestPrompt && (
+{location.pathname === "/roadmap" && showTestPrompt && (
   <div className="test-modal">
     <div className="test-box">
       <h2>Before you start your roadmap…</h2>
