@@ -48,7 +48,13 @@ router.post(
         link,
       } = req.body;
 
-      const user = await User.findById(req.userId);
+   const user = await User.findById(req.userId);
+
+if (!user) {
+  return res.status(404).json({
+    message: "User not found",
+  });
+}
 
       let portfolio = await Portfolio.findOne({
         userId: req.userId,
