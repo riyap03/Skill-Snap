@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {  useEffect } from "react";
 import {
   Plus,
   ExternalLink,
@@ -15,7 +16,9 @@ import jsPDF from "jspdf";
 export default function Portfolio() {
 
 
-
+useEffect(() => {
+  fetchPortfolio();
+}, []);
   const exportPDF = async () => {
     try {
       if (!aiContent.trim()) {
@@ -59,25 +62,7 @@ export default function Portfolio() {
     }
   };
 
-  const [projects, setProjects] = useState([
-    {
-      id: "1",
-      title: "E-Commerce Platform",
-      description:
-        "Built a full-stack e-commerce platform with React, Node.js, and MongoDB.",
-      skills: ["React", "Node.js", "MongoDB", "Stripe"],
-      date: "2024-10",
-      link: "https://example.com",
-    },
-    {
-      id: "2",
-      title: "Task Management App",
-      description:
-        "Designed and developed a task management app with drag-and-drop functionality.",
-      skills: ["React", "TypeScript", "Tailwind CSS"],
-      date: "2024-09",
-    },
-  ]);
+ const [projects, setProjects] = useState([]);
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newProject, setNewProject] = useState({
@@ -95,24 +80,70 @@ export default function Portfolio() {
     localStorage.getItem("name")?.toLowerCase() || "user";
 
   const portfolioLink = `http://localhost:5173/portfolio/${username}`;
+const fetchPortfolio = async () => {
+  try {
+    const token = localStorage.getItem("token");
 
+    const res = await axios.get(
+      apiUrl("/api/portfolio"),
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setProjects(res.data.projects || []);
+    setAiContent(res.data.aiContent || "");
+
+  } catch (err) {
+    console.log(err);
+  }
+};
   // ADD PROJECT
-  const handleAddProject = (e) => {
-    e.preventDefault();
+const handleAddProject = async (e) => {
+  e.preventDefault();
 
-    const project = {
-      id: Date.now().toString(),
+  try {
+    const token = localStorage.getItem("token");
+
+    const payload = {
       title: newProject.title,
       description: newProject.description,
-      skills: newProject.skills.split(",").map((s) => s.trim()),
+      skills: newProject.skills
+        .split(",")
+        .map((s) => s.trim()),
       date: newProject.date,
-      link: newProject.link || undefined,
+      link: newProject.link,
     };
 
-    setProjects([project, ...projects]);
-    setNewProject({ title: "", description: "", skills: "", date: "", link: "" });
+    const res = await axios.post(
+      apiUrl("/api/portfolio/project"),
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setProjects(res.data.projects);
+
+    setNewProject({
+      title: "",
+      description: "",
+      skills: "",
+      date: "",
+      link: "",
+    });
+
     setShowAddForm(false);
-  };
+
+  } catch (err) {
+    console.log(err);
+    alert("Failed to save project");
+  }
+};
 
   // GENERATE AI PORTFOLIO
   const generatePortfolioAI = async () => {

@@ -161,10 +161,11 @@ router.get("/projects/recommend", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/", authMiddleware, (req, res) => {
+router.get("/", (req, res) => {
   const roadmaps = Object.keys(ROADMAPS).map((roadmapName) => ({
     roadmapName,
     title: slugToTitle(roadmapName),
+    skills: ROADMAPS[roadmapName],
   }));
 
   res.json({ roadmaps });

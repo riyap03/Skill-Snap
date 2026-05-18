@@ -32,6 +32,7 @@ export default function Roadmap() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [listError, setListError] = useState("");
   const [showTestPopup, setShowTestPopup] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -70,10 +71,15 @@ export default function Roadmap() {
   useEffect(() => {
     const loadRoadmaps = async () => {
       try {
-        const res = await axios.get(apiUrl("/api/roadmaps"), getAuthHeader());
+        setListError("");
+        const res = await axios.get(apiUrl("/api/roadmaps"));
         setRoadmaps(res.data.roadmaps || []);
-      } catch {
+      } catch (err) {
+        console.error(err);
         setRoadmaps([]);
+        setListError(
+          "Roadmaps could not be loaded. Please make sure the backend is running on http://localhost:5000."
+        );
       }
     };
     loadRoadmaps();
@@ -180,9 +186,15 @@ export default function Roadmap() {
     ? Object.entries(stats).map(([date, value]) => ({ date, value }))
     : [];
 
-  const filteredRoadmaps = roadmaps.filter((r) =>
-    (r.title || r.roadmapName || "").toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredRoadmaps = roadmaps.filter((r) => {
+    const query = search.trim().toLowerCase();
+    const title = r.title || r.roadmapName || "";
+    const skills = (r.skills || []).join(" ");
+
+    return `${title} ${r.roadmapName || ""} ${skills}`
+      .toLowerCase()
+      .includes(query);
+  });
 
   return (
     <div className="min-h-screen relative">
@@ -216,6 +228,18 @@ export default function Roadmap() {
         </div>
 
         {/* ROADMAP CARDS GRID */}
+        {listError && (
+          <div className="mt-8 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {listError}
+          </div>
+        )}
+
+        {!listError && filteredRoadmaps.length === 0 && (
+          <div className="mt-8 rounded-xl border border-border bg-surface/40 px-4 py-8 text-center text-sm text-muted-foreground">
+            No roadmaps found. Try a different search.
+          </div>
+        )}
+
         <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredRoadmaps.map((r) => {
             const name = r.title || r.roadmapName;
