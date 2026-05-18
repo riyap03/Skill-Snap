@@ -107,19 +107,17 @@ const handleAddProject = async (e) => {
   try {
     const token = localStorage.getItem("token");
 
-    const payload = {
-      title: newProject.title,
-      description: newProject.description,
-      skills: newProject.skills
-        .split(",")
-        .map((s) => s.trim()),
-      date: newProject.date,
-      link: newProject.link,
-    };
-
     const res = await axios.post(
       apiUrl("/api/portfolio/project"),
-      payload,
+      {
+        title: newProject.title,
+        description: newProject.description,
+        skills: newProject.skills
+          .split(",")
+          .map((s) => s.trim()),
+        date: newProject.date,
+        link: newProject.link,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -141,10 +139,9 @@ const handleAddProject = async (e) => {
 
   } catch (err) {
     console.log(err);
-    alert("Failed to save project");
+    alert("Failed to add project");
   }
 };
-
   // GENERATE AI PORTFOLIO
   const generatePortfolioAI = async () => {
     try {
