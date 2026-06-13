@@ -78,7 +78,7 @@ export default function Roadmap() {
         console.error(err);
         setRoadmaps([]);
         setListError(
-          "Roadmaps could not be loaded. Please make sure the backend is running on http://localhost:5000."
+          "Roadmaps could not be loaded. Please make sure the backend is running."
         );
       }
     };

@@ -64,7 +64,7 @@
   }
   .glass-panel {
     background: oklch(0.20 0.035 280 / 70%);
-    backdrop-filter: blur(12px);
+ 
     border: 1px solid var(--border);
   }
   .grid-bg {

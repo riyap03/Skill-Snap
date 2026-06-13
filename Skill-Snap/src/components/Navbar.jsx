@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUrl } from "../config/api";
-import { Sparkles, Bell, ChevronDown, LogOut, Trash2 } from "lucide-react";
+import { Sparkles, Bell, ChevronDown, LogOut, Trash2, FlaskConical } from "lucide-react";
 
 function Logo({ to = "/" }) {
   return (
@@ -18,10 +18,13 @@ function Logo({ to = "/" }) {
 }
 
 const appLinks = [
-  { to: "/Home", label: "Home" },
+  { to: "/dashboard", label: "Dashboard" },
   { to: "/roadmap", label: "Roadmap" },
-   { to: "/dashboard", label: "Dashboard" },
+  { to: "/projects", label: "Projects" },
   { to: "/portfolio", label: "Portfolio" },
+  { to: "/assessment", label: "Assessment", icon: FlaskConical },
+  { to: "/analytics", label: "Analytics" },
+  { to: "/readiness", label: "Readiness" },
 ];
 
 const siteLinks = [
@@ -56,7 +59,7 @@ export default function Navbar() {
     .slice(0, 2)
     .toUpperCase();
 
-  const isApp = ["/dashboard", "/roadmap",  "/portfolio"].some((p) =>
+  const isApp = ["/dashboard", "/roadmap", "/portfolio", "/test", "/assessment", "/assessment/result", "/coach", "/readiness", "/projects", "/analytics", "/onboarding"].some((p) =>
     pathname.startsWith(p)
   );
 
@@ -194,7 +197,10 @@ export default function Navbar() {
                   }`
                 }
               >
-                {l.label}
+                <div className="flex items-center gap-1.5">
+                  {l.icon && <l.icon className="h-3.5 w-3.5" />}
+                  <span>{l.label}</span>
+                </div>
               </NavLink>
             ))}
           </nav>

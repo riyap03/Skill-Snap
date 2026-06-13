@@ -10,6 +10,7 @@ import {
   Briefcase,
   FlaskConical,
   TrendingUp,
+  Target,
   Clock,
   AlertCircle,
 } from "lucide-react";
@@ -25,20 +26,29 @@ function getNameFromToken(t) {
   }
 }
 
+function isTokenExpired(t) {
+  if (!t) return true;
+  try {
+    const payload = t.split(".")[1];
+    const json = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+    return json.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
+}
+
 export default function Dashboard() {
   const token = localStorage.getItem("token");
   const name = getNameFromToken(token) || localStorage.getItem("name") || "there";
-  const username = localStorage.getItem("name")?.toLowerCase() || "user";
 
-  const [testStatus, setTestStatus] = useState(null);   // { hasTakenTest, level }
+  const [testStatus, setTestStatus] = useState(null);
   const [roadmaps, setRoadmaps] = useState([]);
   const [portfolio, setPortfolio] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const authHeader = { headers: { Authorization: `Bearer ${token}` } };
 
   useEffect(() => {
+    if (!token || isTokenExpired(token)) return;
     const fetchAll = async () => {
+      const authHeader = { headers: { Authorization: `Bearer ${token}` } };
       try {
         const [testRes, roadmapRes] = await Promise.all([
           axios.get(apiUrl("/api/progress/check"), authHeader),
@@ -48,22 +58,19 @@ export default function Dashboard() {
         setTestStatus(testRes.data);
         setRoadmaps(roadmapRes.data.roadmaps || []);
 
-        // portfolio is optional — don't fail if missing
         try {
-          const portfolioRes = await axios.get(apiUrl(`/api/portfolio/${username}`), authHeader);
+          const portfolioRes = await axios.get(apiUrl("/api/portfolio"), authHeader);
           setPortfolio(portfolioRes.data);
         } catch {
           setPortfolio(null);
         }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+      } catch {
+        // api error - continue with defaults
       }
     };
 
     fetchAll();
-  }, []);
+  }, [token]);
 
   const activeRoadmaps = roadmaps.filter((r) => (r.progress ?? 0) > 0);
   const totalSkills = roadmaps.reduce((acc, r) => acc + (r.skills?.length || 0), 0);
@@ -72,10 +79,13 @@ export default function Dashboard() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-  if (loading) {
+  if (!token || isTokenExpired(token)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-sm text-muted-foreground">Loading your dashboard…</div>
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground mb-4">Your session has expired. Please log in again.</p>
+          <Link to="/login" className="text-sm text-brand-pink hover:opacity-80">Sign in →</Link>
+        </div>
       </div>
     );
   }
@@ -306,6 +316,8 @@ export default function Dashboard() {
                   { to: "/roadmap", label: "Browse Roadmaps", icon: Map },
                   { to: "/portfolio", label: "Portfolio Builder", icon: Briefcase },
                   { to: "/test", label: "Skill Test", icon: FlaskConical },
+                  { to: "/analytics", label: "Analytics", icon: TrendingUp },
+                  { to: "/readiness", label: "Job Readiness", icon: Target },
                 ].map((link) => (
                   <Link
                     key={link.to}

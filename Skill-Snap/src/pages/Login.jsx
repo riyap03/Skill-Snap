@@ -126,7 +126,7 @@ export default function Login() {
         : apiUrl("/api/auth/login");
       const payload = {
         email: formData.email.trim(),
-        password: formData.password,
+        password: formData.password.trim(),
       };
 
       if (isSignup) {
@@ -136,6 +136,7 @@ export default function Login() {
       const res = await axios.post(url, payload);
       saveSession(res.data);
     } catch (err) {
+      console.error("Authentication failed", err.response?.status, err.response?.data);
       setError(err.response?.data?.message || "Authentication failed");
     } finally {
       setIsSubmitting(false);

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import {  useEffect } from "react";
 import {
   Plus,
   ExternalLink,
@@ -9,16 +8,91 @@ import {
   Sparkles,
   Download,
   Github,
+  Palette,
+  Trash2,
 } from "lucide-react";
 import { apiUrl } from "../config/api";
 import jsPDF from "jspdf";
+import MinimalPortfolio from "../components/themes/MinimalTheme";
+import ModernPortfolio from "../components/themes/ModernTheme";
+import ProfessionalPortfolio from "../components/themes/ProfessionalTheme";
+import StartupPortfolio from "../components/themes/StartupTheme";
+import TerminalPortfolio from "../components/themes/TerminalTheme";
+
+const THEME_OPTIONS = [
+  { key: "modern", label: "Modern", Component: ModernPortfolio },
+  { key: "minimal", label: "Minimal", Component: MinimalPortfolio },
+  { key: "professional", label: "Professional", Component: ProfessionalPortfolio },
+  { key: "startup", label: "Startup", Component: StartupPortfolio },
+  { key: "terminal", label: "Terminal", Component: TerminalPortfolio },
+];
+
+const THEME_MAP = Object.fromEntries(
+  THEME_OPTIONS.map((theme) => [theme.key, theme])
+);
+
+const getApiErrorMessage = (err) =>
+  err.response?.data?.message || err.message || "Something went wrong";
+
+const formatDate = (date) => {
+  if (!date) return "No date";
+  const parsed = new Date(`${date}-01`);
+  return Number.isNaN(parsed.getTime())
+    ? "No date"
+    : parsed.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+};
+
+const getStoredTheme = () => {
+  const stored = localStorage.getItem("portfolioTheme");
+  return THEME_MAP[stored]?.key || "modern";
+};
 
 export default function Portfolio() {
+  const [projects, setProjects] = useState([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newProject, setNewProject] = useState({
+    title: "",
+    description: "",
+    skills: "",
+    date: "",
+    link: "",
+  });
+  const [aiContent, setAiContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [apiMessage, setApiMessage] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState(getStoredTheme);
 
+  const username = (localStorage.getItem("name") || "user").toLowerCase().replace(/\s+/g, "");
+  const portfolioLink = `${window.location.origin}/portfolio/${username}?theme=${selectedTheme}`;
+  const SelectedTheme = THEME_MAP[selectedTheme].Component;
 
-useEffect(() => {
-  fetchPortfolio();
-}, []);
+  const previewPortfolio = {
+    name: localStorage.getItem("name") || "Your Name",
+    username,
+    projects,
+    aiContent,
+    skills: [...new Set(projects.flatMap((project) => project.skills || []))],
+  };
+
+  const fetchPortfolio = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(apiUrl("/api/portfolio"), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setProjects(res.data.projects || []);
+      setAiContent(res.data.aiContent || "");
+      setApiMessage("");
+    } catch (err) {
+      setApiMessage(getApiErrorMessage(err));
+    }
+  };
+
+  useEffect(() => {
+    fetchPortfolio();
+  }, []);
+
   const exportPDF = async () => {
     try {
       if (!aiContent.trim()) {
@@ -62,87 +136,67 @@ useEffect(() => {
     }
   };
 
- const [projects, setProjects] = useState([]);
+  const handleAddProject = async (e) => {
+    e.preventDefault();
 
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newProject, setNewProject] = useState({
-    title: "",
-    description: "",
-    skills: "",
-    date: "",
-    link: "",
-  });
+    try {
+      const token = localStorage.getItem("token");
+      const skills = newProject.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean);
 
-  const [aiContent, setAiContent] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const username =
-    localStorage.getItem("name")?.toLowerCase() || "user";
-
-  const portfolioLink = `http://localhost:5173/portfolio/${username}`;
-const fetchPortfolio = async () => {
-  try {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(
-      apiUrl("/api/portfolio"),
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        apiUrl("/api/portfolio/project"),
+        {
+          title: newProject.title.trim(),
+          description: newProject.description.trim(),
+          skills,
+          date: newProject.date,
+          link: newProject.link.trim(),
         },
-      }
-    );
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    setProjects(res.data.projects || []);
-    setAiContent(res.data.aiContent || "");
+      setProjects(res.data.projects || []);
+      setAiContent("");
+      setApiMessage("Project added successfully");
+      setNewProject({
+        title: "",
+        description: "",
+        skills: "",
+        date: "",
+        link: "",
+      });
+      setShowAddForm(false);
+    } catch (err) {
+      const message = getApiErrorMessage(err);
+      setApiMessage(message);
+      alert(message);
+    }
+  };
 
-  } catch (err) {
-    console.log(err);
-  }
-};
-  // ADD PROJECT
-const handleAddProject = async (e) => {
-  e.preventDefault();
+  const handleDeleteProject = async (projectId) => {
+    if (!projectId || !window.confirm("Delete this project from your portfolio?")) return;
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.delete(apiUrl(`/api/portfolio/project/${projectId}`), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const res = await axios.post(
-      apiUrl("/api/portfolio/project"),
-      {
-        title: newProject.title,
-        description: newProject.description,
-        skills: newProject.skills
-          .split(",")
-          .map((s) => s.trim()),
-        date: newProject.date,
-        link: newProject.link,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      setProjects(res.data.projects || []);
+      setAiContent("");
+      setApiMessage("Project deleted successfully");
+    } catch (err) {
+      const message = getApiErrorMessage(err);
+      setApiMessage(message);
+      alert(message);
+    }
+  };
 
-    setProjects(res.data.projects);
-
-    setNewProject({
-      title: "",
-      description: "",
-      skills: "",
-      date: "",
-      link: "",
-    });
-
-    setShowAddForm(false);
-
-  } catch (err) {
-    console.log(err);
-    alert("Failed to add project");
-  }
-};
-  // GENERATE AI PORTFOLIO
   const generatePortfolioAI = async () => {
     try {
       setLoading(true);
@@ -152,336 +206,291 @@ const handleAddProject = async (e) => {
         { projects },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setAiContent(res.data.content);
+      setAiContent(res.data.content || "");
+      setApiMessage("AI portfolio generated successfully");
     } catch (err) {
-      console.log(err);
-      alert("Failed to generate AI portfolio");
+      const message = getApiErrorMessage(err);
+      setApiMessage(message);
+      alert(message);
     } finally {
       setLoading(false);
     }
   };
 
+  const handleThemeChange = (themeKey) => {
+    setSelectedTheme(themeKey);
+    localStorage.setItem("portfolioTheme", themeKey);
+  };
+
   return (
-    <div className="min-h-screen">
-      {/* <Navbar /> */}
-      <main className="mx-auto max-w-7xl px-6 py-10">
+    <div className="min-h-screen bg-background">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+        <section className="card-glow rounded-3xl p-5 sm:p-7">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+                Portfolio Builder
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Add projects, generate AI content, choose a theme, and preview your public portfolio.
+              </p>
+            </div>
 
-        {/* HEADER */}
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight">
-              Portfolio Builder
-            </h1>
-            <p className="mt-1 text-muted-foreground">
-              Showcase your projects and skills beautifully.
-            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <button
+                onClick={exportPDF}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated"
+              >
+                <Download className="h-4 w-4" /> Export PDF
+              </button>
+              <Link
+                to={portfolioLink}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated"
+              >
+                <ExternalLink className="h-4 w-4" /> Open public
+              </Link>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(portfolioLink);
+                  setApiMessage("Theme portfolio link copied!");
+                }}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated"
+              >
+                <ExternalLink className="h-4 w-4" /> Copy theme link
+              </button>
+              <button
+                onClick={generatePortfolioAI}
+                disabled={loading}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-brand px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90 disabled:opacity-60 sm:col-span-2 lg:col-span-1"
+              >
+                <Sparkles className="h-4 w-4" />
+                {loading ? "Generating..." : "Generate AI Portfolio"}
+              </button>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2 relative z-50">
-            <button onClick={exportPDF} className="inline-flex items-center px-3 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated">
-              <Download className="h-4 w-4 mr-1" /> Export PDF
-            </button>
-            <Link
-              to={`/portfolio/${username}`}
-              className="inline-flex items-center px-3 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated"
-            >
-              <ExternalLink className="h-4 w-4 mr-1" /> Preview public
-            </Link>
-            <button
-              className="inline-flex items-center px-3 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated"
-              onClick={() => {
-                navigator.clipboard.writeText(portfolioLink);
-                alert("Portfolio link copied!");
-              }}
-            >
-              <ExternalLink className="h-4 w-4 mr-1" /> Share Portfolio
-            </button>
-            <button
-              className="inline-flex items-center px-3 py-2 rounded-md bg-gradient-brand text-primary-foreground text-sm font-medium disabled:opacity-60"
-              onClick={generatePortfolioAI}
-              disabled={loading}
-            >
-              <Sparkles className="h-4 w-4 mr-1" />
-              {loading ? "Generating..." : "Generate AI Portfolio"}
-            </button>
-          </div>
-        </div>
 
-        <div className="mt-8 grid lg:grid-cols-2 gap-6">
-          <div className="space-y-5">
-
-            {/* ADD PROJECT BUTTON + FORM */}
-            <div className="card-glow rounded-2xl p-6">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold">Projects</h3>
+          <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-border bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <Palette className="h-4 w-4 text-brand-pink" />
+              Portfolio theme
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+              {THEME_OPTIONS.map((theme) => (
                 <button
-                  className="inline-flex items-center px-2.5 py-1 rounded-md border border-border text-xs hover:bg-surface-elevated"
-                  onClick={() => setShowAddForm(!showAddForm)}
+                  key={theme.key}
+                  onClick={() => handleThemeChange(theme.key)}
+                  className={`rounded-xl border px-3 py-2 text-sm transition ${
+                    selectedTheme === theme.key
+                      ? "border-brand-purple bg-brand-purple/10 text-foreground"
+                      : "border-border text-muted-foreground hover:bg-surface-elevated"
+                  }`}
                 >
-                  <Plus className="h-3.5 w-3.5 mr-1" /> Add project
+                  {theme.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {apiMessage && (
+          <div className="mt-4 rounded-xl border border-border bg-surface/60 px-4 py-3 text-sm text-muted-foreground">
+            {apiMessage}
+          </div>
+        )}
+
+        <div className="mt-6 grid items-start gap-6 xl:grid-cols-[1fr_1.05fr]">
+          <div className="space-y-6">
+            <section className="card-glow rounded-3xl p-5 sm:p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="font-semibold">Projects</h2>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Project cards stay aligned and preview instantly in the selected theme.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowAddForm(!showAddForm)}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-3 py-2 text-xs hover:bg-surface-elevated"
+                >
+                  <Plus className="h-3.5 w-3.5" /> {showAddForm ? "Close form" : "Add project"}
                 </button>
               </div>
 
-              {/* ADD PROJECT FORM */}
               {showAddForm && (
-                <div className="mt-4 rounded-xl border border-border bg-surface/60 p-4">
-                  <form onSubmit={handleAddProject} className="space-y-3">
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-xs font-medium">Project Title</label>
-                        <input
-                          type="text"
-                          className="mt-1 w-full h-9 px-3 rounded-md bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
-                          value={newProject.title}
-                          onChange={(e) =>
-                            setNewProject({ ...newProject, title: e.target.value })
-                          }
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium">Date</label>
-                        <input
-                          type="month"
-                          className="mt-1 w-full h-9 px-3 rounded-md bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
-                          value={newProject.date}
-                          onChange={(e) =>
-                            setNewProject({ ...newProject, date: e.target.value })
-                          }
-                          required
-                        />
-                      </div>
-                    </div>
+                <form onSubmit={handleAddProject} className="mt-5 rounded-2xl border border-border bg-surface/60 p-4">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="text-xs font-medium">Description</label>
-                      <textarea
-                        className="mt-1 w-full min-h-20 px-3 py-2 rounded-md bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
-                        rows={3}
-                        value={newProject.description}
-                        onChange={(e) =>
-                          setNewProject({ ...newProject, description: e.target.value })
-                        }
+                      <label className="text-xs font-medium">Project Title</label>
+                      <input
+                        type="text"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        value={newProject.title}
+                        onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                         required
                       />
                     </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-xs font-medium">Skills (comma-separated)</label>
-                        <input
-                          type="text"
-                          className="mt-1 w-full h-9 px-3 rounded-md bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
-                          placeholder="React, Node.js, MongoDB"
-                          value={newProject.skills}
-                          onChange={(e) =>
-                            setNewProject({ ...newProject, skills: e.target.value })
-                          }
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-medium">Project Link</label>
-                        <input
-                          type="url"
-                          className="mt-1 w-full h-9 px-3 rounded-md bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
-                          placeholder="https://example.com"
-                          value={newProject.link}
-                          onChange={(e) =>
-                            setNewProject({ ...newProject, link: e.target.value })
-                          }
-                        />
-                      </div>
+                    <div>
+                      <label className="text-xs font-medium">Date</label>
+                      <input
+                        type="month"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        value={newProject.date}
+                        onChange={(e) => setNewProject({ ...newProject, date: e.target.value })}
+                        required
+                      />
                     </div>
-                    <div className="flex gap-2 pt-1">
-                      <button
-                        type="button"
-                        className="px-3 py-1.5 rounded-md border border-border text-xs hover:bg-surface-elevated"
-                        onClick={() => setShowAddForm(false)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-3 py-1.5 rounded-md bg-gradient-brand text-primary-foreground text-xs font-medium"
-                      >
-                        Add Project
-                      </button>
+                  </div>
+
+                  <div className="mt-3">
+                    <label className="text-xs font-medium">Description</label>
+                    <textarea
+                      className="mt-1 w-full min-h-24 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                      rows={3}
+                      value={newProject.description}
+                      onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="text-xs font-medium">Skills</label>
+                      <input
+                        type="text"
+                        placeholder="React, Node.js, MongoDB"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        value={newProject.skills}
+                        onChange={(e) => setNewProject({ ...newProject, skills: e.target.value })}
+                        required
+                      />
                     </div>
-                  </form>
-                </div>
+                    <div>
+                      <label className="text-xs font-medium">Project Link</label>
+                      <input
+                        type="url"
+                        placeholder="https://example.com"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        value={newProject.link}
+                        onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowAddForm(false)}
+                      className="rounded-lg border border-border px-3 py-2 text-xs hover:bg-surface-elevated"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="rounded-lg bg-gradient-brand px-3 py-2 text-xs font-medium text-primary-foreground"
+                    >
+                      Add Project
+                    </button>
+                  </div>
+                </form>
               )}
 
-              {/* PROJECT LIST */}
-              <div className="mt-4 space-y-3">
+              <div className="mt-5 grid gap-3">
                 {projects.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No projects yet. Start building your portfolio!
-                  </p>
+                  <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+                    No projects yet. Add your first project to build the portfolio.
+                  </div>
                 )}
+
                 {projects.map((project) => (
-                  <div
-                    key={project.id}
-                    className="rounded-xl border border-border bg-surface/60 p-4"
+                  <article
+                    key={project._id || project.id || project.title}
+                    className="rounded-2xl border border-border bg-surface/50 p-4"
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm">{project.title}</div>
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-medium text-sm">{project.title}</h3>
+                          <span className="rounded-full bg-brand-purple/10 px-2 py-0.5 text-[11px] text-brand-pink">
+                            {formatDate(project.date)}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                           {project.description}
                         </p>
-                        <div className="mt-2 flex flex-wrap items-center gap-2">
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Calendar className="h-3 w-3" />
-                            <span>
-                              {new Date(project.date).toLocaleDateString("en-US", {
-                                year: "numeric",
-                                month: "short",
-                              })}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {project.skills.map((skill, idx) => (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {(project.skills || []).map((skill, idx) => (
                             <span
                               key={idx}
-                              className="text-xs px-2 py-0.5 rounded-md bg-surface-elevated text-foreground/90 border border-border"
+                              className="rounded-md border border-border bg-surface-elevated px-2 py-1 text-xs"
                             >
                               {skill}
                             </span>
                           ))}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex shrink-0 items-center gap-2">
                         {project.link ? (
                           <a
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-muted-foreground hover:text-foreground"
+                            className="rounded-md p-2 text-muted-foreground hover:bg-surface-elevated hover:text-foreground"
                           >
                             <ExternalLink className="h-4 w-4" />
                           </a>
                         ) : (
-                          <Github className="h-4 w-4 text-muted-foreground" />
+                          <div className="rounded-md p-2 text-muted-foreground">
+                            <Github className="h-4 w-4" />
+                          </div>
                         )}
+                        <button
+                          onClick={() => handleDeleteProject(project._id)}
+                          className="rounded-md p-2 text-destructive hover:bg-destructive/10"
+                          title="Delete project"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* AI OUTPUT */}
             {aiContent && (
-              <div className="card-glow rounded-2xl p-6">
-                <div className="flex items-center gap-2 text-sm font-semibold text-brand-pink mb-3">
+              <section className="card-glow rounded-3xl p-5 sm:p-6">
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-brand-pink">
                   <Sparkles className="h-4 w-4" /> AI Portfolio Summary
                 </div>
-                <pre className="text-xs text-muted-foreground whitespace-pre-wrap leading-relaxed">
+                <pre className="whitespace-pre-wrap rounded-2xl border border-border bg-surface/50 p-4 text-xs leading-relaxed text-muted-foreground">
                   {aiContent}
                 </pre>
-              </div>
+              </section>
             )}
           </div>
 
-          {/* LIVE PREVIEW PANEL */}
-          <div className="lg:sticky lg:top-24 self-start">
-   <div
-  id="portfolio-preview"
-  className="rounded-2xl p-8 relative overflow-hidden"
-  style={{
-    background: "#0f172a",
-    color: "#ffffff",
-    border: "1px solid rgba(255,255,255,0.1)",
-  }}
->
-              <div
-                className="absolute -top-20 -right-20 h-60 w-60 rounded-full opacity-25 pointer-events-none"
-               style={{
-  background:
-    "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
-  filter: "blur(80px)",
-}}
-              />
-              <div className="relative">
-                <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center text-lg font-semibold text-primary-foreground uppercase">
-                    {username.slice(0, 2)}
-                  </div>
-                  <div>
-                    <div className="text-xl font-display font-semibold capitalize">
-                      {localStorage.getItem("name") || "Your Name"}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Developer · Portfolio Preview
-                    </div>
-                  </div>
+          <aside className="xl:sticky xl:top-6">
+            <section className="rounded-3xl border border-border bg-surface/40 p-4 shadow-sm">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="font-semibold">Live theme preview</h2>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    This is the theme visitors will see on your public link.
+                  </p>
                 </div>
-
-                <div className="mt-6">
-                  <div className="text-xs uppercase tracking-[0.2em] text-brand-pink">
-                    Featured Projects
-                  </div>
-                  <div className="mt-3 grid gap-3">
-                    {projects.slice(0, 3).map((p) => (
-                      <div
-                        key={p.id}
-                        className="rounded-xl border border-border bg-surface/40 p-4"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm font-medium">{p.title}</div>
-                          {p.link && (
-                            <a
-                              href={p.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-muted-foreground hover:text-foreground"
-                            >
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                          {p.description}
-                        </div>
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {p.skills.slice(0, 3).map((s, i) => (
-                            <span
-                              key={i}
-                              className="text-xs px-1.5 py-0.5 rounded bg-surface-elevated border border-border text-foreground/80"
-                            >
-                              {s}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {aiContent && (
-                  <div className="mt-6 rounded-xl border border-brand-purple/40 bg-surface/40 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-brand-pink">
-                      <Sparkles className="h-4 w-4" /> AI suggestions
-                    </div>
-                    <p className="mt-2 text-xs text-muted-foreground line-clamp-4">
-                      {aiContent.slice(0, 200)}…
-                    </p>
-                  </div>
-                )}
-
-                {!aiContent && (
-                  <div className="mt-6 rounded-xl border border-brand-purple/40 bg-surface/40 p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-brand-pink">
-                      <Sparkles className="h-4 w-4" /> AI suggestions
-                    </div>
-                    <ul className="mt-2 text-xs text-muted-foreground space-y-1">
-                      <li>· Add measurable impact to your projects (e.g. concurrent users).</li>
-                      <li>· Generate an AI portfolio summary to stand out.</li>
-                    </ul>
-                  </div>
-                )}
+                <Link
+                  to={portfolioLink}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border px-3 py-2 text-xs hover:bg-surface-elevated"
+                >
+                  Open <ExternalLink className="h-3.5 w-3.5" />
+                </Link>
               </div>
-            </div>
-          </div>
+
+              <div className="overflow-hidden rounded-2xl border border-border bg-background">
+                <SelectedTheme portfolio={previewPortfolio} username={username} preview />
+              </div>
+            </section>
+          </aside>
         </div>
       </main>
     </div>
