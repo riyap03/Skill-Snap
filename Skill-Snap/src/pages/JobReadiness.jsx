@@ -37,7 +37,7 @@ export default function JobReadiness() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-brand-pink" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -47,7 +47,7 @@ export default function JobReadiness() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
         <AlertTriangle className="h-8 w-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{error}</p>
-        <button onClick={fetchReadiness} className="text-sm text-brand-pink">Try again</button>
+        <button onClick={fetchReadiness} className="text-sm text-primary">Try again</button>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function JobReadiness() {
             <div key={s.label} className="card-glow rounded-2xl p-5">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">{s.label}</span>
-                <s.icon className="h-4 w-4 text-brand-pink" />
+                <s.icon className="h-4 w-4 text-primary" />
               </div>
               <div className="h-2 rounded-full bg-surface-elevated overflow-hidden mb-1.5">
                 <div className={`h-full rounded-full transition-all ${s.score >= 70 ? "bg-green-500" : s.score >= 40 ? "bg-yellow-500" : "bg-red-500"}`} style={{ width: `${s.score}%` }} />
@@ -126,12 +126,12 @@ export default function JobReadiness() {
         {data.improvements?.length > 0 && (
           <div className="card-glow rounded-2xl p-5 mb-6">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Target className="h-4 w-4 text-brand-pink" /> Your improvement roadmap
+              <Target className="h-4 w-4 text-primary" /> Your improvement roadmap
             </h3>
             <ol className="space-y-2">
               {data.improvements.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="h-5 w-5 rounded-full bg-brand-purple/20 text-brand-pink grid place-items-center text-[10px] shrink-0 mt-0.5">{i + 1}</span>
+                  <span className="h-5 w-5 rounded-full bg-primary/20 text-primary grid place-items-center text-[10px] shrink-0 mt-0.5">{i + 1}</span>
                   {item}
                 </li>
               ))}
@@ -140,7 +140,7 @@ export default function JobReadiness() {
         )}
 
         <div className="flex justify-center gap-3">
-          <button onClick={fetchReadiness} className="px-5 py-2.5 rounded-md border border-border text-sm hover:bg-surface-elevated">Refresh</button>
+          <button onClick={fetchReadiness} className="px-5 py-2.5 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated">Refresh</button>
         </div>
       </main>
     </div>

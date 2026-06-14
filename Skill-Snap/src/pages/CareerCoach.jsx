@@ -79,33 +79,33 @@ export default function CareerCoach() {
     <div className="min-h-screen">
       <main className="mx-auto max-w-3xl px-6 py-10">
         <div className="flex items-center gap-3 mb-6">
-          <MessageSquare className="h-6 w-6 text-brand-pink" />
+          <MessageSquare className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-display font-bold">AI Career Coach</h1>
         </div>
 
         {/* Quick Actions */}
         <div className="grid sm:grid-cols-2 gap-3 mb-6">
-          <button onClick={() => handleAction("skills")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-brand-purple/60 disabled:opacity-50">
+          <button onClick={() => handleAction("skills")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-primary/60 disabled:opacity-50">
             <div className="flex items-center gap-2 text-sm font-medium">
-              <Sparkles className="h-4 w-4 text-brand-pink" /> Suggest Skills
+              <Sparkles className="h-4 w-4 text-primary" /> Suggest Skills
             </div>
             <p className="text-xs text-muted-foreground mt-1">Get personalized skill recommendations</p>
           </button>
-          <button onClick={() => handleAction("projects")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-brand-purple/60 disabled:opacity-50">
+          <button onClick={() => handleAction("projects")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-primary/60 disabled:opacity-50">
             <div className="flex items-center gap-2 text-sm font-medium">
-              <Briefcase className="h-4 w-4 text-brand-pink" /> Suggest Projects
+              <Briefcase className="h-4 w-4 text-primary" /> Suggest Projects
             </div>
             <p className="text-xs text-muted-foreground mt-1">Projects matched to your level and role</p>
           </button>
-          <button onClick={() => handleAction("portfolio")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-brand-purple/60 disabled:opacity-50">
+          <button onClick={() => handleAction("portfolio")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-primary/60 disabled:opacity-50">
             <div className="flex items-center gap-2 text-sm font-medium">
-              <FileText className="h-4 w-4 text-brand-pink" /> Portfolio Review
+              <FileText className="h-4 w-4 text-primary" /> Portfolio Review
             </div>
             <p className="text-xs text-muted-foreground mt-1">Get feedback on your portfolio</p>
           </button>
-          <button onClick={() => handleAction("readiness")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-brand-purple/60 disabled:opacity-50">
+          <button onClick={() => handleAction("readiness")} disabled={!!actionLoading} className="card-glow rounded-xl p-4 text-left hover:border-primary/60 disabled:opacity-50">
             <div className="flex items-center gap-2 text-sm font-medium">
-              <Target className="h-4 w-4 text-brand-pink" /> Job Readiness
+              <Target className="h-4 w-4 text-primary" /> Job Readiness
             </div>
             <p className="text-xs text-muted-foreground mt-1">Check your job readiness score</p>
           </button>
@@ -124,10 +124,10 @@ export default function CareerCoach() {
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm whitespace-pre-wrap ${
-                    m.role === "user" ? "bg-gradient-brand text-primary-foreground rounded-br-sm" : "bg-surface/60 border border-border rounded-bl-sm"
+                    m.role === "user" ? "bg-gradient-brand text-primary-foreground rounded-br-sm" : "bg-surface/60 border border-gray-200 rounded-bl-sm"
                   }`}
                 >
-                  {m.role === "assistant" && <Sparkles className="h-3 w-3 text-brand-pink inline mr-1" />}
+                  {m.role === "assistant" && <Sparkles className="h-3 w-3 text-primary inline mr-1" />}
                   {m.text}
                 </div>
               </div>
@@ -135,14 +135,14 @@ export default function CareerCoach() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-border p-3 flex gap-2">
+          <div className="border-t border-gray-200 p-3 flex gap-2">
             <input
               type="text"
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Ask about skills, projects, career advice…"
-              className="flex-1 h-10 px-3 rounded-md bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
+              className="flex-1 h-10 px-3 rounded-md bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm"
             />
             <button onClick={sendMessage} className="h-10 w-10 grid place-items-center rounded-md bg-gradient-brand text-primary-foreground shrink-0">
               <Send className="h-4 w-4" />

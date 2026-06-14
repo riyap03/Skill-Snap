@@ -109,7 +109,7 @@ export default function AnalyticsDashboard() {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-10 w-10 rounded-full border-2 border-brand-purple/30 border-t-brand-purple animate-spin" />
+          <div className="h-10 w-10 rounded-full border-2 border-primary/30 border-t-brand-purple animate-spin" />
           <p className="text-sm text-muted-foreground">Loading analytics…</p>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function AnalyticsDashboard() {
       <div className="min-h-screen">
         <main className="mx-auto max-w-4xl px-6 py-12">
           <div className="text-center mb-12">
-            <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_40px_-8px_var(--brand-purple)] mb-6">
+            <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm mb-6">
               <Brain className="h-7 w-7 text-primary-foreground" />
             </div>
             <h1 className="text-4xl font-display font-bold tracking-tight mb-3">Analytics</h1>
@@ -143,7 +143,7 @@ export default function AnalyticsDashboard() {
                   </div>
                   <h3 className="text-base font-semibold mb-1">{item.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-xs text-brand-pink mt-3 group-hover:gap-2 transition-all">
+                  <span className="inline-flex items-center gap-1 text-xs text-primary mt-3 group-hover:gap-2 transition-all">
                     Get started <ArrowRight className="h-3 w-3" />
                   </span>
                 </div>
@@ -210,8 +210,8 @@ export default function AnalyticsDashboard() {
           <div>
             <h3 className="text-lg font-display font-bold">Performance Overview</h3>
             <p className="text-xs text-white/60 mt-1">
-              Level: <span className="text-brand-pink font-medium capitalize">{analytics.level || "beginner"}</span> · 
-              Accuracy: <span className="text-brand-purple font-medium">{analytics.accuracyScore || 0}%</span> · 
+              Level: <span className="text-primary font-medium capitalize">{analytics.level || "beginner"}</span> ·
+              Accuracy: <span className="text-primary font-medium">{analytics.accuracyScore || 0}%</span> ·
               Speed: <span className="text-cyan-400 font-medium">{analytics.speedScore || 0}</span>
             </p>
           </div>
@@ -233,7 +233,7 @@ export default function AnalyticsDashboard() {
               <h3 className="text-sm font-semibold text-white/90">Skill Growth Over Time</h3>
               <p className="text-xs text-white/50 mt-0.5">Cumulative skills completed</p>
             </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-purple/10 text-brand-purple text-[10px] font-medium">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium">
               <TrendingUp className="h-3 w-3" />
               {chartData.length > 0 && chartData[chartData.length - 1]?.completed || 0} total
             </div>
@@ -274,7 +274,7 @@ export default function AnalyticsDashboard() {
                     boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
                   }}
                   labelStyle={{ color: "rgba(255,255,255,0.6)", marginBottom: 4 }}
-                  formatter={(value) => [<span className="font-semibold text-brand-purple">{value} skills</span>, "Completed"]}
+                  formatter={(value) => [<span className="font-semibold text-primary">{value} skills</span>, "Completed"]}
                 />
                 <Area
                   type="monotone"
@@ -420,7 +420,7 @@ export default function AnalyticsDashboard() {
                     color: "white",
                     boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
                   }}
-                  formatter={(value) => [<span className="font-semibold text-brand-purple">{value}%</span>, "Progress"]}
+                  formatter={(value) => [<span className="font-semibold text-primary">{value}%</span>, "Progress"]}
                 />
                 <Area
                   type="monotone"
@@ -485,7 +485,7 @@ export default function AnalyticsDashboard() {
                     color: "white",
                     boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
                   }}
-                  formatter={(value) => [<span className="font-semibold text-brand-pink">{value}%</span>, "Accuracy"]}
+                  formatter={(value) => [<span className="font-semibold text-primary">{value}%</span>, "Accuracy"]}
                 />
                 <Line
                   type="monotone"
@@ -526,7 +526,7 @@ export default function AnalyticsDashboard() {
                 className="rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-all hover:border-white/10 hover:bg-white/[0.04]"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${item.type === "assessment" ? "bg-brand-purple/20 text-brand-purple" : "bg-brand-pink/20 text-brand-pink"}`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${item.type === "assessment" ? "bg-primary/20 text-primary" : "bg-brand-pink/20 text-primary"}`}>
                     {item.type === "assessment" ? "Assessment" : "Roadmap"}
                   </span>
                   <span className="text-[10px] text-white/40">

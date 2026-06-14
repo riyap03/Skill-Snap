@@ -83,7 +83,6 @@ export default function PublicPortfolio({ portfolio: portfolioProp, username: us
       <main className={mainClass}>
         {/* Hero */}
         <div className="rounded-3xl p-10 sm:p-14 relative overflow-hidden mb-10" style={{ background: THEME.cardBg, border: `1px solid ${THEME.border}` }}>
-          <div className="absolute -top-32 -right-20 h-80 w-80 rounded-full opacity-30 pointer-events-none" style={{ background: THEME.gradient, filter: "blur(100px)" }} />
           <div className="relative flex flex-col sm:flex-row gap-8 items-start">
             <div className="h-24 w-24 rounded-3xl grid place-items-center text-2xl font-display font-bold text-white shadow-lg flex-shrink-0" style={{ background: THEME.gradient, boxShadow: THEME.shadow }}>
               {initials}

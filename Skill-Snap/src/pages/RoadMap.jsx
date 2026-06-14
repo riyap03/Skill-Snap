@@ -212,7 +212,7 @@ export default function Roadmap() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 placeholder="Search technologies, frameworks…"
-                className="w-full pl-9 pr-3 h-11 rounded-xl bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm"
+                className="w-full pl-9 pr-3 h-11 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -220,7 +220,7 @@ export default function Roadmap() {
             <button
               onClick={exportPDF}
               disabled={!selected}
-              className="inline-flex items-center px-3 py-2.5 rounded-xl border border-border text-sm hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+              className="inline-flex items-center px-3 py-2.5 rounded-xl border border-gray-200 text-sm hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
             >
               <Download className="h-4 w-4 mr-1.5" /> Export PDF
             </button>
@@ -235,7 +235,7 @@ export default function Roadmap() {
         )}
 
         {!listError && filteredRoadmaps.length === 0 && (
-          <div className="mt-8 rounded-xl border border-border bg-surface/40 px-4 py-8 text-center text-sm text-muted-foreground">
+          <div className="mt-8 rounded-xl border border-gray-200 bg-surface/40 px-4 py-8 text-center text-sm text-muted-foreground">
             No roadmaps found. Try a different search.
           </div>
         )}
@@ -250,7 +250,7 @@ export default function Roadmap() {
             return (
               <div
                 key={r.roadmapName}
-                className={`card-glow rounded-2xl p-6 cursor-pointer transition-all ${expanded ? "border-brand-purple/60" : ""}`}
+                className={`card-glow rounded-2xl p-6 cursor-pointer transition-all ${expanded ? "border-primary/60" : ""}`}
                 onClick={() => setSelected(expanded ? "" : r.roadmapName)}
               >
                 <div className="flex items-start justify-between">
@@ -278,7 +278,7 @@ export default function Roadmap() {
                   </div>
                   <div className="h-2 rounded-full bg-surface-elevated overflow-hidden">
                     <div
-                      className="h-full bg-gradient-brand shadow-[0_0_12px_var(--brand-purple)] transition-all duration-500"
+                      className="h-full bg-gradient-brand shadow-sm transition-all duration-500"
                       style={{ width: `${cardProgress}%` }}
                     />
                   </div>
@@ -297,18 +297,18 @@ export default function Roadmap() {
 
                 {/* EXPANDED CONTENT */}
                 {expanded && (
-                  <div className="mt-5 pt-5 border-t border-border animate-fade-up" onClick={(e) => e.stopPropagation()}>
+                  <div className="mt-5 pt-5 border-t border-gray-200 animate-fade-up" onClick={(e) => e.stopPropagation()}>
 
                     {/* PLAN META */}
                     {plan && (
-                      <div className="mb-4 rounded-xl border border-border bg-surface/40 p-3 text-xs text-muted-foreground space-y-1">
+                      <div className="mb-4 rounded-xl border border-gray-200 bg-surface/40 p-3 text-xs text-muted-foreground space-y-1">
                         <div className="flex flex-wrap gap-3">
                           <span>Level: <span className="text-foreground font-medium">{plan.level}</span></span>
                           <span>Pace: <span className="text-foreground font-medium">{plan.pace?.pace || "new"}</span></span>
                           <span>Weekly target: <span className="text-foreground font-medium">{plan.weeklyTarget}</span></span>
                         </div>
                         {plan.nextFocus?.length > 0 && (
-                          <div>Next focus: <span className="text-brand-pink">{plan.nextFocus.join(", ")}</span></div>
+                          <div>Next focus: <span className="text-primary">{plan.nextFocus.join(", ")}</span></div>
                         )}
                       </div>
                     )}
@@ -333,7 +333,7 @@ export default function Roadmap() {
                             <div className={`h-6 w-6 rounded-full grid place-items-center text-[11px] cursor-pointer transition-all ${
                               checked[skill]
                                 ? "bg-gradient-brand text-primary-foreground"
-                                : "border border-border text-muted-foreground hover:border-brand-purple"
+                                : "border border-gray-200 text-muted-foreground hover:border-primary"
                             }`}>
                               {i + 1}
                             </div>
@@ -350,14 +350,14 @@ export default function Roadmap() {
                       <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
                         <span>{completed} / {total} completed</span>
                         <span>·</span>
-                        <span className="text-brand-pink font-medium">{progress}%</span>
+                        <span className="text-primary font-medium">{progress}%</span>
                       </div>
                     )}
 
                     {/* STATS CHART */}
                     {chartData.length > 0 && (
                       <div className="mt-5">
-                        <div className="text-xs uppercase tracking-[0.2em] text-brand-pink mb-3">Weekly activity</div>
+                        <div className="text-xs uppercase tracking-[0.2em] text-primary mb-3">Weekly activity</div>
                         <ResponsiveContainer width="100%" height={180}>
                           <LineChart data={chartData}>
                             <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" />
@@ -374,7 +374,7 @@ export default function Roadmap() {
                             <Line
                               type="monotone"
                               dataKey="value"
-                              stroke="var(--brand-purple)"
+                              stroke="var(--primary)"
                               strokeWidth={2}
                               dot={false}
                             />
@@ -385,8 +385,8 @@ export default function Roadmap() {
 
                     {/* AI INSIGHT */}
                     {insight && (
-                      <div className="mt-4 rounded-xl border border-brand-purple/40 bg-surface/40 p-3">
-                        <div className="flex items-center gap-1.5 text-xs font-semibold text-brand-pink mb-1">
+                      <div className="mt-4 rounded-xl border border-primary/40 bg-surface/40 p-3">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-primary mb-1">
                           <Sparkles className="h-3.5 w-3.5" /> AI Insight
                         </div>
                         <p className="text-xs text-muted-foreground">{insight}</p>
@@ -396,10 +396,10 @@ export default function Roadmap() {
                     {/* RECOMMENDED PROJECTS */}
                     {projects.length > 0 && (
                       <div className="mt-4">
-                        <div className="text-xs uppercase tracking-[0.2em] text-brand-pink mb-2">Recommended projects</div>
+                        <div className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Recommended projects</div>
                         <div className="flex flex-wrap gap-1.5">
                           {projects.map((p, i) => (
-                            <span key={i} className="text-[11px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-border">
+                            <span key={i} className="text-[11px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-gray-200">
                               {p}
                             </span>
                           ))}
@@ -426,10 +426,9 @@ export default function Roadmap() {
             </button>
             <div
               className="absolute -top-20 -right-20 h-60 w-60 rounded-full opacity-30"
-              style={{ background: "var(--gradient-brand)", filter: "blur(80px)" }}
             />
             <div className="relative text-center">
-              <div className="mx-auto h-12 w-12 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_30px_-4px_var(--brand-purple)]">
+              <div className="mx-auto h-12 w-12 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm">
                 <Sparkles className="h-5 w-5 text-primary-foreground" />
               </div>
               <h3 className="mt-5 text-xl font-semibold">Take the skill assessment first</h3>
@@ -439,7 +438,7 @@ export default function Roadmap() {
               <div className="mt-6 flex gap-2 justify-center">
                 <button
                   onClick={() => setShowTestPopup(false)}
-                  className="px-4 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated"
+                  className="px-4 py-2 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated"
                 >
                   Maybe later
                 </button>

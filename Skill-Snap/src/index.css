@@ -1,26 +1,25 @@
 @import "tailwindcss";
 
-
 :root {
-  --radius: 0.875rem;
-  --background: oklch(0.16 0.03 280);
-  --foreground: oklch(0.98 0.005 270);
-  --surface: oklch(0.20 0.035 280);
-  --surface-elevated: oklch(0.24 0.04 280);
-  --primary: oklch(0.65 0.24 305);
-  --primary-foreground: oklch(0.99 0 0);
-  --muted: oklch(0.24 0.035 280);
-  --muted-foreground: oklch(0.70 0.02 270);
-  --border: oklch(0.30 0.04 280 / 60%);
-  --input: oklch(0.27 0.04 280);
-  --ring: oklch(0.65 0.24 305);
-  --brand-purple: oklch(0.65 0.24 305);
-  --brand-pink: oklch(0.72 0.22 350);
-  --brand-indigo: oklch(0.62 0.22 270);
-  --gradient-brand: linear-gradient(135deg, oklch(0.62 0.22 270), oklch(0.65 0.24 305) 50%, oklch(0.72 0.22 350));
-  --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.65 0.24 305 / 35%), transparent 70%);
-  --gradient-soft: linear-gradient(180deg, oklch(0.22 0.04 280 / 80%), oklch(0.18 0.03 280 / 40%));
-  --shadow-card: 0 10px 40px -20px oklch(0.05 0 0 / 60%);
+  --radius: 0.5rem;
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.14 0 0);
+  --surface: oklch(1 0 0);
+  --surface-elevated: oklch(0.98 0 0);
+  --primary: oklch(0.5 0.2 260);
+  --primary-foreground: oklch(1 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --border: oklch(0.92 0 0);
+  --input: oklch(0.92 0 0);
+  --ring: oklch(0.5 0.2 260);
+  --brand-purple: oklch(0.5 0.2 260);
+  --brand-pink: oklch(0.5 0.2 260);
+  --brand-indigo: oklch(0.5 0.2 260);
+  --gradient-brand: var(--primary);
+  --gradient-glow: transparent;
+  --gradient-soft: var(--surface);
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
 @layer base {
@@ -32,47 +31,36 @@
     -webkit-font-smoothing: antialiased;
   }
   body {
-    background-image:
-      radial-gradient(60% 50% at 20% 0%, oklch(0.62 0.22 270 / 18%), transparent 70%),
-      radial-gradient(50% 40% at 90% 10%, oklch(0.72 0.22 350 / 14%), transparent 70%);
-    background-attachment: fixed;
+    background-image: none;
+    background-attachment: scroll;
   }
   h1, h2, h3, h4 {
-    font-family: 'Space Grotesk', Inter, sans-serif;
+    font-family: 'Inter', sans-serif;
     letter-spacing: -0.02em;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--primary);
   }
-  .bg-gradient-brand { background: var(--gradient-brand); }
+  .bg-gradient-brand { background: var(--primary); }
   .card-glow {
-    background: var(--gradient-soft);
+    background: var(--surface);
     border: 1px solid var(--border);
     box-shadow: var(--shadow-card);
-    transition: box-shadow .3s ease, transform .3s ease, border-color .3s ease;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
   }
   .card-glow:hover {
-    border-color: oklch(0.65 0.24 305 / 60%);
-    box-shadow: 0 0 0 1px oklch(0.65 0.24 305 / 40%), 0 20px 60px -20px oklch(0.65 0.24 305 / 40%);
-    transform: translateY(-2px);
+    border-color: oklch(0.85 0 0);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transform: translateY(-1px);
   }
   .glass-panel {
-    background: oklch(0.20 0.035 280 / 70%);
- 
+    background: var(--surface);
     border: 1px solid var(--border);
   }
   .grid-bg {
-    background-image:
-      linear-gradient(oklch(0.30 0.04 280 / 25%) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.30 0.04 280 / 25%) 1px, transparent 1px);
-    background-size: 48px 48px;
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 80%);
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 80%);
+    background: transparent;
   }
 }

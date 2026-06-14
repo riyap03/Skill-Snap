@@ -195,7 +195,7 @@ export default function ProjectsPage() {
           </div>
           <Link
             to="/portfolio"
-            className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm hover:bg-surface-elevated"
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-surface-elevated"
           >
             Add portfolio project <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -209,7 +209,7 @@ export default function ProjectsPage() {
               className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
                 activeTab === tab.key
                   ? "bg-gradient-brand text-primary-foreground"
-                  : "border border-border hover:bg-surface-elevated"
+                  : "border border-gray-200 hover:bg-surface-elevated"
               }`}
             >
               <tab.icon className="h-4 w-4 inline mr-1.5" /> {tab.label}
@@ -234,7 +234,7 @@ export default function ProjectsPage() {
                     {skills.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {skills.map((skill, j) => (
-                          <span key={j} className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated border border-border text-muted-foreground">{skill}</span>
+                          <span key={j} className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated border border-gray-200 text-muted-foreground">{skill}</span>
                         ))}
                       </div>
                     )}
@@ -246,7 +246,7 @@ export default function ProjectsPage() {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80"
+                            className="inline-flex items-center gap-1 text-xs text-primary hover:opacity-80"
                           >
                             View project <ExternalLink className="h-3 w-3" />
                           </a>
@@ -261,7 +261,7 @@ export default function ProjectsPage() {
                     ) : (
                       <button
                         onClick={() => setOverviewProject(project)}
-                        className="mt-4 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80"
+                        className="mt-4 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80"
                       >
                         Start project <ArrowRight className="h-3 w-3" />
                       </button>
@@ -284,7 +284,7 @@ export default function ProjectsPage() {
               <Clock className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">No projects in progress yet.</p>
               <p className="text-xs text-muted-foreground mt-1">Start a recommended project to create your plan.</p>
-              <Link to="/roadmap" className="mt-3 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80">
+              <Link to="/roadmap" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80">
                 Browse roadmaps <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
@@ -305,7 +305,7 @@ export default function ProjectsPage() {
           <div className="card-glow rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-brand-pink">Project overview</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-primary">Project overview</p>
                 <h2 className="mt-2 text-2xl font-display font-bold">{overview.title}</h2>
               </div>
               <button
@@ -322,7 +322,7 @@ export default function ProjectsPage() {
               <h3 className="text-sm font-semibold mb-3">Skills you will practice</h3>
               <div className="flex flex-wrap gap-2">
                 {overview.skills.map((skill, i) => (
-                  <span key={i} className="rounded-md border border-border bg-surface-elevated px-2.5 py-1 text-xs">{skill}</span>
+                  <span key={i} className="rounded-md border border-gray-200 bg-surface-elevated px-2.5 py-1 text-xs">{skill}</span>
                 ))}
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function ProjectsPage() {
               <h3 className="text-sm font-semibold mb-3">Final deliverables</h3>
               <ul className="grid sm:grid-cols-2 gap-2">
                 {overview.deliverables.map((item, i) => (
-                  <li key={i} className="rounded-xl border border-border bg-surface/50 px-3 py-2 text-xs text-muted-foreground">
+                  <li key={i} className="rounded-xl border border-gray-200 bg-surface/50 px-3 py-2 text-xs text-muted-foreground">
                     {item}
                   </li>
                 ))}
@@ -355,7 +355,7 @@ export default function ProjectsPage() {
             <div className="mt-6 flex flex-wrap justify-end gap-2">
               <button
                 onClick={() => setOverviewProject(null)}
-                className="rounded-xl border border-border px-4 py-2 text-sm hover:bg-surface-elevated"
+                className="rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-surface-elevated"
               >
                 Close
               </button>

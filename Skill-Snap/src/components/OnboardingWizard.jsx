@@ -144,14 +144,14 @@ export default function OnboardingWizard() {
             </div>
             <div className="mt-2 flex justify-between text-[10px] text-muted-foreground">
               {STEPS.map((s, i) => (
-                <span key={s.key} className={i <= currentStep ? "text-brand-pink" : ""}>{s.label}</span>
+                <span key={s.key} className={i <= currentStep ? "text-primary" : ""}>{s.label}</span>
               ))}
             </div>
           </div>
 
           <div className="card-glow rounded-2xl p-8">
             <div className="flex items-center gap-3 mb-6">
-              <current.icon className="h-5 w-5 text-brand-pink" />
+              <current.icon className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-display font-semibold">{current.question}</h2>
             </div>
 
@@ -163,7 +163,7 @@ export default function OnboardingWizard() {
                     key={role}
                     onClick={() => updateForm("currentRole", role)}
                     className={`p-4 rounded-xl border text-left text-sm transition ${
-                      form.currentRole === role ? "border-brand-purple bg-surface-elevated" : "border-border hover:border-brand-purple"
+                      form.currentRole === role ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
                     }`}
                   >
                     {role}
@@ -180,7 +180,7 @@ export default function OnboardingWizard() {
                     key={role}
                     onClick={() => updateForm("targetRole", role)}
                     className={`p-4 rounded-xl border text-left text-sm transition ${
-                      form.targetRole === role ? "border-brand-purple bg-surface-elevated" : "border-border hover:border-brand-purple"
+                      form.targetRole === role ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
                     }`}
                   >
                     {role}
@@ -200,8 +200,8 @@ export default function OnboardingWizard() {
                       onClick={() => form.knownSkills.includes(skill) ? removeSkill(skill) : addSkill(skill)}
                       className={`px-3 py-1.5 rounded-full text-xs border transition ${
                         form.knownSkills.includes(skill)
-                          ? "border-brand-purple bg-brand-purple/20 text-brand-pink"
-                          : "border-border hover:border-brand-purple"
+                          ? "border-primary bg-primary/20 text-primary"
+                          : "border-gray-200 hover:border-primary"
                       }`}
                     >
                       {skill}
@@ -209,11 +209,11 @@ export default function OnboardingWizard() {
                   ))}
                 </div>
                 {form.knownSkills.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-border">
+                  <div className="mt-4 pt-4 border-t border-gray-200">
                     <p className="text-xs text-muted-foreground mb-2">Selected ({form.knownSkills.length}):</p>
                     <div className="flex flex-wrap gap-2">
                       {form.knownSkills.map((s) => (
-                        <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-elevated border border-border text-xs">
+                        <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-elevated border border-gray-200 text-xs">
                           {s}
                           <button onClick={() => removeSkill(s)} className="text-muted-foreground hover:text-red-400">×</button>
                         </span>
@@ -232,7 +232,7 @@ export default function OnboardingWizard() {
                     key={level}
                     onClick={() => updateForm("experienceLevel", level.toLowerCase())}
                     className={`p-5 rounded-xl border text-left transition ${
-                      form.experienceLevel === level.toLowerCase() ? "border-brand-purple bg-surface-elevated" : "border-border hover:border-brand-purple"
+                      form.experienceLevel === level.toLowerCase() ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
                     }`}
                   >
                     <div className="text-sm font-medium">{level}</div>
@@ -279,7 +279,7 @@ export default function OnboardingWizard() {
                     key={style.key}
                     onClick={() => updateForm("learningStyle", style.key)}
                     className={`p-4 rounded-xl border text-left text-sm transition ${
-                      form.learningStyle === style.key ? "border-brand-purple bg-surface-elevated" : "border-border hover:border-brand-purple"
+                      form.learningStyle === style.key ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
                     }`}
                   >
                     <div className="font-medium">{style.label}</div>
@@ -294,7 +294,7 @@ export default function OnboardingWizard() {
               <button
                 onClick={prevStep}
                 disabled={currentStep === 0}
-                className="px-4 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated disabled:opacity-40"
+                className="px-4 py-2 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4 inline mr-1" /> Back
               </button>

@@ -79,7 +79,7 @@ export default function AssessmentWizard() {
     return (
       <div className="grid sm:grid-cols-2 gap-4">
         {Object.entries(trackMeta).map(([key, label]) => (
-          <button key={key} onClick={() => startTrack(key)} disabled={loading} className="card-glow rounded-2xl p-6 text-left hover:border-brand-purple/60 disabled:opacity-50">
+          <button key={key} onClick={() => startTrack(key)} disabled={loading} className="card-glow rounded-2xl p-6 text-left hover:border-primary/60 disabled:opacity-50">
             <div className="text-sm font-semibold">{label}</div>
             <p className="text-xs text-muted-foreground mt-1">5 questions · ~3 min</p>
           </button>
@@ -105,8 +105,8 @@ export default function AssessmentWizard() {
             <h3 className="text-lg font-semibold mb-4">{q.question}</h3>
             <div className="space-y-2">
               {q.options.map((opt, idx) => (
-                <button key={idx} onClick={() => handleAnswer(idx)} className="w-full text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-brand-purple hover:bg-surface-elevated transition">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-md border border-border text-xs mr-3">{String.fromCharCode(65 + idx)}</span>
+                <button key={idx} onClick={() => handleAnswer(idx)} className="w-full text-left p-4 rounded-xl border border-gray-200 bg-surface/60 hover:border-primary hover:bg-surface-elevated transition">
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-md border border-gray-200 text-xs mr-3">{String.fromCharCode(65 + idx)}</span>
                   <span className="text-sm">{opt.text}</span>
                 </button>
               ))}
@@ -131,7 +131,7 @@ export default function AssessmentWizard() {
         <div className="text-center py-8">
           <h3 className="text-xl font-display font-bold mb-1">Result Saved</h3>
           <p className="text-sm text-muted-foreground mb-4">Track: {trackMeta[result.track]} · Level: {result.level} · Score: {result.accuracy}%</p>
-          <Link to="/test" className="inline-flex items-center gap-1 text-sm text-brand-pink">Take another track →</Link>
+          <Link to="/test" className="inline-flex items-center gap-1 text-sm text-primary">Take another track →</Link>
         </div>
       )}
     </div>

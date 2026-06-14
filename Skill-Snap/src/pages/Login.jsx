@@ -9,7 +9,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2">
-      <div className="h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-[0_0_20px_-4px_var(--brand-purple)]">
+      <div className="h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-sm">
         <Sparkles className="h-4 w-4 text-primary-foreground" />
       </div>
       <span className="font-display text-lg font-semibold tracking-tight">
@@ -96,21 +96,18 @@ export default function Login() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden">
-        <div className="absolute inset-0 grid-bg" />
         <div
           className="absolute -top-40 -left-20 h-[500px] w-[500px] rounded-full opacity-50"
-          style={{ background: "var(--gradient-brand)", filter: "blur(120px)" }}
         />
         <div
           className="absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full opacity-30"
-          style={{ background: "var(--gradient-brand)", filter: "blur(100px)" }}
         />
         <div className="relative">
           <Logo />
         </div>
 
         <div className="relative max-w-md">
-          <Sparkles className="h-6 w-6 text-brand-pink mb-6" />
+          <Sparkles className="h-6 w-6 text-primary mb-6" />
           <h2 className="font-display text-4xl font-bold leading-tight">
             {isSignup ? (
               <>
@@ -150,7 +147,7 @@ export default function Login() {
                   type="text"
                   name="name"
                   placeholder="Your name"
-                  className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm transition-colors"
+                  className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm transition-colors"
                   value={formData.name}
                   onChange={handleChange}
                   autoComplete="name"
@@ -166,7 +163,7 @@ export default function Login() {
                 type="email"
                 name="email"
                 placeholder="you@example.com"
-                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm transition-colors"
+                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm transition-colors"
                 value={formData.email}
                 onChange={handleChange}
                 autoComplete="email"
@@ -188,7 +185,7 @@ export default function Login() {
                 type="password"
                 name="password"
                 placeholder="••••••••"
-                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-border outline-none focus:border-brand-purple text-sm transition-colors"
+                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm transition-colors"
                 value={formData.password}
                 onChange={handleChange}
                 autoComplete={isSignup ? "new-password" : "current-password"}
@@ -201,7 +198,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-11 inline-flex items-center justify-center gap-1 rounded-xl mt-2 bg-gradient-brand text-primary-foreground shadow-[0_0_32px_-6px_var(--brand-purple)] hover:opacity-90 disabled:opacity-50 text-sm font-medium transition-all"
+              className="w-full h-11 inline-flex items-center justify-center gap-1 rounded-xl mt-2 bg-gradient-brand text-primary-foreground shadow-sm hover:opacity-90 disabled:opacity-50 text-sm font-medium transition-all"
             >
               {isSubmitting ? "Please wait..." : isSignup ? "Create account" : "Sign in"}
               {!isSubmitting && <ArrowRight className="h-4 w-4" />}
@@ -212,7 +209,7 @@ export default function Login() {
             {isSignup ? "Already have an account?" : "New to SkillSnap?"}{" "}
             <button
               type="button"
-              className="text-foreground hover:text-brand-pink font-medium underline underline-offset-4 transition-colors"
+              className="text-foreground hover:text-primary font-medium underline underline-offset-4 transition-colors"
               onClick={() => {
                 setError("");
                 setIsSignup(!isSignup);

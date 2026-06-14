@@ -7,7 +7,7 @@ import { Sparkles, Bell, ChevronDown, LogOut, Trash2, FlaskConical } from "lucid
 function Logo({ to = "/" }) {
   return (
     <Link to={to} className="flex items-center gap-2 group">
-      <div className="relative h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-[0_0_20px_-4px_var(--brand-purple)]">
+      <div className="relative h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-sm">
         <Sparkles className="h-4 w-4 text-primary-foreground" />
       </div>
       <span className="font-display text-lg font-semibold tracking-tight">
@@ -96,7 +96,7 @@ export default function Navbar() {
   // SITE / LANDING NAVBAR
   if (!isApp) {
     return (
-      <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/60 border-b border-border">
+      <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/60 border-b border-gray-200">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
           <Logo />
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
@@ -117,14 +117,14 @@ export default function Navbar() {
               <>
                 <Link
                   to="/dashboard"
-                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90"
+                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-sm hover:opacity-90"
                 >
                   Dashboard
                 </Link>
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen((prev) => !prev)}
-                    className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full border border-border hover:bg-surface-elevated transition"
+                    className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full border border-gray-200 hover:bg-surface-elevated transition"
                   >
                     <div className="h-7 w-7 rounded-full bg-gradient-brand grid place-items-center text-xs font-semibold text-primary-foreground">
                       {initials}
@@ -136,8 +136,8 @@ export default function Navbar() {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-surface/90 backdrop-blur-xl shadow-lg overflow-hidden animate-fade-up z-50">
-                      <div className="px-4 py-3 border-b border-border">
+                    <div className="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 bg-surface/90 backdrop-blur-xl shadow-lg overflow-hidden animate-fade-up z-50">
+                      <div className="px-4 py-3 border-b border-gray-200">
                         <div className="text-sm font-medium truncate">{name}</div>
                         <div className="text-xs text-muted-foreground mt-0.5">Signed in</div>
                       </div>
@@ -166,7 +166,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   to="/dashboard"
-                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90"
+                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-sm hover:opacity-90"
                 >
                   Get Started
                 </Link>
@@ -180,7 +180,7 @@ export default function Navbar() {
 
   // APP NAVBAR
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border">
+    <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-gray-200">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-10">
           <Logo to="/dashboard" />
@@ -215,7 +215,7 @@ export default function Navbar() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((prev) => !prev)}
-              className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full border border-border hover:bg-surface-elevated transition"
+              className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full border border-gray-200 hover:bg-surface-elevated transition"
             >
               <div className="h-7 w-7 rounded-full bg-gradient-brand grid place-items-center text-xs font-semibold text-primary-foreground">
                 {initials}
@@ -227,8 +227,8 @@ export default function Navbar() {
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-border bg-surface/90 backdrop-blur-xl shadow-lg overflow-hidden animate-fade-up z-50">
-                <div className="px-4 py-3 border-b border-border">
+              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-gray-200 bg-surface/90 backdrop-blur-xl shadow-lg overflow-hidden animate-fade-up z-50">
+                <div className="px-4 py-3 border-b border-gray-200">
                   <div className="text-sm font-medium truncate">{name}</div>
                   <div className="text-xs text-muted-foreground mt-0.5">Signed in</div>
                 </div>

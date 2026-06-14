@@ -7,10 +7,9 @@ export default function AccountSetupComplete() {
       <div className="card-glow rounded-3xl max-w-md w-full p-10 text-center relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-20 pointer-events-none"
-          style={{ background: "var(--gradient-brand)", filter: "blur(120px)" }}
         />
         <div className="relative">
-          <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_30px_-4px_var(--brand-purple)]">
+          <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm">
             <span className="text-2xl">✓</span>
           </div>
           <h2 className="mt-5 text-2xl font-display font-bold tracking-tight">You're all set!</h2>

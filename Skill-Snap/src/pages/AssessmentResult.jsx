@@ -39,7 +39,7 @@ export default function AssessmentResult() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
         <h2 className="font-display text-2xl font-semibold">No results yet</h2>
         <p className="text-sm text-muted-foreground">Take some assessments to see your results here.</p>
-        <Link to="/assessment" className="text-sm text-brand-pink hover:opacity-80">
+        <Link to="/assessment" className="text-sm text-primary hover:opacity-80">
           Take an assessment →
         </Link>
       </div>
@@ -62,7 +62,7 @@ export default function AssessmentResult() {
     <div className="min-h-screen">
       <main className="mx-auto max-w-4xl px-6 py-12">
         <div className="text-center mb-10">
-          <Trophy className="mx-auto h-12 w-12 text-brand-pink mb-3" />
+          <Trophy className="mx-auto h-12 w-12 text-primary mb-3" />
           <h1 className="text-3xl font-display font-bold tracking-tight">Your Assessment Results</h1>
           <p className="text-sm text-muted-foreground mt-1">Based on your performance across all tracks</p>
         </div>
@@ -126,7 +126,7 @@ export default function AssessmentResult() {
         )}
 
         <div className="flex justify-center gap-3">
-          <Link to="/assessment" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-border text-sm hover:bg-surface-elevated">
+          <Link to="/assessment" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated">
             Take more assessments
           </Link>
           <Link to="/roadmap" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-gradient-brand text-primary-foreground text-sm font-medium">
