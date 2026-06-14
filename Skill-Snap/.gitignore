@@ -1,6 +1,9 @@
 # dependencies
 node_modules
 backend/node_modules
+node_modules/
+backend/node_modules/
+Skill-Snap/node_modules/
 
 # env files
 .env
