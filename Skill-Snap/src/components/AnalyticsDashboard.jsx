@@ -216,7 +216,7 @@ export default function AnalyticsDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${recentTrend >= 0 ? "bg-green-500/10 text-green-300" : "bg-red-500/10 text-red-300"}`}>
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${recentTrend >= 0 ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"}`}>
               <TrendingUp className="h-3 w-3" />
               {recentTrend >= 0 ? "+" : ""}{recentTrend}% trend
             </div>
@@ -266,17 +266,20 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#ffffff",
+                    background: "#1e293b",
                     border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    color: "#0f172a",
+                    color: "#f8fafc",
                     boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                   }}
                   labelStyle={{ color: "#64748b", marginBottom: 4 }}
                   formatter={(value) => [<span className="font-semibold text-primary">{value} skills</span>, "Completed"]}
                 />
                 <Area
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                   type="monotone"
                   dataKey="completed"
                   stroke="url(#skillLine)"
@@ -299,7 +302,7 @@ export default function AnalyticsDashboard() {
         </div>
 
         {/* Skill Distribution Donut */}
-        <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="rounded-2xl border border-border bg-surface p-5 animate-fade-in-up animate-delay-200">
           <h3 className="text-sm font-semibold text-foreground mb-1">Skill Distribution</h3>
           <p className="text-xs text-muted-foreground mb-4">Progress breakdown</p>
           {analytics.totalSkills > 0 ? (
@@ -335,11 +338,11 @@ export default function AnalyticsDashboard() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      background: "#ffffff",
+                      background: "#1e293b",
                       border: "1px solid rgba(0,0,0,0.1)",
                       borderRadius: "12px",
                       fontSize: "12px",
-                      color: "#0f172a",
+                      color: "#f8fafc",
                     }}
                     formatter={(value) => [<span className="font-semibold">{value}</span>, ""]}
                   />
@@ -374,9 +377,9 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Roadmap & Assessment Charts */}
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-6 animate-fade-in-up animate-delay-100">
         {/* Roadmap Completion */}
-        <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="rounded-2xl border border-border bg-surface p-5 animate-fade-in-up animate-delay-200">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-semibold text-foreground">Roadmap Progress</h3>
@@ -413,16 +416,19 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#ffffff",
+                    background: "#1e293b",
                     border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    color: "#0f172a",
+                    color: "#f8fafc",
                     boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                   }}
                   formatter={(value) => [<span className="font-semibold text-primary">{value}%</span>, "Progress"]}
                 />
                 <Area
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                   type="monotone"
                   dataKey="progress"
                   stroke="url(#roadmapLine)"
@@ -445,7 +451,7 @@ export default function AnalyticsDashboard() {
         </div>
 
         {/* Assessment Scores */}
-        <div className="rounded-2xl border border-border bg-surface p-5">
+        <div className="rounded-2xl border border-border bg-surface p-5 animate-fade-in-up animate-delay-200">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-sm font-semibold text-foreground">Assessment Scores</h3>
@@ -478,16 +484,19 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#ffffff",
+                    background: "#1e293b",
                     border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    color: "#0f172a",
+                    color: "#f8fafc",
                     boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                   }}
                   formatter={(value) => [<span className="font-semibold text-primary">{value}%</span>, "Accuracy"]}
                 />
                 <Line
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                   type="monotone"
                   dataKey="accuracy"
                   stroke={COLORS.pink}
@@ -510,7 +519,7 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Activity Heatmap-style Cards */}
-      <div className="rounded-2xl border border-border bg-surface p-5">
+      <div className="rounded-2xl border border-border bg-surface p-5 animate-fade-in-up animate-delay-200">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-semibold text-foreground">Recent Activity</h3>
