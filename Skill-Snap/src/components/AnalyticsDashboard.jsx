@@ -266,7 +266,7 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#1e293b",
+                    background: "#06402f",
                     border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
@@ -338,7 +338,7 @@ export default function AnalyticsDashboard() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      background: "#1e293b",
+                      background: "#06402f",
                       border: "1px solid rgba(0,0,0,0.1)",
                       borderRadius: "12px",
                       fontSize: "12px",
@@ -416,7 +416,7 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#1e293b",
+                    background: "#06402f",
                     border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
@@ -484,7 +484,7 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#1e293b",
+                    background: "#06402f",
                     border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
@@ -535,7 +535,7 @@ export default function AnalyticsDashboard() {
                 className="rounded-xl border border-border bg-surface p-4 transition-all hover:border-border hover:bg-surface-elevated"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${item.type === "assessment" ? "bg-primary/20 text-primary" : "bg-brand-pink/20 text-primary"}`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${item.type === "assessment" ? "bg-primary/20 text-primary" : "bg-primary/20 text-primary"}`}>
                     {item.type === "assessment" ? "Assessment" : "Roadmap"}
                   </span>
                   <span className="text-[10px] text-muted-foreground">

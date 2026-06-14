@@ -2,26 +2,31 @@
 
 :root {
   --radius: 1rem;
-  /* Soft dark theme based on modern SaaS dashboards (slate/charcoal) */
-  --background: #0f172a; /* slate-900 */
-  --foreground: #f8fafc; /* slate-50 */
-  --surface: #1e293b; /* slate-800 */
-  --surface-elevated: #334155; /* slate-700 */
-  --primary: #818cf8; /* indigo-400 */
-  --primary-foreground: #ffffff;
-  --muted: #334155; /* slate-700 */
-  --muted-foreground: #94a3b8; /* slate-400 */
-  --border: #334155; /* slate-700 */
-  --input: #1e293b; /* slate-800 */
-  --ring: #818cf8; /* indigo-400 */
+  /* User requested Framer style palette: #042e22 (Dark Green Base), #bef4be (Light Green Accent) */
+  --background: #042e22;
+  --foreground: #ecfdf5; /* Very light green/white for text readability */
 
-  --brand-purple: #c084fc; /* purple-400 */
-  --brand-pink: #f472b6; /* pink-400 */
-  --brand-indigo: #818cf8; /* indigo-400 */
+  --surface: #06402f; /* Slightly lighter than background */
+  --surface-elevated: #08523c; /* Elevated surface */
+
+  --primary: #bef4be;
+  --primary-foreground: #042e22; /* Dark text on light green accent */
+
+  --muted: #08523c;
+  --muted-foreground: #86efac; /* Soft green for muted text */
+
+  --border: #08523c;
+  --input: #06402f;
+  --ring: #bef4be;
+
+  /* Update brand colors to match the green theme instead of purple/pink */
+  --brand-purple: #86efac;
+  --brand-pink: #bef4be;
+  --brand-indigo: #4ade80;
 
   --gradient-brand: linear-gradient(135deg, var(--brand-indigo), var(--brand-purple) 50%, var(--brand-pink));
-  --gradient-glow: radial-gradient(60% 60% at 50% 0%, rgba(129, 140, 248, 0.15), transparent 70%);
-  --gradient-soft: linear-gradient(180deg, rgba(30, 41, 59, 1), rgba(15, 23, 42, 1));
+  --gradient-glow: radial-gradient(60% 60% at 50% 0%, rgba(190, 244, 190, 0.1), transparent 70%);
+  --gradient-soft: linear-gradient(180deg, rgba(6, 64, 47, 1), rgba(4, 46, 34, 1));
   --shadow-card: 0 10px 40px -20px rgba(0, 0, 0, 0.5);
 }
 
@@ -38,7 +43,7 @@
     background-attachment: fixed;
   }
   h1, h2, h3, h4 {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Lora', ui-serif, Georgia, serif;
     letter-spacing: -0.02em;
   }
 }
@@ -58,19 +63,19 @@
     transition: box-shadow .3s ease, transform .3s ease, border-color .3s ease;
   }
   .card-glow:hover {
-    border-color: rgba(129, 140, 248, 0.4);
-    box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.3), 0 20px 60px -20px rgba(129, 140, 248, 0.2);
+    border-color: rgba(190, 244, 190, 0.4);
+    box-shadow: 0 0 0 1px rgba(190, 244, 190, 0.3), 0 20px 60px -20px rgba(190, 244, 190, 0.2);
     transform: translateY(-2px);
   }
   .glass-panel {
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(6, 64, 47, 0.8);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
   }
   .grid-bg {
     background-image:
-      linear-gradient(rgba(51, 65, 85, 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(51, 65, 85, 0.5) 1px, transparent 1px);
+      linear-gradient(rgba(8, 82, 60, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(8, 82, 60, 0.5) 1px, transparent 1px);
     background-size: 48px 48px;
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 80%);
             mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 80%);
