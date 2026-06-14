@@ -44,11 +44,11 @@ const COLORS = {
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0f0f1a]/95 px-4 py-3 shadow-2xl backdrop-blur-xl">
-      {label && <p className="text-xs text-white/60 mb-2">{label}</p>}
+    <div className="rounded-xl border border-border bg-surface-elevated px-4 py-3 shadow-2xl backdrop-blur-xl">
+      {label && <p className="text-xs text-muted-foreground mb-2">{label}</p>}
       {payload.map((entry, index) => (
         <div key={index} className="flex items-center justify-between gap-4">
-          <span className="text-xs text-white/70">{entry.name}</span>
+          <span className="text-xs text-muted-foreground">{entry.name}</span>
           <span className="text-sm font-semibold" style={{ color: entry.color }}>
             {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
           </span>
@@ -59,17 +59,17 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const StatCard = ({ icon: IconComponent, label, value, sub, gradient }) => (
-  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5 transition-all hover:border-white/20 hover:shadow-lg hover:shadow-brand-purple/10">
+  <div className="relative overflow-hidden rounded-2xl border border-border bg-surface p-5 transition-all hover:border-border hover:shadow-lg hover:shadow-brand-purple/10">
     <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} opacity-20 blur-2xl`} />
     <div className="relative">
       <div className="flex items-center gap-2 mb-3">
         <div className={`rounded-lg bg-gradient-to-br ${gradient} p-2`}>
-          <IconComponent className="h-4 w-4 text-white" />
+          <IconComponent className="h-4 w-4 text-foreground" />
         </div>
-        <span className="text-xs text-white/60">{label}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
       </div>
       <div className="text-3xl font-display font-bold tracking-tight">{value}</div>
-      <div className="text-xs text-white/50 mt-1">{sub}</div>
+      <div className="text-xs text-muted-foreground mt-1">{sub}</div>
     </div>
   </div>
 );
@@ -135,11 +135,11 @@ export default function AnalyticsDashboard() {
               { to: "/assessment", icon: ClipboardCheck, title: "Take an assessment", desc: "Complete a core track or adaptive test.", color: "from-purple-500 to-pink-400" },
               { to: "/assessment", icon: Code2, title: "Practice coding", desc: "Try a coding challenge to track speed and accuracy.", color: "from-orange-500 to-yellow-400" },
             ].map((item) => (
-              <Link key={item.to} to={item.to} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 text-left transition-all hover:border-white/20 hover:shadow-lg hover:shadow-brand-purple/10">
+              <Link key={item.to} to={item.to} className="group relative overflow-hidden rounded-2xl border border-border bg-surface p-6 text-left transition-all hover:border-border hover:shadow-lg hover:shadow-brand-purple/10">
                 <div className={`absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br ${item.color} opacity-20 blur-2xl transition-opacity group-hover:opacity-30`} />
                 <div className="relative">
                   <div className={`inline-flex h-10 w-10 rounded-xl bg-gradient-to-br ${item.color} grid place-items-center mb-4 shadow-lg`}>
-                    <item.icon className="h-5 w-5 text-white" />
+                    <item.icon className="h-5 w-5 text-foreground" />
                   </div>
                   <h3 className="text-base font-semibold mb-1">{item.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -204,12 +204,12 @@ export default function AnalyticsDashboard() {
       </div>
 
       {/* Performance Summary Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-brand-purple/20 via-brand-pink/20 to-blue-500/20 p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-r from-brand-purple/20 via-brand-pink/20 to-blue-500/20 p-6">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50" />
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-display font-bold">Performance Overview</h3>
-            <p className="text-xs text-white/60 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Level: <span className="text-primary font-medium capitalize">{analytics.level || "beginner"}</span> ·
               Accuracy: <span className="text-primary font-medium">{analytics.accuracyScore || 0}%</span> ·
               Speed: <span className="text-cyan-400 font-medium">{analytics.speedScore || 0}</span>
@@ -227,11 +227,11 @@ export default function AnalyticsDashboard() {
       {/* Charts Row */}
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Skill Growth - takes 2 columns */}
-        <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
+        <div className="lg:col-span-2 rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-semibold text-white/90">Skill Growth Over Time</h3>
-              <p className="text-xs text-white/50 mt-0.5">Cumulative skills completed</p>
+              <h3 className="text-sm font-semibold text-foreground">Skill Growth Over Time</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Cumulative skills completed</p>
             </div>
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-medium">
               <TrendingUp className="h-3 w-3" />
@@ -243,7 +243,7 @@ export default function AnalyticsDashboard() {
               <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="skillGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.purple} stopOpacity={0.4} />
+                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.15} />
                     <stop offset="100%" stopColor={COLORS.purple} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="skillLine" x1="0" y1="0" x2="1" y2="0">
@@ -253,27 +253,27 @@ export default function AnalyticsDashboard() {
                 </defs>
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 10, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
                   dy={8}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 10, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
                   dx={-8}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "rgba(15,15,26,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    color: "white",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                    color: "#0f172a",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                   }}
-                  labelStyle={{ color: "rgba(255,255,255,0.6)", marginBottom: 4 }}
+                  labelStyle={{ color: "#64748b", marginBottom: 4 }}
                   formatter={(value) => [<span className="font-semibold text-primary">{value} skills</span>, "Completed"]}
                 />
                 <Area
@@ -290,18 +290,18 @@ export default function AnalyticsDashboard() {
             </ResponsiveContainer>
           ) : (
             <div className="flex flex-col items-center justify-center py-12">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <TrendingUp className="h-5 w-5 text-white/30" />
+              <div className="h-12 w-12 rounded-full bg-surface-elevated flex items-center justify-center mb-3">
+                <TrendingUp className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-xs text-white/50">Complete more skills to see growth charts</p>
+              <p className="text-xs text-muted-foreground">Complete more skills to see growth charts</p>
             </div>
           )}
         </div>
 
         {/* Skill Distribution Donut */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
-          <h3 className="text-sm font-semibold text-white/90 mb-1">Skill Distribution</h3>
-          <p className="text-xs text-white/50 mb-4">Progress breakdown</p>
+        <div className="rounded-2xl border border-border bg-surface p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-1">Skill Distribution</h3>
+          <p className="text-xs text-muted-foreground mb-4">Progress breakdown</p>
           {analytics.totalSkills > 0 ? (
             <div className="flex flex-col items-center">
               <ResponsiveContainer width="100%" height={180}>
@@ -312,8 +312,8 @@ export default function AnalyticsDashboard() {
                       <stop offset="100%" stopColor={COLORS.pink} />
                     </linearGradient>
                     <linearGradient id="donutGray" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
-                      <stop offset="100%" stopColor="rgba(255,255,255,0.05)" />
+                      <stop offset="0%" stopColor="rgba(0,0,0,0.1)" />
+                      <stop offset="100%" stopColor="rgba(0,0,0,0.05)" />
                     </linearGradient>
                   </defs>
                   <Pie
@@ -335,11 +335,11 @@ export default function AnalyticsDashboard() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      background: "rgba(15,15,26,0.95)",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      background: "#ffffff",
+                      border: "1px solid rgba(0,0,0,0.1)",
                       borderRadius: "12px",
                       fontSize: "12px",
-                      color: "white",
+                      color: "#0f172a",
                     }}
                     formatter={(value) => [<span className="font-semibold">{value}</span>, ""]}
                   />
@@ -348,26 +348,26 @@ export default function AnalyticsDashboard() {
               <div className="flex items-center justify-center gap-6 mt-2">
                 <div className="flex items-center gap-2">
                   <div className="h-3 w-3 rounded-full bg-gradient-to-br from-brand-purple to-brand-pink" />
-                  <span className="text-xs text-white/60">Done</span>
+                  <span className="text-xs text-muted-foreground">Done</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-white/10" />
-                  <span className="text-xs text-white/60">Remaining</span>
+                  <div className="h-3 w-3 rounded-full bg-surface-elevated" />
+                  <span className="text-xs text-muted-foreground">Remaining</span>
                 </div>
               </div>
               <div className="mt-3 text-center">
-                <div className="text-2xl font-display font-bold text-white">
+                <div className="text-2xl font-display font-bold text-foreground">
                   {Math.round((analytics.completedSkills / Math.max(1, analytics.totalSkills)) * 100)}%
                 </div>
-                <div className="text-[10px] text-white/50 uppercase tracking-wider">Complete</div>
+                <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Complete</div>
               </div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-8">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <Target className="h-5 w-5 text-white/30" />
+              <div className="h-12 w-12 rounded-full bg-surface-elevated flex items-center justify-center mb-3">
+                <Target className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-xs text-white/50">Start a roadmap to track progress</p>
+              <p className="text-xs text-muted-foreground">Start a roadmap to track progress</p>
             </div>
           )}
         </div>
@@ -376,13 +376,13 @@ export default function AnalyticsDashboard() {
       {/* Roadmap & Assessment Charts */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Roadmap Completion */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
+        <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-semibold text-white/90">Roadmap Progress</h3>
-              <p className="text-xs text-white/50 mt-0.5">Completion by roadmap</p>
+              <h3 className="text-sm font-semibold text-foreground">Roadmap Progress</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Completion by roadmap</p>
             </div>
-            <BookOpen className="h-4 w-4 text-white/30" />
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
           </div>
           {roadmapData.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
@@ -393,19 +393,19 @@ export default function AnalyticsDashboard() {
                     <stop offset="100%" stopColor={COLORS.cyan} />
                   </linearGradient>
                   <linearGradient id="roadmapArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.35} />
+                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.15} />
                     <stop offset="100%" stopColor={COLORS.blue} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 9, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
                   dy={8}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 10, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
                   dx={-8}
@@ -413,12 +413,12 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "rgba(15,15,26,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    color: "white",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                    color: "#0f172a",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                   }}
                   formatter={(value) => [<span className="font-semibold text-primary">{value}%</span>, "Progress"]}
                 />
@@ -436,41 +436,41 @@ export default function AnalyticsDashboard() {
             </ResponsiveContainer>
           ) : (
             <div className="flex flex-col items-center justify-center py-10">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <BookOpen className="h-5 w-5 text-white/30" />
+              <div className="h-12 w-12 rounded-full bg-surface-elevated flex items-center justify-center mb-3">
+                <BookOpen className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-xs text-white/50">Start a roadmap to see progress</p>
+              <p className="text-xs text-muted-foreground">Start a roadmap to see progress</p>
             </div>
           )}
         </div>
 
         {/* Assessment Scores */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
+        <div className="rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-semibold text-white/90">Assessment Scores</h3>
-              <p className="text-xs text-white/50 mt-0.5">Accuracy over time</p>
+              <h3 className="text-sm font-semibold text-foreground">Assessment Scores</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Accuracy over time</p>
             </div>
-            <ClipboardCheck className="h-4 w-4 text-white/30" />
+            <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
           </div>
           {assessmentData.length > 0 ? (
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={assessmentData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.pink} stopOpacity={0.3} />
+                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.15} />
                     <stop offset="100%" stopColor={COLORS.pink} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 9, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
                   dy={8}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
+                  tick={{ fontSize: 10, fill: "#64748b" }}
                   axisLine={false}
                   tickLine={false}
                   dx={-8}
@@ -478,12 +478,12 @@ export default function AnalyticsDashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "rgba(15,15,26,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    background: "#ffffff",
+                    border: "1px solid rgba(0,0,0,0.1)",
                     borderRadius: "12px",
                     fontSize: "12px",
-                    color: "white",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+                    color: "#0f172a",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
                   }}
                   formatter={(value) => [<span className="font-semibold text-primary">{value}%</span>, "Accuracy"]}
                 />
@@ -500,36 +500,36 @@ export default function AnalyticsDashboard() {
             </ResponsiveContainer>
           ) : (
             <div className="flex flex-col items-center justify-center py-10">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <ClipboardCheck className="h-5 w-5 text-white/30" />
+              <div className="h-12 w-12 rounded-full bg-surface-elevated flex items-center justify-center mb-3">
+                <ClipboardCheck className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-xs text-white/50">Take assessments to see score trends</p>
+              <p className="text-xs text-muted-foreground">Take assessments to see score trends</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Activity Heatmap-style Cards */}
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
+      <div className="rounded-2xl border border-border bg-surface p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-white/90">Recent Activity</h3>
-            <p className="text-xs text-white/50 mt-0.5">Latest assessments and progress</p>
+            <h3 className="text-sm font-semibold text-foreground">Recent Activity</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Latest assessments and progress</p>
           </div>
-          <Trophy className="h-4 w-4 text-white/30" />
+          <Trophy className="h-4 w-4 text-muted-foreground" />
         </div>
         {assessments.length > 0 || roadmaps.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {[...assessments.slice(-4).reverse(), ...roadmaps.slice(-2).reverse()].map((item, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-all hover:border-white/10 hover:bg-white/[0.04]"
+                className="rounded-xl border border-border bg-surface p-4 transition-all hover:border-border hover:bg-surface-elevated"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${item.type === "assessment" ? "bg-primary/20 text-primary" : "bg-brand-pink/20 text-primary"}`}>
                     {item.type === "assessment" ? "Assessment" : "Roadmap"}
                   </span>
-                  <span className="text-[10px] text-white/40">
+                  <span className="text-[10px] text-muted-foreground">
                     {(() => {
                       const d = item.date || item.createdAt;
                       if (!d) return "Unknown";
@@ -539,10 +539,10 @@ export default function AnalyticsDashboard() {
                     })()}
                   </span>
                 </div>
-                <div className="text-sm font-medium text-white/90 mb-1">
+                <div className="text-sm font-medium text-foreground mb-1">
                   {item.type === "assessment" ? `${item.accuracy}% accuracy` : `${item.progress || 0}% complete`}
                 </div>
-                <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                <div className="h-1.5 rounded-full bg-surface-elevated overflow-hidden">
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-pink transition-all"
                     style={{ width: `${item.type === "assessment" ? item.accuracy : item.progress || 0}%` }}
@@ -553,10 +553,10 @@ export default function AnalyticsDashboard() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-8">
-            <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-              <Flame className="h-5 w-5 text-white/30" />
+            <div className="h-12 w-12 rounded-full bg-surface-elevated flex items-center justify-center mb-3">
+              <Flame className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="text-xs text-white/50">No activity yet. Start learning to see insights</p>
+            <p className="text-xs text-muted-foreground">No activity yet. Start learning to see insights</p>
           </div>
         )}
       </div>
