@@ -2,9 +2,13 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx,html}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
       colors: {
-        primary: 'var(--color-primary)',
-        accent: 'var(--color-accent)'
+        primary: 'var(--primary)',
+        accent: 'var(--ring)'
       }
     }
   },

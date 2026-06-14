@@ -314,7 +314,7 @@ export default function AssessmentPage() {
     <div className="min-h-screen">
       <main className="mx-auto max-w-6xl px-6 py-12">
         <div className="text-center mb-10">
-          <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_30px_-4px_var(--brand-purple)]">
+          <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm">
             <Zap className="h-6 w-6 text-primary-foreground" />
           </div>
           <h1 className="mt-5 text-3xl font-display font-bold tracking-tight">
@@ -330,10 +330,10 @@ export default function AssessmentPage() {
           <button
             onClick={() => setActiveTab("adaptive")}
             className={`card-glow rounded-2xl p-4 text-left ${
-              activeTab === "adaptive" ? "border-brand-purple/70" : ""
+              activeTab === "adaptive" ? "border-primary/70" : ""
             }`}
           >
-            <Sparkles className="h-5 w-5 text-brand-pink mb-2" />
+            <Sparkles className="h-5 w-5 text-primary mb-2" />
             <h3 className="font-semibold">Roadmap Progress</h3>
             <p className="text-xs text-muted-foreground mt-1">
               Questions adapt to pending roadmap skills.
@@ -342,10 +342,10 @@ export default function AssessmentPage() {
           <button
             onClick={() => setActiveTab("core")}
             className={`card-glow rounded-2xl p-4 text-left ${
-              activeTab === "core" ? "border-brand-purple/70" : ""
+              activeTab === "core" ? "border-primary/70" : ""
             }`}
           >
-            <FlaskConical className="h-5 w-5 text-brand-pink mb-2" />
+            <FlaskConical className="h-5 w-5 text-primary mb-2" />
             <h3 className="font-semibold">Core Tracks</h3>
             <p className="text-xs text-muted-foreground mt-1">
               Frontend, backend, DSA, and AI/ML tests.
@@ -354,10 +354,10 @@ export default function AssessmentPage() {
           <button
             onClick={() => setActiveTab("coding")}
             className={`card-glow rounded-2xl p-4 text-left ${
-              activeTab === "coding" ? "border-brand-purple/70" : ""
+              activeTab === "coding" ? "border-primary/70" : ""
             }`}
           >
-            <Code2 className="h-5 w-5 text-brand-pink mb-2" />
+            <Code2 className="h-5 w-5 text-primary mb-2" />
             <h3 className="font-semibold">Coding Challenge</h3>
             <p className="text-xs text-muted-foreground mt-1">
               Track output, speed, attempts, and errors.
@@ -438,14 +438,14 @@ export default function AssessmentPage() {
                   <div className="rounded-2xl border border-border bg-surface/40 p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="text-[10px] uppercase tracking-[0.2em] text-brand-pink mb-2">
+                        <div className="text-[10px] uppercase tracking-[0.2em] text-primary mb-2">
                           {currentAdaptiveQ.roadmapName} · {currentAdaptiveQ.skill}
                         </div>
                         <h3 className="text-sm font-semibold">
                           {adaptiveQIndex + 1}. {currentAdaptiveQ.question}
                         </h3>
                       </div>
-                      <span className="text-[10px] rounded-full bg-brand-purple/10 text-brand-pink px-2 py-1">
+                      <span className="text-[10px] rounded-full bg-primary/10 text-primary px-2 py-1">
                         {currentAdaptiveQ.type}
                       </span>
                     </div>
@@ -598,7 +598,7 @@ export default function AssessmentPage() {
                 </div>
 
                 {currentCoreQ && (
-                  <div className="rounded-2xl border border-brand-purple/70 bg-surface/40 p-6">
+                  <div className="rounded-2xl border border-primary/70 bg-surface/40 p-6">
                     <h2 className="text-2xl font-display font-semibold leading-snug">
                       {currentCoreQ.question}
                     </h2>
@@ -607,10 +607,10 @@ export default function AssessmentPage() {
                         <button
                           key={idx}
                           onClick={() => handleCoreAnswer(idx)}
-                          className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-brand-purple hover:bg-surface-elevated transition group"
+                          className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-brand-purple group-hover:text-brand-pink shrink-0">
+                            <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
                               {String.fromCharCode(65 + idx)}
                             </span>
                             <span className="text-sm">{opt.text}</span>
@@ -710,7 +710,7 @@ export default function AssessmentPage() {
                   <div className="rounded-2xl border border-border bg-surface/40 p-5">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-semibold">{coding.title}</h3>
-                      <span className="text-xs rounded-full bg-brand-purple/10 text-brand-pink px-2 py-1">
+                      <span className="text-xs rounded-full bg-primary/10 text-primary px-2 py-1">
                         {coding.difficulty}
                       </span>
                     </div>
@@ -770,7 +770,7 @@ export default function AssessmentPage() {
                     <textarea
                       value={codingCode}
                       onChange={(e) => setCodingCode(e.target.value)}
-                      className="mt-2 min-h-56 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-brand-purple"
+                      className="mt-2 min-h-56 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-primary"
                       placeholder="Paste or write your solution here"
                     />
                   </div>
@@ -781,7 +781,7 @@ export default function AssessmentPage() {
                     <textarea
                       value={codingOutput}
                       onChange={(e) => setCodingOutput(e.target.value)}
-                      className="mt-2 min-h-28 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-brand-purple"
+                      className="mt-2 min-h-28 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-primary"
                       placeholder="Example: 1\n2\nFizz\n4\nBuzz"
                     />
                   </div>

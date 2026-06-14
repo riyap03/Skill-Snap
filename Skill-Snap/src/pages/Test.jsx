@@ -120,7 +120,7 @@ export default function Test() {
       <div className="min-h-screen">
         <main className="mx-auto max-w-4xl px-6 py-12">
           <div className="text-center mb-10">
-            <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_30px_-4px_var(--brand-purple)] mx-auto">
+            <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm mx-auto">
               <Sparkles className="h-6 w-6 text-primary-foreground" />
             </div>
             <h1 className="mt-5 text-3xl font-display font-bold tracking-tight">
@@ -137,11 +137,11 @@ export default function Test() {
                 key={tk}
                 onClick={() => setTrack(tk)}
                 disabled={submitting}
-                className={`card-glow rounded-2xl p-6 text-left transition-all hover:border-brand-purple/60 disabled:opacity-50`}
+                className={`card-glow rounded-2xl p-6 text-left transition-all hover:border-primary/60 disabled:opacity-50`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-brand-pink mb-1.5">
+                    <div className="text-xs uppercase tracking-[0.2em] text-primary mb-1.5">
                       {tk === "fe" || tk === "frontend" ? "Frontend" : tk === "be" || tk === "backend" ? "Backend" : tk === "dsa" || tk === "dsa" ? "DSA" : "AI / ML"}
                     </div>
                     <h3 className="text-lg font-semibold">
@@ -166,7 +166,7 @@ export default function Test() {
               <button
                 onClick={() => { startTest(); loadQuestions(track); }}
                 disabled={submitting}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-brand text-primary-foreground text-sm font-medium shadow-[0_0_24px_-6px_var(--brand-purple)] disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-brand text-primary-foreground text-sm font-medium shadow-sm disabled:opacity-60"
               >
                 {submitting ? "Loading..." : "Start Assessment"} <ArrowRight className="h-4 w-4" />
               </button>
@@ -196,7 +196,7 @@ export default function Test() {
 
           {currentQ && (
             <div key={qIndex} className="card-glow rounded-3xl p-8">
-              <div className="text-xs uppercase tracking-[0.2em] text-brand-pink">{track}</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-primary">{track}</div>
               <h2 className="mt-3 text-2xl sm:text-3xl font-display font-semibold leading-snug">
                 {currentQ.question}
               </h2>
@@ -205,10 +205,10 @@ export default function Test() {
                   <button
                     key={idx}
                     onClick={() => handleAnswer(idx)}
-                    className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-brand-purple hover:bg-surface-elevated transition group"
+                    className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-brand-purple group-hover:text-brand-pink shrink-0">
+                      <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
                         {String.fromCharCode(65 + idx)}
                       </span>
                       <span className="text-sm">{opt.text}</span>
@@ -238,10 +238,9 @@ export default function Test() {
         <div className="card-glow rounded-3xl p-10 text-center relative overflow-hidden">
           <div
             className="absolute inset-0 opacity-20 pointer-events-none"
-            style={{ background: "var(--gradient-brand)", filter: "blur(120px)" }}
           />
           <div className="relative">
-            <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_30px_-4px_var(--brand-purple)]">
+            <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm">
               <CheckCircle2 className="h-6 w-6 text-primary-foreground" />
             </div>
             <h2 className="mt-5 text-3xl font-display font-bold tracking-tight">
@@ -255,7 +254,7 @@ export default function Test() {
                 <div className="mt-1 text-2xl font-display font-bold">
                   {score} / {questions.length}
                 </div>
-                <div className="text-xs text-brand-pink mt-1">{pct}% correct</div>
+                <div className="text-xs text-primary mt-1">{pct}% correct</div>
               </div>
               <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                 <div className="text-xs text-muted-foreground">Skill Level</div>
@@ -273,7 +272,7 @@ export default function Test() {
               <div className="mt-6 grid sm:grid-cols-2 gap-4 text-left">
                 <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Zap className="h-4 w-4 text-brand-pink" /> Strong areas
+                    <Zap className="h-4 w-4 text-primary" /> Strong areas
                   </div>
                   <ul className="mt-2 text-sm text-muted-foreground space-y-1">
                     {(result.strongTopics?.length > 0 ? result.strongTopics : ["Good pacing", "Overall understanding"]).map((t, i) => (
@@ -283,7 +282,7 @@ export default function Test() {
                 </div>
                 <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    <Sparkles className="h-4 w-4 text-brand-pink" /> Focus areas
+                    <Sparkles className="h-4 w-4 text-primary" /> Focus areas
                   </div>
                   <ul className="mt-2 text-sm text-muted-foreground space-y-1">
                     {(result.weakTopics?.length > 0 ? result.weakTopics : ["Practice more", "Review fundamentals"]).map((t, i) => (

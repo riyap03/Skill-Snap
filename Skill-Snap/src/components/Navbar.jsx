@@ -7,7 +7,7 @@ import { Sparkles, Bell, ChevronDown, LogOut, Trash2, FlaskConical } from "lucid
 function Logo({ to = "/" }) {
   return (
     <Link to={to} className="flex items-center gap-2 group">
-      <div className="relative h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-[0_0_20px_-4px_var(--brand-purple)]">
+      <div className="relative h-8 w-8 rounded-lg bg-gradient-brand grid place-items-center shadow-sm">
         <Sparkles className="h-4 w-4 text-primary-foreground" />
       </div>
       <span className="font-display text-lg font-semibold tracking-tight">
@@ -117,7 +117,7 @@ export default function Navbar() {
               <>
                 <Link
                   to="/dashboard"
-                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90"
+                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-sm hover:opacity-90"
                 >
                   Dashboard
                 </Link>
@@ -166,7 +166,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   to="/dashboard"
-                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90"
+                  className="px-4 py-2 text-sm rounded-md bg-gradient-brand text-primary-foreground shadow-sm hover:opacity-90"
                 >
                   Get Started
                 </Link>

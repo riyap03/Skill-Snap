@@ -210,8 +210,8 @@ export default function AnalyticsDashboard() {
           <div>
             <h3 className="text-lg font-display font-bold">Performance Overview</h3>
             <p className="text-xs text-white/60 mt-1">
-              Level: <span className="text-brand-pink font-medium capitalize">{analytics.level || "beginner"}</span> · 
-              Accuracy: <span className="text-brand-purple font-medium">{analytics.accuracyScore || 0}%</span> · 
+              Level: <span className="text-brand-pink font-medium capitalize">{analytics.level || "beginner"}</span> ·
+              Accuracy: <span className="text-brand-purple font-medium">{analytics.accuracyScore || 0}%</span> ·
               Speed: <span className="text-cyan-400 font-medium">{analytics.speedScore || 0}</span>
             </p>
           </div>
@@ -243,12 +243,12 @@ export default function AnalyticsDashboard() {
               <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="skillGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.purple} stopOpacity={0.4} />
-                    <stop offset="100%" stopColor={COLORS.purple} stopOpacity={0} />
+                    <stop offset="0%" stopColor={"#3b82f6"} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={"#3b82f6"} stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="skillLine" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor={COLORS.purple} />
-                    <stop offset="100%" stopColor={COLORS.pink} />
+                    <stop offset="0%" stopColor={"#3b82f6"} />
+                    <stop offset="100%" stopColor={"#8b5cf6"} />
                   </linearGradient>
                 </defs>
                 <XAxis
@@ -282,8 +282,8 @@ export default function AnalyticsDashboard() {
                   stroke="url(#skillLine)"
                   strokeWidth={3}
                   fill="url(#skillGrad)"
-                  dot={{ r: 4, fill: COLORS.purple, strokeWidth: 2, stroke: "#0f0f1a" }}
-                  activeDot={{ r: 6, fill: COLORS.pink, strokeWidth: 2, stroke: "#0f0f1a" }}
+                  dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2, stroke: "#0f0f1a" }}
+                  activeDot={{ r: 6, fill: "#8b5cf6", strokeWidth: 2, stroke: "#0f0f1a" }}
                   name="Completed"
                 />
               </AreaChart>
@@ -308,8 +308,8 @@ export default function AnalyticsDashboard() {
                 <PieChart>
                   <defs>
                     <linearGradient id="donutPurple" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor={COLORS.purple} />
-                      <stop offset="100%" stopColor={COLORS.pink} />
+                      <stop offset="0%" stopColor={"#3b82f6"} />
+                      <stop offset="100%" stopColor={"#8b5cf6"} />
                     </linearGradient>
                     <linearGradient id="donutGray" x1="0" y1="0" x2="1" y2="1">
                       <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
@@ -389,12 +389,12 @@ export default function AnalyticsDashboard() {
               <AreaChart data={roadmapData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="roadmapLine" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor={COLORS.blue} />
+                    <stop offset="0%" stopColor={"#06b6d4"} />
                     <stop offset="100%" stopColor={COLORS.cyan} />
                   </linearGradient>
                   <linearGradient id="roadmapArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.35} />
-                    <stop offset="100%" stopColor={COLORS.blue} stopOpacity={0} />
+                    <stop offset="0%" stopColor={"#06b6d4"} stopOpacity={0.35} />
+                    <stop offset="100%" stopColor={"#06b6d4"} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
@@ -428,7 +428,7 @@ export default function AnalyticsDashboard() {
                   stroke="url(#roadmapLine)"
                   strokeWidth={3}
                   fill="url(#roadmapArea)"
-                  dot={{ r: 4, fill: COLORS.blue, strokeWidth: 2, stroke: "#0f0f1a" }}
+                  dot={{ r: 4, fill: "#06b6d4", strokeWidth: 2, stroke: "#0f0f1a" }}
                   activeDot={{ r: 6, fill: COLORS.cyan, strokeWidth: 2, stroke: "#0f0f1a" }}
                   name="Progress %"
                 />
@@ -458,8 +458,8 @@ export default function AnalyticsDashboard() {
               <LineChart data={assessmentData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.pink} stopOpacity={0.3} />
-                    <stop offset="100%" stopColor={COLORS.pink} stopOpacity={0} />
+                    <stop offset="0%" stopColor={"#8b5cf6"} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={"#8b5cf6"} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <XAxis
@@ -490,10 +490,10 @@ export default function AnalyticsDashboard() {
                 <Line
                   type="monotone"
                   dataKey="accuracy"
-                  stroke={COLORS.pink}
+                  stroke={"#8b5cf6"}
                   strokeWidth={3}
-                  dot={{ r: 4, fill: COLORS.pink, strokeWidth: 2, stroke: "#0f0f1a" }}
-                  activeDot={{ r: 6, fill: "#fff", strokeWidth: 2, stroke: COLORS.pink }}
+                  dot={{ r: 4, fill: "#8b5cf6", strokeWidth: 2, stroke: "#0f0f1a" }}
+                  activeDot={{ r: 6, fill: "#fff", strokeWidth: 2, stroke: "#8b5cf6" }}
                   name="Accuracy %"
                 />
               </LineChart>

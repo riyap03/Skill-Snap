@@ -261,7 +261,7 @@ export default function Portfolio() {
               <button
                 onClick={generatePortfolioAI}
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-brand px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90 disabled:opacity-60 sm:col-span-2 lg:col-span-1"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-brand px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm hover:opacity-90 disabled:opacity-60 sm:col-span-2 lg:col-span-1"
               >
                 <Sparkles className="h-4 w-4" />
                 {loading ? "Generating..." : "Generate AI Portfolio"}
@@ -271,7 +271,7 @@ export default function Portfolio() {
 
           <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-border bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 text-sm font-medium">
-              <Palette className="h-4 w-4 text-brand-pink" />
+              <Palette className="h-4 w-4 text-primary" />
               Portfolio theme
             </div>
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
@@ -281,7 +281,7 @@ export default function Portfolio() {
                   onClick={() => handleThemeChange(theme.key)}
                   className={`rounded-xl border px-3 py-2 text-sm transition ${
                     selectedTheme === theme.key
-                      ? "border-brand-purple bg-brand-purple/10 text-foreground"
+                      ? "border-primary bg-primary/10 text-foreground"
                       : "border-border text-muted-foreground hover:bg-surface-elevated"
                   }`}
                 >
@@ -323,7 +323,7 @@ export default function Portfolio() {
                       <label className="text-xs font-medium">Project Title</label>
                       <input
                         type="text"
-                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.title}
                         onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                         required
@@ -333,7 +333,7 @@ export default function Portfolio() {
                       <label className="text-xs font-medium">Date</label>
                       <input
                         type="month"
-                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.date}
                         onChange={(e) => setNewProject({ ...newProject, date: e.target.value })}
                         required
@@ -344,7 +344,7 @@ export default function Portfolio() {
                   <div className="mt-3">
                     <label className="text-xs font-medium">Description</label>
                     <textarea
-                      className="mt-1 w-full min-h-24 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                      className="mt-1 w-full min-h-24 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                       rows={3}
                       value={newProject.description}
                       onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
@@ -358,7 +358,7 @@ export default function Portfolio() {
                       <input
                         type="text"
                         placeholder="React, Node.js, MongoDB"
-                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.skills}
                         onChange={(e) => setNewProject({ ...newProject, skills: e.target.value })}
                         required
@@ -369,7 +369,7 @@ export default function Portfolio() {
                       <input
                         type="url"
                         placeholder="https://example.com"
-                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-purple"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.link}
                         onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
                       />
@@ -410,7 +410,7 @@ export default function Portfolio() {
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <h3 className="font-medium text-sm">{project.title}</h3>
-                          <span className="rounded-full bg-brand-purple/10 px-2 py-0.5 text-[11px] text-brand-pink">
+                          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] text-primary">
                             {formatDate(project.date)}
                           </span>
                         </div>
@@ -459,7 +459,7 @@ export default function Portfolio() {
 
             {aiContent && (
               <section className="card-glow rounded-3xl p-5 sm:p-6">
-                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-brand-pink">
+                <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
                   <Sparkles className="h-4 w-4" /> AI Portfolio Summary
                 </div>
                 <pre className="whitespace-pre-wrap rounded-2xl border border-border bg-surface/50 p-4 text-xs leading-relaxed text-muted-foreground">

@@ -84,7 +84,7 @@ export default function Dashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-sm text-muted-foreground mb-4">Your session has expired. Please log in again.</p>
-          <Link to="/login" className="text-sm text-brand-pink hover:opacity-80">Sign in →</Link>
+          <Link to="/login" className="text-sm text-primary hover:opacity-80">Sign in →</Link>
         </div>
       </div>
     );
@@ -98,7 +98,6 @@ export default function Dashboard() {
         <div className="relative card-glow rounded-3xl p-8 sm:p-12 overflow-hidden mb-8">
           <div
             className="absolute -top-20 -right-20 h-72 w-72 rounded-full opacity-20 pointer-events-none"
-            style={{ background: "var(--gradient-brand)", filter: "blur(80px)" }}
           />
           <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
@@ -115,7 +114,7 @@ export default function Dashboard() {
             {!testStatus?.hasTakenTest && (
               <Link
                 to="/test"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-brand text-primary-foreground text-sm font-medium shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90 shrink-0"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-brand text-primary-foreground text-sm font-medium shadow-sm hover:opacity-90 shrink-0"
               >
                 <Sparkles className="h-4 w-4" /> Take Skill Test
               </Link>
@@ -123,7 +122,7 @@ export default function Dashboard() {
             {testStatus?.hasTakenTest && (
               <Link
                 to="/roadmap"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-brand text-primary-foreground text-sm font-medium shadow-[0_0_24px_-6px_var(--brand-purple)] hover:opacity-90 shrink-0"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-brand text-primary-foreground text-sm font-medium shadow-sm hover:opacity-90 shrink-0"
               >
                 Continue Learning <ArrowRight className="h-4 w-4" />
               </Link>
@@ -165,11 +164,11 @@ export default function Dashboard() {
           ].map((stat) => (
             <div key={stat.label} className="card-glow rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
-                <div className="h-9 w-9 rounded-xl bg-gradient-brand grid place-items-center shadow-[0_0_16px_-4px_var(--brand-purple)]">
+                <div className="h-9 w-9 rounded-xl bg-gradient-brand grid place-items-center shadow-sm">
                   <stat.icon className="h-4 w-4 text-primary-foreground" />
                 </div>
                 {stat.ok
-                  ? <CheckCircle2 className="h-4 w-4 text-brand-pink" />
+                  ? <CheckCircle2 className="h-4 w-4 text-primary" />
                   : <AlertCircle className="h-4 w-4 text-muted-foreground" />
                 }
               </div>
@@ -186,7 +185,7 @@ export default function Dashboard() {
           <div className="lg:col-span-2 card-glow rounded-2xl p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-semibold">Your Roadmaps</h2>
-              <Link to="/roadmap" className="text-xs text-brand-pink hover:opacity-80 flex items-center gap-1">
+              <Link to="/roadmap" className="text-xs text-primary hover:opacity-80 flex items-center gap-1">
                 View all <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
@@ -195,7 +194,7 @@ export default function Dashboard() {
               <div className="text-center py-10">
                 <Map className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
                 <p className="text-sm text-muted-foreground">No roadmaps yet.</p>
-                <Link to="/roadmap" className="mt-3 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80">
+                <Link to="/roadmap" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80">
                   Browse roadmaps <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
@@ -212,7 +211,7 @@ export default function Dashboard() {
                       </div>
                       <div className="h-2 rounded-full bg-surface-elevated overflow-hidden">
                         <div
-                          className="h-full bg-gradient-brand shadow-[0_0_8px_var(--brand-purple)] transition-all duration-700"
+                          className="h-full bg-gradient-brand shadow-sm transition-all duration-700"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -243,7 +242,7 @@ export default function Dashboard() {
             {/* SKILL TEST STATUS */}
             <div className="card-glow rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles className="h-4 w-4 text-brand-pink" />
+                <Sparkles className="h-4 w-4 text-primary" />
                 <h2 className="font-semibold text-sm">Skill Assessment</h2>
               </div>
               {testStatus?.hasTakenTest ? (
@@ -254,7 +253,7 @@ export default function Dashboard() {
                   <p className="text-xs text-muted-foreground">
                     SkillSnap has personalized your roadmaps based on your results.
                   </p>
-                  <Link to="/test" className="mt-3 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80">
+                  <Link to="/test" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80">
                     Retake test <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
@@ -276,7 +275,7 @@ export default function Dashboard() {
             {/* PORTFOLIO */}
             <div className="card-glow rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-3">
-                <Briefcase className="h-4 w-4 text-brand-pink" />
+                <Briefcase className="h-4 w-4 text-primary" />
                 <h2 className="font-semibold text-sm">Portfolio</h2>
               </div>
               {projectCount > 0 ? (
@@ -289,7 +288,7 @@ export default function Dashboard() {
                       {p.title}
                     </div>
                   ))}
-                  <Link to="/portfolio" className="mt-3 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80">
+                  <Link to="/portfolio" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80">
                     Edit portfolio <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>

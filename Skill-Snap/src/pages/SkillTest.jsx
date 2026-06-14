@@ -93,7 +93,7 @@ export default function SkillTest() {
   if (phase === "loading") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-        <Loader2 className="h-6 w-6 animate-spin text-brand-pink" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
         <p className="text-sm text-muted-foreground">Preparing your skill test...</p>
       </div>
     );
@@ -104,7 +104,7 @@ export default function SkillTest() {
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <AlertCircle className="h-10 w-10 text-red-400" />
         <p className="text-sm text-destructive">{error}</p>
-        <Link to="/dashboard" className="text-sm text-brand-pink">Back to dashboard</Link>
+        <Link to="/dashboard" className="text-sm text-primary">Back to dashboard</Link>
       </div>
     );
   }
@@ -117,10 +117,9 @@ export default function SkillTest() {
           <div className="card-glow rounded-3xl p-10 text-center relative overflow-hidden">
             <div
               className="absolute inset-0 opacity-20 pointer-events-none"
-              style={{ background: "var(--gradient-brand)", filter: "blur(120px)" }}
             />
             <div className="relative">
-              <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_30px_-4px_var(--brand-purple)]">
+              <div className="mx-auto h-14 w-14 rounded-2xl bg-gradient-brand grid place-items-center shadow-sm">
                 <CheckCircle2 className="h-6 w-6 text-primary-foreground" />
               </div>
               <h2 className="mt-5 text-3xl font-display font-bold tracking-tight">Skill Test Complete</h2>
@@ -132,7 +131,7 @@ export default function SkillTest() {
                   <div className="mt-1 text-2xl font-display font-bold">
                     {data.correctAnswers || 0} / {data.totalQuestions || questions.length}
                   </div>
-                  <div className="text-xs text-brand-pink mt-1">{data.accuracy || 0}% correct</div>
+                  <div className="text-xs text-primary mt-1">{data.accuracy || 0}% correct</div>
                 </div>
                 <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                   <div className="text-xs text-muted-foreground">Time taken</div>
@@ -280,10 +279,10 @@ export default function SkillTest() {
                 <button
                   key={idx}
                   onClick={() => handleAnswer(idx)}
-                  className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-brand-purple hover:bg-surface-elevated transition group"
+                  className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-brand-purple group-hover:text-brand-pink shrink-0">
+                    <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
                       {String.fromCharCode(65 + idx)}
                     </span>
                     <span className="text-sm">{opt.text}</span>

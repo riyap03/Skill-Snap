@@ -246,7 +246,7 @@ export default function ProjectsPage() {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80"
+                            className="inline-flex items-center gap-1 text-xs text-primary hover:opacity-80"
                           >
                             View project <ExternalLink className="h-3 w-3" />
                           </a>
@@ -261,7 +261,7 @@ export default function ProjectsPage() {
                     ) : (
                       <button
                         onClick={() => setOverviewProject(project)}
-                        className="mt-4 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80"
+                        className="mt-4 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80"
                       >
                         Start project <ArrowRight className="h-3 w-3" />
                       </button>
@@ -284,7 +284,7 @@ export default function ProjectsPage() {
               <Clock className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">No projects in progress yet.</p>
               <p className="text-xs text-muted-foreground mt-1">Start a recommended project to create your plan.</p>
-              <Link to="/roadmap" className="mt-3 inline-flex items-center gap-1 text-xs text-brand-pink hover:opacity-80">
+              <Link to="/roadmap" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:opacity-80">
                 Browse roadmaps <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
@@ -305,7 +305,7 @@ export default function ProjectsPage() {
           <div className="card-glow rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-brand-pink">Project overview</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-primary">Project overview</p>
                 <h2 className="mt-2 text-2xl font-display font-bold">{overview.title}</h2>
               </div>
               <button
