@@ -15,6 +15,7 @@ import CareerCoach from "./pages/CareerCoach";
 import JobReadiness from "./pages/JobReadiness";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import ProjectsPage from "./components/ProjectsPage";
+import SkillTest from "./pages/SkillTest";
 
 function App() {
   const location = useLocation();
@@ -42,6 +43,7 @@ function App() {
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/analytics" element={<AnalyticsDashboard />} />
           <Route path="/readiness" element={<JobReadiness />} />
+          <Route path="/skill-test" element={<SkillTest />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

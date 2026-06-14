@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Github, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import axios from "axios";
 import { apiUrl } from "../config/api";
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 function Logo() {
@@ -29,61 +28,14 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const googleButtonRef = useRef(null);
   const navigate = useNavigate();
 
-  const saveSession = useCallback((data) => {
+  const saveSession = (data) => {
     localStorage.setItem("token", data.token);
     localStorage.setItem("userId", data.userId);
     localStorage.setItem("name", data.name);
     navigate("/dashboard");
-  }, [navigate]);
-
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) return;
-
-    const renderGoogleButton = () => {
-      if (!window.google || !googleButtonRef.current) return;
-
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: async (response) => {
-          try {
-            setError("");
-            setIsSubmitting(true);
-            const res = await axios.post(apiUrl("/api/auth/google"), {
-              credential: response.credential,
-            });
-            saveSession(res.data);
-          } catch (err) {
-            setError(err.response?.data?.message || "Google sign-in failed");
-          } finally {
-            setIsSubmitting(false);
-          }
-        },
-      });
-
-      googleButtonRef.current.innerHTML = "";
-      window.google.accounts.id.renderButton(googleButtonRef.current, {
-        theme: "outline",
-        size: "large",
-        width: googleButtonRef.current.parentElement?.offsetWidth || 336,
-        text: isSignup ? "signup_with" : "signin_with",
-      });
-    };
-
-    if (window.google) {
-      renderGoogleButton();
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = renderGoogleButton;
-    document.body.appendChild(script);
-  }, [isSignup, saveSession]);
+  };
 
   const handleChange = (e) => {
     setError("");
@@ -121,9 +73,7 @@ export default function Login() {
       setIsSubmitting(true);
       setError("");
 
-      const url = isSignup
-        ? apiUrl("/api/auth/register")
-        : apiUrl("/api/auth/login");
+      const url = isSignup ? apiUrl("/api/auth/register") : apiUrl("/api/auth/login");
       const payload = {
         email: formData.email.trim(),
         password: formData.password.trim(),
@@ -145,7 +95,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      {/* Left Sidebar Layout - Desktop Only */}
       <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden">
         <div className="absolute inset-0 grid-bg" />
         <div
@@ -159,7 +108,7 @@ export default function Login() {
         <div className="relative">
           <Logo />
         </div>
-        
+
         <div className="relative max-w-md">
           <Sparkles className="h-6 w-6 text-brand-pink mb-6" />
           <h2 className="font-display text-4xl font-bold leading-tight">
@@ -180,7 +129,6 @@ export default function Login() {
         <div className="relative text-xs text-muted-foreground">© SkillSnap — Build smarter</div>
       </div>
 
-      {/* Right Content Area */}
       <div className="flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-md">
           <div className="lg:hidden mb-8">
@@ -193,31 +141,7 @@ export default function Login() {
             {isSignup ? "Create an account to start your journey." : "Sign in to continue your journey."}
           </p>
 
-          {/* Social Auth Providers */}
-          <div className="mt-8 space-y-3">
-            <button 
-              type="button" 
-              className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated text-sm transition-colors"
-            >
-              <Github className="h-4 w-4" /> Continue with GitHub
-            </button>
-
-            {/* Managed Google Sign In script mounting target wrapper */}
-            {GOOGLE_CLIENT_ID ? (
-              <div className="w-full flex justify-center auth-google-wrap" ref={googleButtonRef} />
-            ) : (
-              <button type="button" className="w-full h-11 inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/20 text-muted-foreground text-sm cursor-not-allowed" disabled>
-                Google sign-in needs setup
-              </button>
-            )}
-          </div>
-
-          <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-            <div className="h-px flex-1 bg-border" /> or continue with email <div className="h-px flex-1 bg-border" />
-          </div>
-
-          {/* Core Credentials Form */}
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
             {isSignup && (
               <div className="space-y-1.5">
                 <label htmlFor="name" className="text-sm font-medium">Name</label>
@@ -254,9 +178,9 @@ export default function Login() {
               <div className="flex justify-between">
                 <label htmlFor="password" className="text-sm font-medium">Password</label>
                 {!isSignup && (
-                  <a className="text-xs text-muted-foreground hover:text-foreground transition-colors" href="#">
+                  <button type="button" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                     Forgot?
-                  </a>
+                  </button>
                 )}
               </div>
               <input
@@ -284,7 +208,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Mode Toggler */}
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {isSignup ? "Already have an account?" : "New to SkillSnap?"}{" "}
             <button
