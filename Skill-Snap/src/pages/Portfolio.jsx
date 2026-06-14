@@ -239,13 +239,13 @@ export default function Portfolio() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <button
                 onClick={exportPDF}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm hover:bg-surface-elevated"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated"
               >
                 <Download className="h-4 w-4" /> Export PDF
               </button>
               <Link
                 to={portfolioLink}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm hover:bg-surface-elevated"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated"
               >
                 <ExternalLink className="h-4 w-4" /> Open public
               </Link>
@@ -254,7 +254,7 @@ export default function Portfolio() {
                   navigator.clipboard.writeText(portfolioLink);
                   setApiMessage("Theme portfolio link copied!");
                 }}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm hover:bg-surface-elevated"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated"
               >
                 <ExternalLink className="h-4 w-4" /> Copy theme link
               </button>
@@ -269,7 +269,7 @@ export default function Portfolio() {
             </div>
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-gray-200 bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-5 flex flex-col gap-3 rounded-2xl border border-border bg-surface/40 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 text-sm font-medium">
               <Palette className="h-4 w-4 text-primary" />
               Portfolio theme
@@ -282,7 +282,7 @@ export default function Portfolio() {
                   className={`rounded-xl border px-3 py-2 text-sm transition ${
                     selectedTheme === theme.key
                       ? "border-primary bg-primary/10 text-foreground"
-                      : "border-gray-200 text-muted-foreground hover:bg-surface-elevated"
+                      : "border-border text-muted-foreground hover:bg-surface-elevated"
                   }`}
                 >
                   {theme.label}
@@ -293,7 +293,7 @@ export default function Portfolio() {
         </section>
 
         {apiMessage && (
-          <div className="mt-4 rounded-xl border border-gray-200 bg-surface/60 px-4 py-3 text-sm text-muted-foreground">
+          <div className="mt-4 rounded-xl border border-border bg-surface/60 px-4 py-3 text-sm text-muted-foreground">
             {apiMessage}
           </div>
         )}
@@ -310,20 +310,20 @@ export default function Portfolio() {
                 </div>
                 <button
                   onClick={() => setShowAddForm(!showAddForm)}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-xs hover:bg-surface-elevated"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-3 py-2 text-xs hover:bg-surface-elevated"
                 >
                   <Plus className="h-3.5 w-3.5" /> {showAddForm ? "Close form" : "Add project"}
                 </button>
               </div>
 
               {showAddForm && (
-                <form onSubmit={handleAddProject} className="mt-5 rounded-2xl border border-gray-200 bg-surface/60 p-4">
+                <form onSubmit={handleAddProject} className="mt-5 rounded-2xl border border-border bg-surface/60 p-4">
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
                       <label className="text-xs font-medium">Project Title</label>
                       <input
                         type="text"
-                        className="mt-1 w-full rounded-lg border border-gray-200 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.title}
                         onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                         required
@@ -333,7 +333,7 @@ export default function Portfolio() {
                       <label className="text-xs font-medium">Date</label>
                       <input
                         type="month"
-                        className="mt-1 w-full rounded-lg border border-gray-200 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.date}
                         onChange={(e) => setNewProject({ ...newProject, date: e.target.value })}
                         required
@@ -344,7 +344,7 @@ export default function Portfolio() {
                   <div className="mt-3">
                     <label className="text-xs font-medium">Description</label>
                     <textarea
-                      className="mt-1 w-full min-h-24 rounded-lg border border-gray-200 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                      className="mt-1 w-full min-h-24 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                       rows={3}
                       value={newProject.description}
                       onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
@@ -358,7 +358,7 @@ export default function Portfolio() {
                       <input
                         type="text"
                         placeholder="React, Node.js, MongoDB"
-                        className="mt-1 w-full rounded-lg border border-gray-200 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.skills}
                         onChange={(e) => setNewProject({ ...newProject, skills: e.target.value })}
                         required
@@ -369,7 +369,7 @@ export default function Portfolio() {
                       <input
                         type="url"
                         placeholder="https://example.com"
-                        className="mt-1 w-full rounded-lg border border-gray-200 bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
                         value={newProject.link}
                         onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
                       />
@@ -380,7 +380,7 @@ export default function Portfolio() {
                     <button
                       type="button"
                       onClick={() => setShowAddForm(false)}
-                      className="rounded-lg border border-gray-200 px-3 py-2 text-xs hover:bg-surface-elevated"
+                      className="rounded-lg border border-border px-3 py-2 text-xs hover:bg-surface-elevated"
                     >
                       Cancel
                     </button>
@@ -396,7 +396,7 @@ export default function Portfolio() {
 
               <div className="mt-5 grid gap-3">
                 {projects.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-gray-200 p-6 text-center text-sm text-muted-foreground">
+                  <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
                     No projects yet. Add your first project to build the portfolio.
                   </div>
                 )}
@@ -404,7 +404,7 @@ export default function Portfolio() {
                 {projects.map((project) => (
                   <article
                     key={project._id || project.id || project.title}
-                    className="rounded-2xl border border-gray-200 bg-surface/50 p-4"
+                    className="rounded-2xl border border-border bg-surface/50 p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
@@ -421,7 +421,7 @@ export default function Portfolio() {
                           {(project.skills || []).map((skill, idx) => (
                             <span
                               key={idx}
-                              className="rounded-md border border-gray-200 bg-surface-elevated px-2 py-1 text-xs"
+                              className="rounded-md border border-border bg-surface-elevated px-2 py-1 text-xs"
                             >
                               {skill}
                             </span>
@@ -462,7 +462,7 @@ export default function Portfolio() {
                 <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
                   <Sparkles className="h-4 w-4" /> AI Portfolio Summary
                 </div>
-                <pre className="whitespace-pre-wrap rounded-2xl border border-gray-200 bg-surface/50 p-4 text-xs leading-relaxed text-muted-foreground">
+                <pre className="whitespace-pre-wrap rounded-2xl border border-border bg-surface/50 p-4 text-xs leading-relaxed text-muted-foreground">
                   {aiContent}
                 </pre>
               </section>
@@ -470,7 +470,7 @@ export default function Portfolio() {
           </div>
 
           <aside className="xl:sticky xl:top-6">
-            <section className="rounded-3xl border border-gray-200 bg-surface/40 p-4 shadow-sm">
+            <section className="rounded-3xl border border-border bg-surface/40 p-4 shadow-sm">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <h2 className="font-semibold">Live theme preview</h2>
@@ -480,13 +480,13 @@ export default function Portfolio() {
                 </div>
                 <Link
                   to={portfolioLink}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 px-3 py-2 text-xs hover:bg-surface-elevated"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border px-3 py-2 text-xs hover:bg-surface-elevated"
                 >
                   Open <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
               </div>
 
-              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-background">
+              <div className="overflow-hidden rounded-2xl border border-border bg-background">
                 <SelectedTheme portfolio={previewPortfolio} username={username} preview />
               </div>
             </section>

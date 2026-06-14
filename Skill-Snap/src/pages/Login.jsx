@@ -147,7 +147,7 @@ export default function Login() {
                   type="text"
                   name="name"
                   placeholder="Your name"
-                  className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm transition-colors"
+                  className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-border outline-none focus:border-primary text-sm transition-colors"
                   value={formData.name}
                   onChange={handleChange}
                   autoComplete="name"
@@ -163,7 +163,7 @@ export default function Login() {
                 type="email"
                 name="email"
                 placeholder="you@example.com"
-                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm transition-colors"
+                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-border outline-none focus:border-primary text-sm transition-colors"
                 value={formData.email}
                 onChange={handleChange}
                 autoComplete="email"
@@ -185,7 +185,7 @@ export default function Login() {
                 type="password"
                 name="password"
                 placeholder="••••••••"
-                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm transition-colors"
+                className="w-full h-11 px-3 rounded-xl bg-surface/60 border border-border outline-none focus:border-primary text-sm transition-colors"
                 value={formData.password}
                 onChange={handleChange}
                 autoComplete={isSignup ? "new-password" : "current-password"}

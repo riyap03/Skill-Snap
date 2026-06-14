@@ -140,7 +140,7 @@ export default function JobReadiness() {
         )}
 
         <div className="flex justify-center gap-3">
-          <button onClick={fetchReadiness} className="px-5 py-2.5 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated">Refresh</button>
+          <button onClick={fetchReadiness} className="px-5 py-2.5 rounded-md border border-border text-sm hover:bg-surface-elevated">Refresh</button>
         </div>
       </main>
     </div>

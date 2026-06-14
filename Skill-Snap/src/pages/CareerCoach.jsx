@@ -124,7 +124,7 @@ export default function CareerCoach() {
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm whitespace-pre-wrap ${
-                    m.role === "user" ? "bg-gradient-brand text-primary-foreground rounded-br-sm" : "bg-surface/60 border border-gray-200 rounded-bl-sm"
+                    m.role === "user" ? "bg-gradient-brand text-primary-foreground rounded-br-sm" : "bg-surface/60 border border-border rounded-bl-sm"
                   }`}
                 >
                   {m.role === "assistant" && <Sparkles className="h-3 w-3 text-primary inline mr-1" />}
@@ -135,14 +135,14 @@ export default function CareerCoach() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-gray-200 p-3 flex gap-2">
+          <div className="border-t border-border p-3 flex gap-2">
             <input
               type="text"
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Ask about skills, projects, career advice…"
-              className="flex-1 h-10 px-3 rounded-md bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm"
+              className="flex-1 h-10 px-3 rounded-md bg-surface/60 border border-border outline-none focus:border-primary text-sm"
             />
             <button onClick={sendMessage} className="h-10 w-10 grid place-items-center rounded-md bg-gradient-brand text-primary-foreground shrink-0">
               <Send className="h-4 w-4" />

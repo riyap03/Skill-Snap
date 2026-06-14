@@ -218,12 +218,12 @@ export default function Dashboard() {
                       {r.skills?.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
                           {r.skills.slice(0, 4).map((s) => (
-                            <span key={s} className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-gray-200">
+                            <span key={s} className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-border">
                               {s}
                             </span>
                           ))}
                           {r.skills.length > 4 && (
-                            <span className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-gray-200">
+                            <span className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-border">
                               +{r.skills.length - 4}
                             </span>
                           )}
@@ -284,7 +284,7 @@ export default function Dashboard() {
                     You have <span className="text-foreground font-medium">{projectCount} project{projectCount > 1 ? "s" : ""}</span> in your portfolio.
                   </p>
                   {portfolio?.projects?.slice(0, 2).map((p) => (
-                    <div key={p.title} className="mt-2 text-xs px-3 py-2 rounded-lg bg-surface/60 border border-gray-200 text-muted-foreground">
+                    <div key={p.title} className="mt-2 text-xs px-3 py-2 rounded-lg bg-surface/60 border border-border text-muted-foreground">
                       {p.title}
                     </div>
                   ))}

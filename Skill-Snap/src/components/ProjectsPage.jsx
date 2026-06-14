@@ -195,7 +195,7 @@ export default function ProjectsPage() {
           </div>
           <Link
             to="/portfolio"
-            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-surface-elevated"
+            className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm hover:bg-surface-elevated"
           >
             Add portfolio project <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -209,7 +209,7 @@ export default function ProjectsPage() {
               className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
                 activeTab === tab.key
                   ? "bg-gradient-brand text-primary-foreground"
-                  : "border border-gray-200 hover:bg-surface-elevated"
+                  : "border border-border hover:bg-surface-elevated"
               }`}
             >
               <tab.icon className="h-4 w-4 inline mr-1.5" /> {tab.label}
@@ -234,7 +234,7 @@ export default function ProjectsPage() {
                     {skills.length > 0 && (
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {skills.map((skill, j) => (
-                          <span key={j} className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated border border-gray-200 text-muted-foreground">{skill}</span>
+                          <span key={j} className="text-[10px] px-2 py-0.5 rounded-md bg-surface-elevated border border-border text-muted-foreground">{skill}</span>
                         ))}
                       </div>
                     )}
@@ -322,7 +322,7 @@ export default function ProjectsPage() {
               <h3 className="text-sm font-semibold mb-3">Skills you will practice</h3>
               <div className="flex flex-wrap gap-2">
                 {overview.skills.map((skill, i) => (
-                  <span key={i} className="rounded-md border border-gray-200 bg-surface-elevated px-2.5 py-1 text-xs">{skill}</span>
+                  <span key={i} className="rounded-md border border-border bg-surface-elevated px-2.5 py-1 text-xs">{skill}</span>
                 ))}
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function ProjectsPage() {
               <h3 className="text-sm font-semibold mb-3">Final deliverables</h3>
               <ul className="grid sm:grid-cols-2 gap-2">
                 {overview.deliverables.map((item, i) => (
-                  <li key={i} className="rounded-xl border border-gray-200 bg-surface/50 px-3 py-2 text-xs text-muted-foreground">
+                  <li key={i} className="rounded-xl border border-border bg-surface/50 px-3 py-2 text-xs text-muted-foreground">
                     {item}
                   </li>
                 ))}
@@ -355,7 +355,7 @@ export default function ProjectsPage() {
             <div className="mt-6 flex flex-wrap justify-end gap-2">
               <button
                 onClick={() => setOverviewProject(null)}
-                className="rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-surface-elevated"
+                className="rounded-xl border border-border px-4 py-2 text-sm hover:bg-surface-elevated"
               >
                 Close
               </button>

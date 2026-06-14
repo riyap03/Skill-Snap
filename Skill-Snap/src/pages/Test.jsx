@@ -205,10 +205,10 @@ export default function Test() {
                   <button
                     key={idx}
                     onClick={() => handleAnswer(idx)}
-                    className="text-left p-4 rounded-xl border border-gray-200 bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
+                    className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="h-7 w-7 rounded-md border border-gray-200 grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
+                      <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
                         {String.fromCharCode(65 + idx)}
                       </span>
                       <span className="text-sm">{opt.text}</span>
@@ -222,7 +222,7 @@ export default function Test() {
           <div className="mt-6 flex justify-end">
             <button
               onClick={() => setPhase("result")}
-              className="px-4 py-2 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated"
+              className="px-4 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated"
             >
               Submit assessment
             </button>
@@ -249,19 +249,19 @@ export default function Test() {
             <p className="mt-2 text-muted-foreground">You scored {score}/{questions.length} — {level} level</p>
 
             <div className="mt-8 grid sm:grid-cols-3 gap-4 text-left">
-              <div className="rounded-2xl p-5 bg-surface/60 border border-gray-200">
+              <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                 <div className="text-xs text-muted-foreground">Score</div>
                 <div className="mt-1 text-2xl font-display font-bold">
                   {score} / {questions.length}
                 </div>
                 <div className="text-xs text-primary mt-1">{pct}% correct</div>
               </div>
-              <div className="rounded-2xl p-5 bg-surface/60 border border-gray-200">
+              <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                 <div className="text-xs text-muted-foreground">Skill Level</div>
                 <div className="mt-1 text-2xl font-display font-bold text-gradient">{level}</div>
                 <div className="text-xs text-muted-foreground mt-1">Based on accuracy</div>
               </div>
-              <div className="rounded-2xl p-5 bg-surface/60 border border-gray-200">
+              <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                 <div className="text-xs text-muted-foreground">Time taken</div>
                 <div className="mt-1 text-2xl font-display font-bold">{formatTime(duration)}</div>
                 <div className="text-xs text-muted-foreground mt-1">{questions.length} questions</div>
@@ -270,7 +270,7 @@ export default function Test() {
 
             {result && (
               <div className="mt-6 grid sm:grid-cols-2 gap-4 text-left">
-                <div className="rounded-2xl p-5 bg-surface/60 border border-gray-200">
+                <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                   <div className="flex items-center gap-2 text-sm font-semibold">
                     <Zap className="h-4 w-4 text-primary" /> Strong areas
                   </div>
@@ -280,7 +280,7 @@ export default function Test() {
                     ))}
                   </ul>
                 </div>
-                <div className="rounded-2xl p-5 bg-surface/60 border border-gray-200">
+                <div className="rounded-2xl p-5 bg-surface/60 border border-border">
                   <div className="flex items-center gap-2 text-sm font-semibold">
                     <Sparkles className="h-4 w-4 text-primary" /> Focus areas
                   </div>
@@ -312,7 +312,7 @@ export default function Test() {
                   </Link>
                   <button
                     onClick={() => setPhase("select")}
-                    className="px-4 py-2.5 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated"
+                    className="px-4 py-2.5 rounded-md border border-border text-sm hover:bg-surface-elevated"
                   >
                     Take another track
                   </button>

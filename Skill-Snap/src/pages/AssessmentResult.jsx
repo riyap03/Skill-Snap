@@ -126,7 +126,7 @@ export default function AssessmentResult() {
         )}
 
         <div className="flex justify-center gap-3">
-          <Link to="/assessment" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated">
+          <Link to="/assessment" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-border text-sm hover:bg-surface-elevated">
             Take more assessments
           </Link>
           <Link to="/roadmap" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-gradient-brand text-primary-foreground text-sm font-medium">

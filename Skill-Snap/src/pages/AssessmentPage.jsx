@@ -392,7 +392,7 @@ export default function AssessmentPage() {
 
             {adaptive && !adaptiveResult && (
               <div className="grid sm:grid-cols-3 gap-3 mb-6">
-                <div className="rounded-2xl border border-gray-200 bg-surface/50 p-4">
+                <div className="rounded-2xl border border-border bg-surface/50 p-4">
                   <div className="text-xs text-muted-foreground">
                     Pending skills
                   </div>
@@ -400,13 +400,13 @@ export default function AssessmentPage() {
                     {adaptive.totalPending}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-surface/50 p-4">
+                <div className="rounded-2xl border border-border bg-surface/50 p-4">
                   <div className="text-xs text-muted-foreground">Time</div>
                   <div className="text-2xl font-display font-bold">
                     {formatTime(adaptiveTimer)}
                   </div>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-surface/50 p-4">
+                <div className="rounded-2xl border border-border bg-surface/50 p-4">
                   <div className="text-xs text-muted-foreground">Level</div>
                   <div className="text-2xl font-display font-bold capitalize">
                     {adaptive.level}
@@ -416,7 +416,7 @@ export default function AssessmentPage() {
             )}
 
             {!adaptiveQuestions.length && !adaptiveLoading && !adaptiveResult && (
-              <div className="rounded-2xl border border-dashed border-gray-200 p-8 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
                 Generate an adaptive assessment to start.
               </div>
             )}
@@ -435,7 +435,7 @@ export default function AssessmentPage() {
                   <span>Score: {Object.keys(adaptiveAnswers).length}/{adaptiveQuestions.length}</span>
                 </div>
                 {currentAdaptiveQ && (
-                  <div className="rounded-2xl border border-gray-200 bg-surface/40 p-5">
+                  <div className="rounded-2xl border border-border bg-surface/40 p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <div className="text-[10px] uppercase tracking-[0.2em] text-primary mb-2">
@@ -464,7 +464,7 @@ export default function AssessmentPage() {
                             className={`rounded-xl border px-3 py-2 text-left text-sm transition ${
                               selected
                                 ? "border-green-500 bg-green-500/15 text-foreground"
-                                : "border-gray-200 text-muted-foreground hover:bg-surface-elevated"
+                                : "border-border text-muted-foreground hover:bg-surface-elevated"
                             }`}
                           >
                             {option.text}
@@ -479,14 +479,14 @@ export default function AssessmentPage() {
                   <button
                     onClick={() => setAdaptiveQIndex((i) => Math.max(0, i - 1))}
                     disabled={adaptiveQIndex === 0}
-                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-surface-elevated transition disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm hover:bg-surface-elevated transition disabled:opacity-50"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setAdaptiveQIndex((i) => Math.min(adaptiveQuestions.length - 1, i + 1))}
                     disabled={adaptiveQIndex >= adaptiveQuestions.length - 1}
-                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-surface-elevated transition disabled:opacity-50"
+                    className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm hover:bg-surface-elevated transition disabled:opacity-50"
                   >
                     Next
                   </button>
@@ -607,10 +607,10 @@ export default function AssessmentPage() {
                         <button
                           key={idx}
                           onClick={() => handleCoreAnswer(idx)}
-                          className="text-left p-4 rounded-xl border border-gray-200 bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
+                          className="text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-primary hover:bg-surface-elevated transition group"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="h-7 w-7 rounded-md border border-gray-200 grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
+                            <span className="h-7 w-7 rounded-md border border-border grid place-items-center text-xs text-muted-foreground group-hover:border-primary group-hover:text-primary shrink-0">
                               {String.fromCharCode(65 + idx)}
                             </span>
                             <span className="text-sm">{opt.text}</span>
@@ -692,7 +692,7 @@ export default function AssessmentPage() {
             </div>
 
             {!coding && !codingLoading && (
-              <div className="rounded-2xl border border-dashed border-gray-200 p-8 text-center text-sm text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
                 Load a coding challenge to start.
               </div>
             )}
@@ -707,7 +707,7 @@ export default function AssessmentPage() {
             {coding && (
               <div className="grid lg:grid-cols-[1fr_1fr] gap-6">
                 <div className="space-y-4">
-                  <div className="rounded-2xl border border-gray-200 bg-surface/40 p-5">
+                  <div className="rounded-2xl border border-border bg-surface/40 p-5">
                     <div className="flex items-center justify-between gap-3">
                       <h3 className="font-semibold">{coding.title}</h3>
                       <span className="text-xs rounded-full bg-primary/10 text-primary px-2 py-1">
@@ -741,13 +741,13 @@ export default function AssessmentPage() {
                   </div>
 
                   <div className="grid sm:grid-cols-3 gap-3">
-                    <div className="rounded-2xl border border-gray-200 bg-surface/50 p-4">
+                    <div className="rounded-2xl border border-border bg-surface/50 p-4">
                       <div className="text-xs text-muted-foreground">Time</div>
                       <div className="text-2xl font-display font-bold">
                         {formatTime(codingTimer)}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-gray-200 bg-surface/50 p-4">
+                    <div className="rounded-2xl border border-border bg-surface/50 p-4">
                       <div className="text-xs text-muted-foreground">
                         Attempts
                       </div>
@@ -755,7 +755,7 @@ export default function AssessmentPage() {
                         {codingAttempts}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-gray-200 bg-surface/50 p-4">
+                    <div className="rounded-2xl border border-border bg-surface/50 p-4">
                       <div className="text-xs text-muted-foreground">Errors</div>
                       <div className="text-2xl font-display font-bold">
                         {codingErrors}
@@ -770,7 +770,7 @@ export default function AssessmentPage() {
                     <textarea
                       value={codingCode}
                       onChange={(e) => setCodingCode(e.target.value)}
-                      className="mt-2 min-h-56 w-full rounded-2xl border border-gray-200 bg-background p-4 font-mono text-xs outline-none focus:border-primary"
+                      className="mt-2 min-h-56 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-primary"
                       placeholder="Paste or write your solution here"
                     />
                   </div>
@@ -781,7 +781,7 @@ export default function AssessmentPage() {
                     <textarea
                       value={codingOutput}
                       onChange={(e) => setCodingOutput(e.target.value)}
-                      className="mt-2 min-h-28 w-full rounded-2xl border border-gray-200 bg-background p-4 font-mono text-xs outline-none focus:border-primary"
+                      className="mt-2 min-h-28 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-primary"
                       placeholder="Example: 1\n2\nFizz\n4\nBuzz"
                     />
                   </div>
@@ -789,7 +789,7 @@ export default function AssessmentPage() {
                     <button
                       type="button"
                       onClick={compareOutput}
-                      className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm hover:bg-surface-elevated transition"
+                      className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated transition"
                     >
                       Run output
                     </button>
@@ -825,13 +825,13 @@ export default function AssessmentPage() {
                           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
                             Expected
                           </div>
-                          <pre className="whitespace-pre-wrap text-xs rounded-lg bg-background/60 p-3 border border-gray-200">
+                          <pre className="whitespace-pre-wrap text-xs rounded-lg bg-background/60 p-3 border border-border">
                             {coding?.expectedOutput || "Same as challenge"}
                           </pre>
                           <div className="text-[10px] text-muted-foreground mt-2">
                             Your output:
                           </div>
-                          <pre className="whitespace-pre-wrap text-xs rounded-lg bg-background/60 p-3 border border-gray-200">
+                          <pre className="whitespace-pre-wrap text-xs rounded-lg bg-background/60 p-3 border border-border">
                             {codingOutput}
                           </pre>
                         </div>

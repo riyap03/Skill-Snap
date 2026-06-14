@@ -163,7 +163,7 @@ export default function OnboardingWizard() {
                     key={role}
                     onClick={() => updateForm("currentRole", role)}
                     className={`p-4 rounded-xl border text-left text-sm transition ${
-                      form.currentRole === role ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
+                      form.currentRole === role ? "border-primary bg-surface-elevated" : "border-border hover:border-primary"
                     }`}
                   >
                     {role}
@@ -180,7 +180,7 @@ export default function OnboardingWizard() {
                     key={role}
                     onClick={() => updateForm("targetRole", role)}
                     className={`p-4 rounded-xl border text-left text-sm transition ${
-                      form.targetRole === role ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
+                      form.targetRole === role ? "border-primary bg-surface-elevated" : "border-border hover:border-primary"
                     }`}
                   >
                     {role}
@@ -201,7 +201,7 @@ export default function OnboardingWizard() {
                       className={`px-3 py-1.5 rounded-full text-xs border transition ${
                         form.knownSkills.includes(skill)
                           ? "border-primary bg-primary/20 text-primary"
-                          : "border-gray-200 hover:border-primary"
+                          : "border-border hover:border-primary"
                       }`}
                     >
                       {skill}
@@ -209,11 +209,11 @@ export default function OnboardingWizard() {
                   ))}
                 </div>
                 {form.knownSkills.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="mt-4 pt-4 border-t border-border">
                     <p className="text-xs text-muted-foreground mb-2">Selected ({form.knownSkills.length}):</p>
                     <div className="flex flex-wrap gap-2">
                       {form.knownSkills.map((s) => (
-                        <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-elevated border border-gray-200 text-xs">
+                        <span key={s} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-elevated border border-border text-xs">
                           {s}
                           <button onClick={() => removeSkill(s)} className="text-muted-foreground hover:text-red-400">×</button>
                         </span>
@@ -232,7 +232,7 @@ export default function OnboardingWizard() {
                     key={level}
                     onClick={() => updateForm("experienceLevel", level.toLowerCase())}
                     className={`p-5 rounded-xl border text-left transition ${
-                      form.experienceLevel === level.toLowerCase() ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
+                      form.experienceLevel === level.toLowerCase() ? "border-primary bg-surface-elevated" : "border-border hover:border-primary"
                     }`}
                   >
                     <div className="text-sm font-medium">{level}</div>
@@ -279,7 +279,7 @@ export default function OnboardingWizard() {
                     key={style.key}
                     onClick={() => updateForm("learningStyle", style.key)}
                     className={`p-4 rounded-xl border text-left text-sm transition ${
-                      form.learningStyle === style.key ? "border-primary bg-surface-elevated" : "border-gray-200 hover:border-primary"
+                      form.learningStyle === style.key ? "border-primary bg-surface-elevated" : "border-border hover:border-primary"
                     }`}
                   >
                     <div className="font-medium">{style.label}</div>
@@ -294,7 +294,7 @@ export default function OnboardingWizard() {
               <button
                 onClick={prevStep}
                 disabled={currentStep === 0}
-                className="px-4 py-2 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated disabled:opacity-40"
+                className="px-4 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4 inline mr-1" /> Back
               </button>

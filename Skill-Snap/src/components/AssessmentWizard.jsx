@@ -105,8 +105,8 @@ export default function AssessmentWizard() {
             <h3 className="text-lg font-semibold mb-4">{q.question}</h3>
             <div className="space-y-2">
               {q.options.map((opt, idx) => (
-                <button key={idx} onClick={() => handleAnswer(idx)} className="w-full text-left p-4 rounded-xl border border-gray-200 bg-surface/60 hover:border-primary hover:bg-surface-elevated transition">
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-md border border-gray-200 text-xs mr-3">{String.fromCharCode(65 + idx)}</span>
+                <button key={idx} onClick={() => handleAnswer(idx)} className="w-full text-left p-4 rounded-xl border border-border bg-surface/60 hover:border-primary hover:bg-surface-elevated transition">
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-md border border-border text-xs mr-3">{String.fromCharCode(65 + idx)}</span>
                   <span className="text-sm">{opt.text}</span>
                 </button>
               ))}

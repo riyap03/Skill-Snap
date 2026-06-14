@@ -3,13 +3,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Lora', 'serif'],
-        display: ['Lora', 'serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        primary: 'var(--color-primary)',
-        accent: 'var(--color-accent)'
+        primary: 'var(--primary)',
+        accent: 'var(--ring)'
       }
     }
   },

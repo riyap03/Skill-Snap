@@ -212,7 +212,7 @@ export default function Roadmap() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 placeholder="Search technologies, frameworks…"
-                className="w-full pl-9 pr-3 h-11 rounded-xl bg-surface/60 border border-gray-200 outline-none focus:border-primary text-sm"
+                className="w-full pl-9 pr-3 h-11 rounded-xl bg-surface/60 border border-border outline-none focus:border-primary text-sm"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -220,7 +220,7 @@ export default function Roadmap() {
             <button
               onClick={exportPDF}
               disabled={!selected}
-              className="inline-flex items-center px-3 py-2.5 rounded-xl border border-gray-200 text-sm hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+              className="inline-flex items-center px-3 py-2.5 rounded-xl border border-border text-sm hover:bg-surface-elevated disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
             >
               <Download className="h-4 w-4 mr-1.5" /> Export PDF
             </button>
@@ -235,7 +235,7 @@ export default function Roadmap() {
         )}
 
         {!listError && filteredRoadmaps.length === 0 && (
-          <div className="mt-8 rounded-xl border border-gray-200 bg-surface/40 px-4 py-8 text-center text-sm text-muted-foreground">
+          <div className="mt-8 rounded-xl border border-border bg-surface/40 px-4 py-8 text-center text-sm text-muted-foreground">
             No roadmaps found. Try a different search.
           </div>
         )}
@@ -297,11 +297,11 @@ export default function Roadmap() {
 
                 {/* EXPANDED CONTENT */}
                 {expanded && (
-                  <div className="mt-5 pt-5 border-t border-gray-200 animate-fade-up" onClick={(e) => e.stopPropagation()}>
+                  <div className="mt-5 pt-5 border-t border-border animate-fade-up" onClick={(e) => e.stopPropagation()}>
 
                     {/* PLAN META */}
                     {plan && (
-                      <div className="mb-4 rounded-xl border border-gray-200 bg-surface/40 p-3 text-xs text-muted-foreground space-y-1">
+                      <div className="mb-4 rounded-xl border border-border bg-surface/40 p-3 text-xs text-muted-foreground space-y-1">
                         <div className="flex flex-wrap gap-3">
                           <span>Level: <span className="text-foreground font-medium">{plan.level}</span></span>
                           <span>Pace: <span className="text-foreground font-medium">{plan.pace?.pace || "new"}</span></span>
@@ -333,7 +333,7 @@ export default function Roadmap() {
                             <div className={`h-6 w-6 rounded-full grid place-items-center text-[11px] cursor-pointer transition-all ${
                               checked[skill]
                                 ? "bg-gradient-brand text-primary-foreground"
-                                : "border border-gray-200 text-muted-foreground hover:border-primary"
+                                : "border border-border text-muted-foreground hover:border-primary"
                             }`}>
                               {i + 1}
                             </div>
@@ -399,7 +399,7 @@ export default function Roadmap() {
                         <div className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Recommended projects</div>
                         <div className="flex flex-wrap gap-1.5">
                           {projects.map((p, i) => (
-                            <span key={i} className="text-[11px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-gray-200">
+                            <span key={i} className="text-[11px] px-2 py-0.5 rounded-md bg-surface-elevated text-muted-foreground border border-border">
                               {p}
                             </span>
                           ))}
@@ -438,7 +438,7 @@ export default function Roadmap() {
               <div className="mt-6 flex gap-2 justify-center">
                 <button
                   onClick={() => setShowTestPopup(false)}
-                  className="px-4 py-2 rounded-md border border-gray-200 text-sm hover:bg-surface-elevated"
+                  className="px-4 py-2 rounded-md border border-border text-sm hover:bg-surface-elevated"
                 >
                   Maybe later
                 </button>
