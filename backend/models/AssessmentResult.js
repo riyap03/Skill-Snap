@@ -16,8 +16,18 @@ const assessmentResultSchema = new mongoose.Schema({
   weakTopics: [{ type: String }],
   codingData: {
     challengeId: String,
+    language: String,
     code: String,
     output: String,
+    testResults: [
+      {
+        index: Number,
+        input: mongoose.Schema.Types.Mixed,
+        expected: mongoose.Schema.Types.Mixed,
+        actual: mongoose.Schema.Types.Mixed,
+        passed: Boolean,
+      },
+    ],
     attempts: { type: Number, default: 0 },
     errors: { type: Number, default: 0 },
     correct: { type: Boolean, default: false },

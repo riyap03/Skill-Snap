@@ -59,6 +59,42 @@ const EXPECTED_MATCHES = {
   "cc-10": ["0\n1\n1\n2\n3\n5\n8\n13\n21\n34"],
 };
 
+const CODING_LANGUAGES = [
+  { key: "javascript", label: "JavaScript", runnable: true },
+  { key: "typescript", label: "TypeScript", runnable: true },
+  { key: "python", label: "Python", runnable: false },
+  { key: "java", label: "Java", runnable: false },
+  { key: "cpp", label: "C++", runnable: false },
+  { key: "c", label: "C", runnable: false },
+  { key: "csharp", label: "C#", runnable: false },
+  { key: "go", label: "Go", runnable: false },
+  { key: "ruby", label: "Ruby", runnable: false },
+  { key: "php", label: "PHP", runnable: false },
+  { key: "swift", label: "Swift", runnable: false },
+  { key: "kotlin", label: "Kotlin", runnable: false },
+];
+
+const starterForLanguage = (challenge, language) => {
+  const args = challenge?.inputLabel || "input";
+  const title = challenge?.title || "Challenge";
+  const jsStarter = challenge?.starterCode || `function solve(${args}) {\n  // Write your solution here.\n}\n`;
+  const templates = {
+    javascript: jsStarter,
+    typescript: jsStarter,
+    python: `def solve(${args}):\n    # Write your solution for ${title} here\n    pass\n`,
+    java: `class Solution {\n    public Object solve(Object ${args.split(",")[0]?.trim() || "input"}) {\n        // Write your solution for ${title} here\n        return null;\n    }\n}\n`,
+    cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\n// Write your solution for ${title} here\n// Example: auto solve(${args}) { }\n`,
+    c: `#include <stdio.h>\n\n/* Write your solution for ${title} here */\n`,
+    csharp: `public class Solution {\n    public object Solve(object ${args.split(",")[0]?.trim() || "input"}) {\n        // Write your solution for ${title} here\n        return null;\n    }\n}\n`,
+    go: `package main\n\n// Write your solution for ${title} here\n// func solve(${args}) any { return nil }\n`,
+    ruby: `def solve(${args})\n  # Write your solution for ${title} here\nend\n`,
+    php: `<?php\nfunction solve(${args.split(",").map((arg) => `$${arg.trim() || "input"}`).join(", ")}) {\n    // Write your solution for ${title} here\n}\n`,
+    swift: `func solve(_ input: Any) -> Any {\n    // Write your solution for ${title} here\n    return input\n}\n`,
+    kotlin: `fun solve(input: Any): Any {\n    // Write your solution for ${title} here\n    return input\n}\n`,
+  };
+  return templates[language] || jsStarter;
+};
+
 export default function AssessmentPage() {
   const { track: urlTrack } = useParams();
 
@@ -78,8 +114,10 @@ export default function AssessmentPage() {
 
   const [coding, setCoding] = useState(null);
   const [codingResult, setCodingResult] = useState(null);
+  const [codingLanguage, setCodingLanguage] = useState("javascript");
   const [codingCode, setCodingCode] = useState("");
   const [codingOutput, setCodingOutput] = useState("");
+  const [codingTestResults, setCodingTestResults] = useState([]);
   const [codingAttempts, setCodingAttempts] = useState(0);
   const [codingErrors, setCodingErrors] = useState(0);
   const [codingTimer, setCodingTimer] = useState(0);
@@ -109,6 +147,14 @@ export default function AssessmentPage() {
     }
     return () => clearInterval(interval);
   }, [coreQuestions, coreResult, activeTab]);
+
+  useEffect(() => {
+    let interval;
+    if (coding && activeTab === "coding" && !codingResult?.correct) {
+      interval = setInterval(() => setCodingTimer((t) => t + 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [coding, activeTab, codingResult?.correct]);
 
   useEffect(() => {
     if (urlTrack && activeTab === "core" && !coreQuestions.length) {
@@ -166,6 +212,7 @@ export default function AssessmentPage() {
     setCodingResult(null);
     setCodingCode("");
     setCodingOutput("");
+    setCodingTestResults([]);
     setCodingAttempts(0);
     setCodingErrors(0);
     setCodingTimer(0);
@@ -173,7 +220,9 @@ export default function AssessmentPage() {
       const res = await axios.get(apiUrl("/api/assessment/coding-questions"), {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setCoding(res.data.challenges?.[0] || null);
+      const nextChallenge = res.data.challenges?.[0] || null;
+      setCoding(nextChallenge);
+      setCodingCode(starterForLanguage(nextChallenge, codingLanguage));
     } catch {
       setCodingResult({ error: "Failed to load coding challenge." });
     } finally {
@@ -202,14 +251,93 @@ export default function AssessmentPage() {
     });
   };
 
-  const compareOutput = () => {
+  const stableStringify = (value) => {
+    if (typeof value === "string") return value.trim();
+    return JSON.stringify(value);
+  };
+
+  const valuesEqual = (actual, expected) => {
+    if (Array.isArray(expected)) {
+      if (typeof actual === "string") {
+        const lines = actual.split(/\r?\n|,/).map((item) => item.trim()).filter(Boolean);
+        return stableStringify(lines) === stableStringify(expected.map(String));
+      }
+      return stableStringify(actual) === stableStringify(expected);
+    }
+    if (typeof expected === "boolean") {
+      if (typeof actual === "string") return actual.toLowerCase() === String(expected);
+      return actual === expected;
+    }
+    return stableStringify(actual) === stableStringify(expected);
+  };
+
+  const runCodingTests = () => {
     if (!coding) return;
-    const correct = isCorrectFor(coding.id, codingOutput);
+    const activeLanguage = CODING_LANGUAGES.find((language) => language.key === codingLanguage);
+    if (!activeLanguage?.runnable) {
+      setCodingResult({
+        error: `${activeLanguage?.label || "This language"} cannot run inside the browser yet. Run it locally and paste the output below, then submit.`,
+      });
+      return;
+    }
+    const logs = [];
+    const originalLog = console.log;
+    const results = [];
+
+    try {
+      console.log = (...args) => logs.push(args.join(" "));
+      const runner = new Function(`${codingCode}; return typeof solve === "function" ? solve : null;`);
+      const solve = runner();
+
+      if (!solve) {
+        throw new Error("Define a function named solve.");
+      }
+
+      (coding.testCases || []).forEach((testCase, index) => {
+        try {
+          logs.length = 0;
+          const actual = solve(...(testCase.input || []));
+          const actualValue = actual === undefined && logs.length ? logs.join("\n") : actual;
+          results.push({
+            index,
+            input: testCase.input,
+            expected: testCase.expected,
+            actual: actualValue,
+            passed: valuesEqual(actualValue, testCase.expected),
+          });
+        } catch (err) {
+          results.push({
+            index,
+            input: testCase.input,
+            expected: testCase.expected,
+            actual: err.message,
+            passed: false,
+          });
+        }
+      });
+    } catch (err) {
+      const fallbackResults = (coding.testCases || []).map((testCase, index) => ({
+        index,
+        input: testCase.input,
+        expected: testCase.expected,
+        actual: err.message,
+        passed: false,
+      }));
+      results.push(...fallbackResults);
+    } finally {
+      console.log = originalLog;
+    }
+
+    const passed = results.filter((result) => result.passed).length;
+    const output = results.map((result) => `Case ${result.index + 1}: ${result.passed ? "Passed" : "Failed"} | Expected ${stableStringify(result.expected)} | Got ${stableStringify(result.actual)}`).join("\n");
+    const correct = results.length > 0 && passed === results.length;
+    setCodingTestResults(results);
+    setCodingOutput(output);
     setCodingResult({
       correct,
-      message: correct ? "Output matches expected result!" : "Output does not match yet.",
+      message: correct ? "All tests passed!" : `${passed}/${results.length} tests passed.`,
       expectedOutput: coding.expectedOutput,
-      actualOutput: codingOutput,
+      actualOutput: output,
     });
     setCodingAttempts((prev) => prev + 1);
     setCodingErrors(correct ? codingErrors : codingErrors + 1);
@@ -219,7 +347,10 @@ export default function AssessmentPage() {
     if (!coding) return;
     setCodingSubmitting(true);
     const nextAttempts = codingAttempts + 1;
-    const correct = isCorrectFor(coding.id, codingOutput);
+    const currentResults = codingTestResults.length ? codingTestResults : [];
+    const correct = currentResults.length
+      ? currentResults.every((result) => result.passed)
+      : isCorrectFor(coding.id, codingOutput);
     const nextErrors = correct ? codingErrors : codingErrors + 1;
     try {
       const res = await axios.post(
@@ -227,7 +358,9 @@ export default function AssessmentPage() {
         {
           challengeId: coding.id,
           code: codingCode,
+          language: codingLanguage,
           output: codingOutput,
+          testResults: currentResults,
           timeTaken: codingTimer,
           attempts: nextAttempts,
           errors: nextErrors,
@@ -237,8 +370,8 @@ export default function AssessmentPage() {
       setCodingAttempts(nextAttempts);
       setCodingErrors(nextErrors);
       setCodingResult({
-        correct,
-        message: correct ? "Correct output! Well done." : "Output did not match. Review the expected output and try again.",
+        correct: res.data.correct,
+        message: res.data.message,
         expectedOutput: coding.expectedOutput,
         actualOutput: codingOutput,
         ...res.data,
@@ -309,6 +442,8 @@ export default function AssessmentPage() {
     ? Math.round((coreIndex / coreQuestions.length) * 100)
     : 0;
   const currentAdaptiveQ = adaptiveQuestions[adaptiveQIndex];
+  const activeCodingLanguage = CODING_LANGUAGES.find((language) => language.key === codingLanguage) || CODING_LANGUAGES[0];
+  const canRunCodingInBrowser = !!activeCodingLanguage.runnable;
 
   return (
     <div className="min-h-screen">
@@ -673,8 +808,8 @@ export default function AssessmentPage() {
                   Coding challenge
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Submit the expected program output. SkillSnap tracks time,
-                  attempts, and errors.
+                  Write a JavaScript solve function and run it against sample
+                  test cases. SkillSnap tracks time, attempts, and errors.
                 </p>
               </div>
               <button
@@ -718,11 +853,34 @@ export default function AssessmentPage() {
                       {coding.prompt}
                     </p>
                     <div className="mt-4">
+                      <label className="text-xs text-muted-foreground mb-2 block">
+                        Language
+                      </label>
+                      <select
+                        value={codingLanguage}
+                        onChange={(e) => {
+                          const nextLanguage = e.target.value;
+                          setCodingLanguage(nextLanguage);
+                          setCodingCode(starterForLanguage(coding, nextLanguage));
+                          setCodingOutput("");
+                          setCodingTestResults([]);
+                          setCodingResult(null);
+                        }}
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                      >
+                        {CODING_LANGUAGES.map((language) => (
+                          <option key={language.key} value={language.key}>
+                            {language.label}{language.runnable ? " - browser run" : " - manual output"}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="mt-4">
                       <div className="text-xs text-muted-foreground mb-2">
-                        Starter code
+                        Function signature
                       </div>
                       <pre className="overflow-auto rounded-xl bg-background p-4 text-xs text-foreground">
-                        {coding.starterCode}
+                        solve({coding.inputLabel || "input"})
                       </pre>
                     </div>
                     <div className="mt-4 space-y-2">
@@ -776,26 +934,67 @@ export default function AssessmentPage() {
                   </div>
                   <div>
                     <label className="text-sm font-medium">
-                      Expected output from your code
+                      {canRunCodingInBrowser ? "Console" : "Output"}
                     </label>
                     <textarea
                       value={codingOutput}
                       onChange={(e) => setCodingOutput(e.target.value)}
+                      readOnly={canRunCodingInBrowser}
                       className="mt-2 min-h-28 w-full rounded-2xl border border-border bg-background p-4 font-mono text-xs outline-none focus:border-primary"
-                      placeholder="Example: 1\n2\nFizz\n4\nBuzz"
+                      placeholder={canRunCodingInBrowser ? "Run tests to see results." : "Run your code locally and paste the output here."}
                     />
                   </div>
+                  {canRunCodingInBrowser && (
+                  <div className="rounded-2xl border border-border bg-surface/40 p-4">
+                    <div className="text-xs uppercase tracking-[0.2em] text-primary mb-3">
+                      Test cases
+                    </div>
+                    <div className="space-y-2">
+                      {(coding.testCases || []).map((testCase, index) => {
+                        const result = codingTestResults.find((item) => item.index === index);
+                        return (
+                          <div
+                            key={index}
+                            className={`rounded-xl border p-3 text-xs ${
+                              result
+                                ? result.passed
+                                  ? "border-green-500/40 bg-green-500/10"
+                                  : "border-red-500/40 bg-red-500/10"
+                                : "border-border bg-background/50"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="font-medium">Case {index + 1}</span>
+                              {result && (
+                                <span className={result.passed ? "text-green-300" : "text-red-300"}>
+                                  {result.passed ? "Passed" : "Failed"}
+                                </span>
+                              )}
+                            </div>
+                            <div className="mt-2 grid gap-1 text-muted-foreground">
+                              <span>Input: {stableStringify(testCase.input)}</span>
+                              <span>Expected: {stableStringify(testCase.expected)}</span>
+                              {result && <span>Actual: {stableStringify(result.actual)}</span>}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  )}
                   <div className="flex flex-wrap justify-end gap-3">
+                    {canRunCodingInBrowser && (
                     <button
                       type="button"
-                      onClick={compareOutput}
+                      onClick={runCodingTests}
                       className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated transition"
                     >
-                      Run output
+                      Run tests
                     </button>
+                    )}
                     <button
                       onClick={submitCoding}
-                      disabled={codingSubmitting || !codingOutput.trim()}
+                      disabled={codingSubmitting || (canRunCodingInBrowser ? !codingTestResults.length : !codingOutput.trim())}
                       className="inline-flex items-center gap-2 rounded-xl bg-gradient-brand px-5 py-2.5 text-sm text-primary-foreground disabled:opacity-50"
                     >
                       {codingSubmitting ? (
@@ -823,7 +1022,7 @@ export default function AssessmentPage() {
                       {!codingResult.correct && (
                         <div className="mt-3">
                           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1">
-                            Expected
+                            Expected output
                           </div>
                           <pre className="whitespace-pre-wrap text-xs rounded-lg bg-background/60 p-3 border border-border">
                             {coding?.expectedOutput || "Same as challenge"}

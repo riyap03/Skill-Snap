@@ -75,6 +75,7 @@ export default function SkillTest() {
         apiUrl("/api/assessment/skill-test/submit"),
         {
           answers,
+          questions,
           timeTaken: timer,
         },
         {

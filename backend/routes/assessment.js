@@ -61,6 +61,17 @@ const getWeakSkillsFromRoadmap = async (userId) => {
   return roadmap ? roadmap.skills : {};
 };
 
+const updateLearningProfile = async (userId, updates) => {
+  const user = await User.findById(userId);
+  if (!user) return;
+  user.hasTakenTest = true;
+  user.learningProfile = {
+    ...(user.learningProfile?.toObject?.() || user.learningProfile || {}),
+    ...updates,
+  };
+  await user.save();
+};
+
 router.get("/questions", async (req, res) => {
   try {
     const { track } = req.query;
@@ -101,14 +112,7 @@ router.post("/submit", authMiddleware, async (req, res) => {
       weakTopics: weak,
     });
 
-    await User.findByIdAndUpdate(req.userId, {
-      hasTakenTest: true,
-      learningProfile: {
-        level,
-        accuracyScore: accuracy,
-        speedScore,
-      },
-    });
+    await updateLearningProfile(req.userId, { level, accuracyScore: accuracy, speedScore });
 
     res.json({ level, accuracy: Math.round(accuracy), speedScore, strongTopics: strong, weakTopics: weak });
   } catch (err) {
@@ -207,10 +211,7 @@ router.post("/adaptive/submit", authMiddleware, async (req, res) => {
       answers,
     });
 
-    await User.findByIdAndUpdate(req.userId, {
-      hasTakenTest: true,
-      learningProfile: { level, accuracyScore: accuracy, speedScore },
-    });
+    await updateLearningProfile(req.userId, { level, accuracyScore: accuracy, speedScore });
 
     res.json({ correctAnswers: correctCount, totalQuestions: total, accuracy: Math.round(accuracy), speedScore, level });
   } catch (err) {
@@ -229,7 +230,7 @@ router.get("/coding-questions", authMiddleware, async (req, res) => {
 
 router.post("/coding/submit", authMiddleware, async (req, res) => {
   try {
-    const { challengeId, code, output, timeTaken = 0, attempts = 1, errors = 0 } = req.body;
+    const { challengeId, code, language = "javascript", output, testResults = [], timeTaken = 0, attempts = 1, errors = 0 } = req.body;
     const challenge = CODING_CHALLENGES.find((c) => c.id === challengeId) || CODING_CHALLENGES[0];
 
     const normalize = (text) => {
@@ -270,6 +271,9 @@ router.post("/coding/submit", authMiddleware, async (req, res) => {
       return cleaned.join("\n").trim();
     };
 
+    const hasRunnableResults = Array.isArray(testResults) && testResults.length > 0;
+    const passedCount = hasRunnableResults ? testResults.filter((result) => result.passed).length : 0;
+
     const expected = normalize(challenge.expectedOutput);
     const raw = normalize(output);
     const expectedLower = expected.toLowerCase();
@@ -279,15 +283,17 @@ router.post("/coding/submit", authMiddleware, async (req, res) => {
     const isJsLike = /console\.log|let |const |var |function |=>|require\(|import |document\.|window\.|\.log\(/.test(code || "");
     const isPyLike = /def |print\(|import |from |if __name__|elif|range\(|\.append\(/.test(code || "");
 
-    let correct = false;
-    if (actualJs === expectedLower) correct = true;
-    else if (actualPy === expectedLower) correct = true;
-    else if (raw.toLowerCase() === expectedLower) correct = true;
-    else if (isJsLike && actualJs.includes(expectedLower)) correct = true;
-    else if (isPyLike && actualPy.includes(expectedLower)) correct = true;
-    else if (expectedLower && (actualJs.includes(expectedLower) || actualPy.includes(expectedLower) || raw.toLowerCase().includes(expectedLower))) correct = true;
+    let outputCorrect = false;
+    if (actualJs === expectedLower) outputCorrect = true;
+    else if (actualPy === expectedLower) outputCorrect = true;
+    else if (raw.toLowerCase() === expectedLower) outputCorrect = true;
+    else if (isJsLike && actualJs.includes(expectedLower)) outputCorrect = true;
+    else if (isPyLike && actualPy.includes(expectedLower)) outputCorrect = true;
+    else if (expectedLower && (actualJs.includes(expectedLower) || actualPy.includes(expectedLower) || raw.toLowerCase().includes(expectedLower))) outputCorrect = true;
 
-    const accuracy = correct ? 100 : 0;
+    const correct = hasRunnableResults ? passedCount === testResults.length : outputCorrect;
+
+    const accuracy = hasRunnableResults ? Math.round((passedCount / testResults.length) * 100) : correct ? 100 : 0;
     const speedScore = Math.max(0, 100 - timeTaken);
     let level = "beginner";
     if (accuracy > 80 && attempts <= 2) level = "advanced";
@@ -303,8 +309,10 @@ router.post("/coding/submit", authMiddleware, async (req, res) => {
       timeTaken,
       codingData: {
         challengeId,
+        language,
         code,
         output,
+        testResults,
         attempts,
         errors,
         correct,
@@ -313,7 +321,10 @@ router.post("/coding/submit", authMiddleware, async (req, res) => {
 
     res.json({
       correct,
-      message: correct ? "Correct output! Well done." : "Output did not match. Review the expected output and try again.",
+      passedCount,
+      totalTests: hasRunnableResults ? testResults.length : undefined,
+      accuracy,
+      message: correct ? "All tests passed. Well done." : "Some tests failed. Review the failed cases and try again.",
       expectedOutput: challenge.expectedOutput,
     });
   } catch (err) {
@@ -339,7 +350,9 @@ router.get("/skill-test", authMiddleware, async (req, res) => {
 router.post("/skill-test/submit", authMiddleware, async (req, res) => {
   try {
     const { answers = [], timeTaken = 0 } = req.body;
-    const questions = pickSkillTestQuestions(8);
+    const questions = Array.isArray(req.body.questions) && req.body.questions.length
+      ? req.body.questions
+      : pickSkillTestQuestions(8);
     let correctCount = 0;
     const detailedAnswers = [];
 
@@ -376,10 +389,7 @@ router.post("/skill-test/submit", authMiddleware, async (req, res) => {
       weakTopics: weak,
     });
 
-    await User.findByIdAndUpdate(req.userId, {
-      hasTakenTest: true,
-      learningProfile: { level, accuracyScore: accuracy, speedScore },
-    });
+    await updateLearningProfile(req.userId, { level, accuracyScore: accuracy, speedScore });
 
     res.json({ correctAnswers: correctCount, totalQuestions: total, accuracy: Math.round(accuracy), speedScore, level, strongTopics: strong, weakTopics: weak });
   } catch (err) {

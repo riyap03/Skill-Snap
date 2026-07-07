@@ -12,6 +12,7 @@ import assessmentRoutes from "./routes/assessment.js";
 import analyticsRoutes from "./routes/analytics.js";
 import userRoutes from "./routes/user.js";
 import portfolioRoutes from "./routes/portfolio.routes.js";
+import onboardingRoutes from "./routes/onboarding.js";
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/portfolio", portfolioRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/onboarding", onboardingRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)

@@ -1,5 +1,6 @@
 import express from "express";
 import PDFDocument from "pdfkit";
+import jwt from "jsonwebtoken";
 
 import authMiddleware from "../middleware/auth.middleware.js";
 import Roadmap from "../models/Roadmap.js";
@@ -23,10 +24,25 @@ const slugToTitle = (slug) =>
 
 const getBaseRoadmap = (roadmapName) => ROADMAPS[roadmapName] || null;
 
+const getOptionalUserId = (req) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return null;
+    return jwt.verify(token, process.env.JWT_SECRET).userId;
+  } catch {
+    return null;
+  }
+};
+
 const getUserProfile = (user) => ({
   level: user?.learningProfile?.level || "beginner",
   accuracyScore: user?.learningProfile?.accuracyScore || 0,
   speedScore: user?.learningProfile?.speedScore || 0,
+  currentRole: user?.learningProfile?.currentRole || "",
+  targetRole: user?.learningProfile?.targetRole || "",
+  knownSkills: user?.learningProfile?.knownSkills || [],
+  weeklyStudyHours: user?.learningProfile?.weeklyStudyHours || 10,
+  learningStyle: user?.learningProfile?.learningStyle || "",
 });
 
 const getSkillState = (roadmap, skillName) => {
@@ -39,14 +55,18 @@ const getSkillState = (roadmap, skillName) => {
   };
 };
 
-const calculatePace = (roadmap) => {
+const calculatePace = (roadmap, profile = {}) => {
+  const hours = Math.min(40, Math.max(1, Number(profile.weeklyStudyHours) || 10));
+  const capacityTarget = hours < 7 ? 2 : hours < 12 ? 3 : hours < 20 ? 4 : 5;
+
   if (!roadmap) {
     return {
       pace: "new",
       completedLast7Days: 0,
       completedPrevious7Days: 0,
-      weeklyTarget: 3,
-      message: "Start with a few focused skills this week.",
+      weeklyTarget: capacityTarget,
+      hoursPerWeek: hours,
+      message: `Start with ${capacityTarget} focused skill${capacityTarget === 1 ? "" : "s"} this week based on your available study time.`,
     };
   }
 
@@ -66,20 +86,20 @@ const calculatePace = (roadmap) => {
   });
 
   let pace = "steady";
-  let weeklyTarget = 3;
+  let weeklyTarget = capacityTarget;
   let message = "You are moving at a steady pace. Keep the streak alive.";
 
   if (completedLast7Days === 0) {
     pace = "slow";
-    weeklyTarget = 2;
+    weeklyTarget = Math.max(1, capacityTarget - 1);
     message = "Pick one small skill today and rebuild momentum.";
   } else if (completedLast7Days >= 5 || completedLast7Days > completedPrevious7Days + 2) {
     pace = "fast";
-    weeklyTarget = 5;
+    weeklyTarget = Math.min(6, capacityTarget + 1);
     message = "Great momentum. Your roadmap can handle a bigger weekly target.";
   } else if (completedPrevious7Days > completedLast7Days + 1) {
     pace = "slowing";
-    weeklyTarget = 2;
+    weeklyTarget = Math.max(1, capacityTarget - 1);
     message = "Your pace dipped a little. A lighter focus list should help.";
   }
 
@@ -88,8 +108,32 @@ const calculatePace = (roadmap) => {
     completedLast7Days,
     completedPrevious7Days,
     weeklyTarget,
+    hoursPerWeek: hours,
     message,
   };
+};
+
+const normalizeSkill = (skill = "") => skill.toLowerCase().replace(/[^a-z0-9+#.]/g, "");
+
+const prioritizeSkills = (skillNames, profile) => {
+  const known = new Set((profile.knownSkills || []).map(normalizeSkill));
+  const target = String(profile.targetRole || "").toLowerCase();
+  const style = String(profile.learningStyle || "").toLowerCase();
+
+  const scoreSkill = (skillName, index) => {
+    const normalized = normalizeSkill(skillName);
+    let score = index;
+
+    if (known.has(normalized)) score += 1000;
+    if (target.includes("frontend") && ["html", "css", "javascript", "react", "responsive design"].some((s) => normalized.includes(normalizeSkill(s)))) score -= 20;
+    if (target.includes("backend") && ["node.js", "express", "mongodb", "rest apis", "authentication"].some((s) => normalized.includes(normalizeSkill(s)))) score -= 20;
+    if (target.includes("fullstack") && ["javascript", "react", "node.js", "express", "mongodb"].some((s) => normalized.includes(normalizeSkill(s)))) score -= 20;
+    if (style === "hands-on" && ["project", "deployment", "testing", "api"].some((s) => normalized.includes(s))) score -= 8;
+
+    return score;
+  };
+
+  return [...skillNames].sort((a, b) => scoreSkill(a, skillNames.indexOf(a)) - scoreSkill(b, skillNames.indexOf(b)));
 };
 
 const buildAdaptivePlan = (roadmapName, user, roadmap) => {
@@ -98,21 +142,23 @@ const buildAdaptivePlan = (roadmapName, user, roadmap) => {
   if (!base) return null;
 
   const profile = getUserProfile(user);
-  const pace = calculatePace(roadmap);
+  const pace = calculatePace(roadmap, profile);
   const extras = LEVEL_EXTRAS[profile.level] || [];
-  const skillNames = [...new Set([...base, ...extras])];
+  const skillNames = prioritizeSkills([...new Set([...base, ...extras])], profile);
   const skills = {};
 
   skillNames.forEach((skillName) => {
-    skills[skillName] = getSkillState(roadmap, skillName).completed;
+    const isKnown = (profile.knownSkills || []).map(normalizeSkill).includes(normalizeSkill(skillName));
+    skills[skillName] = getSkillState(roadmap, skillName).completed || isKnown;
   });
 
   const completed = Object.values(skills).filter(Boolean).length;
   const total = skillNames.length;
   const progress = total ? Math.round((completed / total) * 100) : 0;
   const pendingSkills = skillNames.filter((skillName) => !skills[skillName]);
-  const focusSize = pace.pace === "fast" ? 4 : pace.pace === "slow" || pace.pace === "slowing" ? 2 : 3;
+  const focusSize = Math.max(1, Math.min(pace.weeklyTarget, pendingSkills.length || pace.weeklyTarget));
   const nextFocus = pendingSkills.slice(0, focusSize);
+  const estimatedWeeks = pace.weeklyTarget ? Math.max(1, Math.ceil(pendingSkills.length / pace.weeklyTarget)) : 1;
 
   return {
     roadmapName,
@@ -120,8 +166,12 @@ const buildAdaptivePlan = (roadmapName, user, roadmap) => {
     level: profile.level,
     accuracyScore: Math.round(profile.accuracyScore),
     speedScore: Math.round(profile.speedScore),
+    targetRole: profile.targetRole,
+    learningStyle: profile.learningStyle,
     pace,
+    hoursPerWeek: pace.hoursPerWeek,
     weeklyTarget: pace.weeklyTarget,
+    estimatedWeeks,
     nextFocus,
     skills,
     skillOrder: skillNames,
@@ -161,12 +211,31 @@ router.get("/projects/recommend", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/", (req, res) => {
-  const roadmaps = Object.keys(ROADMAPS).map((roadmapName) => ({
-    roadmapName,
-    title: slugToTitle(roadmapName),
-    skills: ROADMAPS[roadmapName],
-  }));
+router.get("/", async (req, res) => {
+  const userId = getOptionalUserId(req);
+  const [user, savedRoadmaps] = userId
+    ? await Promise.all([
+        User.findById(userId),
+        Roadmap.find({ userId }),
+      ])
+    : [null, []];
+  const savedByName = new Map((savedRoadmaps || []).map((roadmap) => [roadmap.roadmapName, roadmap]));
+
+  const roadmaps = Object.keys(ROADMAPS).map((roadmapName) => {
+    const plan = userId ? buildAdaptivePlan(roadmapName, user, savedByName.get(roadmapName)) : null;
+
+    return {
+      roadmapName,
+      title: slugToTitle(roadmapName),
+      skills: plan?.skillOrder || ROADMAPS[roadmapName],
+      progress: plan?.progress || 0,
+      completed: plan?.completed || 0,
+      total: plan?.total || ROADMAPS[roadmapName].length,
+      nextFocus: plan?.nextFocus || [],
+      weeklyTarget: plan?.weeklyTarget,
+      estimatedWeeks: plan?.estimatedWeeks,
+    };
+  });
 
   res.json({ roadmaps });
 });

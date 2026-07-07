@@ -5,11 +5,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Beginner",
     prompt:
       "Write a program that prints numbers from 1 to 30. For multiples of 3 print 'Fizz', for multiples of 5 print 'Buzz', and for multiples of both print 'FizzBuzz'.",
-    starterCode: "# Write your code here\n\n",
+    starterCode: "function solve(n) {\n  // Return an array with values from 1 to n using FizzBuzz rules.\n}\n",
+    functionName: "solve",
+    inputLabel: "n",
     constraints: [
       "Print each result on a new line",
       "Handle numbers from 1 to 30",
       "Order matters: FizzBuzz before Fizz and Buzz",
+    ],
+    testCases: [
+      { input: [5], expected: [1, 2, "Fizz", 4, "Buzz"] },
+      { input: [15], expected: [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"] },
+      { input: [30], expected: [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz", 16, 17, "Fizz", 19, "Buzz", "Fizz", 22, 23, "Fizz", "Buzz", 26, "Fizz", 28, 29, "FizzBuzz"] },
     ],
     expectedOutput:
       "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16\n17\nFizz\n19\nBuzz\nFizz\n22\n23\nFizz\nBuzz\n26\nFizz\n28\n29\nFizzBuzz",
@@ -22,11 +29,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Beginner",
     prompt:
       "Write a function that checks if a given string is a palindrome (reads the same forwards and backwards). Ignore case and spaces. Test it with 'A man a plan a canal Panama'.",
-    starterCode: "# Write your function here\n# Test with: 'A man a plan a canal Panama'\n\n",
+    starterCode: "function solve(text) {\n  // Return true if text is a palindrome after ignoring spaces and case.\n}\n",
+    functionName: "solve",
+    inputLabel: "text",
     constraints: [
       "Ignore case and spaces",
       "Return True if palindrome, False otherwise",
       "Handle single character strings",
+    ],
+    testCases: [
+      { input: ["A man a plan a canal Panama"], expected: true },
+      { input: ["SkillSnap"], expected: false },
+      { input: ["Race car"], expected: true },
     ],
     expectedOutput: "True",
     suggestedTime: 120,
@@ -38,11 +52,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Beginner",
     prompt:
       "Write a program that finds the sum of all numbers in an array. Test with the array [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].",
-    starterCode: "# Test array: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n\n",
+    starterCode: "function solve(nums) {\n  // Return the sum of all numbers in nums.\n}\n",
+    functionName: "solve",
+    inputLabel: "nums",
     constraints: [
       "Output should be a single number",
       "Handle empty arrays",
       "Handle negative numbers",
+    ],
+    testCases: [
+      { input: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]], expected: 55 },
+      { input: [[]], expected: 0 },
+      { input: [[-2, 4, -1]], expected: 1 },
     ],
     expectedOutput: "55",
     suggestedTime: 90,
@@ -54,11 +75,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Intermediate",
     prompt:
       "Given an array of integers and a target sum, find two numbers that add up to the target. Return their indices. Test with array [2, 7, 11, 15] and target 9.",
-    starterCode: "# Array: [2, 7, 11, 15], Target: 9\n\n",
+    starterCode: "function solve(nums, target) {\n  // Return the two indices that add up to target.\n}\n",
+    functionName: "solve",
+    inputLabel: "nums, target",
     constraints: [
       "Each input has exactly one solution",
       "You may not use the same element twice",
       "Return the two indices",
+    ],
+    testCases: [
+      { input: [[2, 7, 11, 15], 9], expected: [0, 1] },
+      { input: [[3, 2, 4], 6], expected: [1, 2] },
+      { input: [[3, 3], 6], expected: [0, 1] },
     ],
     expectedOutput: "0\n1",
     suggestedTime: 300,
@@ -70,11 +98,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Intermediate",
     prompt:
       "Write a program to calculate the factorial of a number. Test with input 5. Factorial of n is n * (n-1) * ... * 1.",
-    starterCode: "# Calculate factorial of 5\n\n",
+    starterCode: "function solve(n) {\n  // Return n factorial.\n}\n",
+    functionName: "solve",
+    inputLabel: "n",
     constraints: [
       "Handle n = 0 (factorial is 1)",
       "Handle negative numbers appropriately",
       "Use recursion or iteration",
+    ],
+    testCases: [
+      { input: [5], expected: 120 },
+      { input: [0], expected: 1 },
+      { input: [7], expected: 5040 },
     ],
     expectedOutput: "120",
     suggestedTime: 150,
@@ -86,13 +121,20 @@ export const CODING_CHALLENGES = [
     difficulty: "Beginner",
     prompt:
       "Write a program that reverses a given string. Test with the string 'SkillSnap'.",
-    starterCode: "# Reverse: 'SkillSnap'\n\n",
+    starterCode: "function solve(text) {\n  // Return text reversed.\n}\n",
+    functionName: "solve",
+    inputLabel: "text",
     constraints: [
       "Handle empty strings",
       "Preserve all characters including special chars",
       "Do not use built-in reverse function",
     ],
-    expectedOutput: "paNlliKS",
+    testCases: [
+      { input: ["SkillSnap"], expected: "panSllikS" },
+      { input: [""], expected: "" },
+      { input: ["abc!"], expected: "!cba" },
+    ],
+    expectedOutput: "panSllikS",
     suggestedTime: 90,
     skills: ["String Manipulation", "JavaScript", "Python"],
   },
@@ -102,11 +144,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Beginner",
     prompt:
       "Write a program that counts the number of vowels in a given string. Test with 'SkillSnap Backend Assessment'.",
-    starterCode: "# Count vowels in: 'SkillSnap Backend Assessment'\n\n",
+    starterCode: "function solve(text) {\n  // Return the number of vowels in text.\n}\n",
+    functionName: "solve",
+    inputLabel: "text",
     constraints: [
       "Consider a, e, i, o, u as vowels (case insensitive)",
       "Return just the count number",
       "Handle empty strings",
+    ],
+    testCases: [
+      { input: ["SkillSnap Backend Assessment"], expected: 8 },
+      { input: [""], expected: 0 },
+      { input: ["AEIOU xyz"], expected: 5 },
     ],
     expectedOutput: "8",
     suggestedTime: 90,
@@ -118,11 +167,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Intermediate",
     prompt:
       "Write a program that checks if two strings are anagrams of each other. Test with 'listen' and 'silent'.",
-    starterCode: "# Check: 'listen' and 'silent'\n\n",
+    starterCode: "function solve(a, b) {\n  // Return true if a and b are anagrams.\n}\n",
+    functionName: "solve",
+    inputLabel: "a, b",
     constraints: [
       "Ignore case and spaces",
       "Return True/False or equivalent",
       "Handle strings of different lengths",
+    ],
+    testCases: [
+      { input: ["listen", "silent"], expected: true },
+      { input: ["hello", "world"], expected: false },
+      { input: ["Dormitory", "Dirty room"], expected: true },
     ],
     expectedOutput: "True",
     suggestedTime: 180,
@@ -134,11 +190,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Beginner",
     prompt:
       "Write a program that finds the maximum number in an array without using built-in max functions. Test with [3, 7, 2, 9, 1, 5].",
-    starterCode: "# Array: [3, 7, 2, 9, 1, 5]\n\n",
+    starterCode: "function solve(nums) {\n  // Return the largest number in nums without Math.max.\n}\n",
+    functionName: "solve",
+    inputLabel: "nums",
     constraints: [
       "Do not use Math.max or built-in max",
       "Handle single element arrays",
       "Handle negative numbers",
+    ],
+    testCases: [
+      { input: [[3, 7, 2, 9, 1, 5]], expected: 9 },
+      { input: [[-8, -3, -12]], expected: -3 },
+      { input: [[42]], expected: 42 },
     ],
     expectedOutput: "9",
     suggestedTime: 90,
@@ -150,11 +213,18 @@ export const CODING_CHALLENGES = [
     difficulty: "Intermediate",
     prompt:
       "Write a program that prints the first 10 numbers of the Fibonacci sequence (starting with 0, 1).",
-    starterCode: "# Print first 10 Fibonacci numbers\n\n",
+    starterCode: "function solve(n) {\n  // Return an array with the first n Fibonacci numbers.\n}\n",
+    functionName: "solve",
+    inputLabel: "n",
     constraints: [
       "Start with 0, 1",
       "Print each number on a new line",
       "Use iteration or recursion",
+    ],
+    testCases: [
+      { input: [1], expected: [0] },
+      { input: [2], expected: [0, 1] },
+      { input: [10], expected: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34] },
     ],
     expectedOutput: "0\n1\n1\n2\n3\n5\n8\n13\n21\n34",
     suggestedTime: 180,

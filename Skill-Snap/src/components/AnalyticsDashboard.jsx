@@ -1,78 +1,79 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import {
-  LineChart,
-  Line,
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
-import axios from "axios";
-import { apiUrl } from "../config/api";
 import {
-  Flame,
-  TrendingUp,
-  Trophy,
   ArrowRight,
+  BarChart3,
   BookOpen,
+  CheckCircle2,
   ClipboardCheck,
-  Code2,
+  Clock,
+  Flame,
+  Loader2,
   Target,
-  Zap,
-  Brain,
+  TrendingUp,
 } from "lucide-react";
+import { apiUrl } from "../config/api";
 
-const COLORS = {
-  purple: "#a855f7",
-  pink: "#ec4899",
-  blue: "#3b82f6",
-  cyan: "#06b6d4",
-  green: "#22c55e",
-  yellow: "#eab308",
-  orange: "#f97316",
-  red: "#ef4444",
-};
+const clampPercent = (value) => Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
 
-const CustomTooltip = ({ active, payload, label }) => {
+const titleCase = (value = "") =>
+  value
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+
+const ChartTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0f0f1a]/95 px-4 py-3 shadow-2xl backdrop-blur-xl">
-      {label && <p className="text-xs text-white/60 mb-2">{label}</p>}
-      {payload.map((entry, index) => (
-        <div key={index} className="flex items-center justify-between gap-4">
-          <span className="text-xs text-white/70">{entry.name}</span>
-          <span className="text-sm font-semibold" style={{ color: entry.color }}>
-            {typeof entry.value === "number" ? entry.value.toLocaleString() : entry.value}
-          </span>
+    <div className="rounded-xl border border-border bg-surface px-3 py-2 shadow-lg">
+      {label && <div className="mb-1 text-xs text-muted-foreground">{label}</div>}
+      {payload.map((item) => (
+        <div key={item.dataKey} className="flex items-center justify-between gap-5 text-xs">
+          <span className="text-muted-foreground">{item.name}</span>
+          <span className="font-semibold text-foreground">{item.value}</span>
         </div>
       ))}
     </div>
   );
 };
 
-const StatCard = ({ icon: IconComponent, label, value, sub, gradient }) => (
-  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5 transition-all hover:border-white/20 hover:shadow-lg hover:shadow-brand-purple/10">
-    <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} opacity-20 blur-2xl`} />
-    <div className="relative">
-      <div className="flex items-center gap-2 mb-3">
-        <div className={`rounded-lg bg-gradient-to-br ${gradient} p-2`}>
-          <IconComponent className="h-4 w-4 text-white" />
+const StatCard = ({ icon: Icon, label, value, detail, tone = "blue" }) => {
+  const tones = {
+    blue: "bg-blue-500/15 text-blue-300",
+    green: "bg-emerald-500/15 text-emerald-300",
+    purple: "bg-violet-500/15 text-violet-300",
+    amber: "bg-amber-500/15 text-amber-300",
+  };
+
+  return (
+    <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-xs text-muted-foreground">{label}</div>
+          <div className="mt-2 text-2xl font-display font-bold">{value}</div>
+          <div className="mt-1 text-xs text-muted-foreground">{detail}</div>
         </div>
-        <span className="text-xs text-white/60">{label}</span>
+        <div className={`grid h-10 w-10 place-items-center rounded-xl ${tones[tone] || tones.blue}`}>
+          <Icon className="h-5 w-5" />
+        </div>
       </div>
-      <div className="text-3xl font-display font-bold tracking-tight">{value}</div>
-      <div className="text-xs text-white/50 mt-1">{sub}</div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function AnalyticsDashboard() {
   const [analytics, setAnalytics] = useState(null);
@@ -80,10 +81,12 @@ export default function AnalyticsDashboard() {
   const [roadmaps, setRoadmaps] = useState([]);
   const [assessments, setAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
+        setError("");
         const token = localStorage.getItem("token");
         const headers = { headers: { Authorization: `Bearer ${token}` } };
         const [overviewRes, skillsRes, roadmapRes, assessmentsRes] = await Promise.all([
@@ -92,473 +95,254 @@ export default function AnalyticsDashboard() {
           axios.get(apiUrl("/api/analytics/roadmap"), headers),
           axios.get(apiUrl("/api/analytics/assessments"), headers),
         ]);
-        setAnalytics(overviewRes.data.overview);
+        setAnalytics(overviewRes.data.overview || {});
         setSkills(skillsRes.data.skills || []);
         setRoadmaps(roadmapRes.data.roadmaps || []);
         setAssessments(assessmentsRes.data.assessments || []);
-      } catch (err) {
-        console.error(err);
+      } catch {
+        setError("Analytics could not be loaded. Please make sure the backend is running.");
       } finally {
         setLoading(false);
       }
     };
+
     fetchAll();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-10 w-10 rounded-full border-2 border-brand-purple/30 border-t-brand-purple animate-spin" />
-          <p className="text-sm text-muted-foreground">Loading analytics…</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!loading && !analytics) {
-    return (
-      <div className="min-h-screen">
-        <main className="mx-auto max-w-4xl px-6 py-12">
-          <div className="text-center mb-12">
-            <div className="mx-auto h-16 w-16 rounded-2xl bg-gradient-brand grid place-items-center shadow-[0_0_40px_-8px_var(--brand-purple)] mb-6">
-              <Brain className="h-7 w-7 text-primary-foreground" />
-            </div>
-            <h1 className="text-4xl font-display font-bold tracking-tight mb-3">Analytics</h1>
-            <p className="text-muted-foreground max-w-lg mx-auto text-sm leading-relaxed">
-              Start using SkillSnap to unlock personalized insights and progress tracking.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {[
-              { to: "/roadmap", icon: BookOpen, title: "Start a roadmap", desc: "Pick a career path and start learning skills.", color: "from-blue-500 to-cyan-400" },
-              { to: "/assessment", icon: ClipboardCheck, title: "Take an assessment", desc: "Complete a core track or adaptive test.", color: "from-purple-500 to-pink-400" },
-              { to: "/assessment", icon: Code2, title: "Practice coding", desc: "Try a coding challenge to track speed and accuracy.", color: "from-orange-500 to-yellow-400" },
-            ].map((item) => (
-              <Link key={item.to} to={item.to} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 text-left transition-all hover:border-white/20 hover:shadow-lg hover:shadow-brand-purple/10">
-                <div className={`absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br ${item.color} opacity-20 blur-2xl transition-opacity group-hover:opacity-30`} />
-                <div className="relative">
-                  <div className={`inline-flex h-10 w-10 rounded-xl bg-gradient-to-br ${item.color} grid place-items-center mb-4 shadow-lg`}>
-                    <item.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="text-base font-semibold mb-1">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-xs text-brand-pink mt-3 group-hover:gap-2 transition-all">
-                    Get started <ArrowRight className="h-3 w-3" />
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  const skillDistribution = [
-    { name: "Completed", value: analytics.completedSkills || 0 },
-    { name: "Remaining", value: Math.max(0, (analytics.totalSkills || 0) - (analytics.completedSkills || 0)) },
-  ].filter((item) => item.value > 0 || item.name === "Remaining");
-
-  const pieData = skillDistribution.length > 0 ? skillDistribution : [{ name: "No data", value: 1 }];
-
-  const chartData = skills.slice(-12);
-  const roadmapData = roadmaps.slice(-6);
-  const assessmentData = assessments.slice(-8);
-  const recentTrend = assessmentData.length >= 2
-    ? assessmentData[assessmentData.length - 1]?.accuracy - assessmentData[0]?.accuracy
+  const completedSkills = analytics?.completedSkills || 0;
+  const totalSkills = analytics?.totalSkills || 0;
+  const completionPercent = totalSkills ? clampPercent((completedSkills / totalSkills) * 100) : 0;
+  const accuracyScore = clampPercent(analytics?.accuracyScore);
+  const recentAssessments = assessments.slice(-8);
+  const averageAssessment = recentAssessments.length
+    ? clampPercent(recentAssessments.reduce((sum, item) => sum + (item.accuracy || 0), 0) / recentAssessments.length)
     : 0;
 
-  return (
-    <div className="space-y-6">
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          icon={Flame}
-          label="Learning Streak"
-          value={`${analytics.streak || 0} days`}
-          sub={analytics.streak >= 7 ? "On fire!" : "Keep it going"}
-          gradient="from-orange-500 to-red-500"
-        />
-        <StatCard
-          icon={Target}
-          label="Skills Completed"
-          value={analytics.completedSkills || 0}
-          sub={`of ${analytics.totalSkills || 0} total`}
-          gradient="from-blue-500 to-cyan-400"
-        />
-        <StatCard
-          icon={Trophy}
-          label="Assessments"
-          value={analytics.assessmentCount || 0}
-          sub="tests completed"
-          gradient="from-purple-500 to-pink-400"
-        />
-        <StatCard
-          icon={Zap}
-          label="This Week"
-          value={`${analytics.weeklyHours || 0}h`}
-          sub={`${analytics.monthlyHours || 0}h this month`}
-          gradient="from-emerald-500 to-teal-400"
-        />
-      </div>
+  const skillChart = useMemo(() => {
+    let running = 0;
+    return skills.slice(-14).map((item) => {
+      running += Number(item.completed) || 0;
+      return { ...item, cumulative: running };
+    });
+  }, [skills]);
 
-      {/* Performance Summary Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-brand-purple/20 via-brand-pink/20 to-blue-500/20 p-6">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50" />
-        <div className="relative flex flex-wrap items-center justify-between gap-4">
+  const roadmapChart = roadmaps
+    .slice()
+    .sort((a, b) => (b.progress || 0) - (a.progress || 0))
+    .slice(0, 6)
+    .map((item) => ({
+      ...item,
+      name: titleCase(item.name),
+      progress: clampPercent(item.progress),
+    }));
+
+  const pieData = [
+    { name: "Completed", value: completedSkills },
+    { name: "Remaining", value: Math.max(0, totalSkills - completedSkills) },
+  ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen grid place-items-center">
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          Loading analytics...
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen">
+      <main className="mx-auto max-w-7xl px-6 py-10">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h3 className="text-lg font-display font-bold">Performance Overview</h3>
-            <p className="text-xs text-white/60 mt-1">
-              Level: <span className="text-brand-pink font-medium capitalize">{analytics.level || "beginner"}</span> ·
-              Accuracy: <span className="text-brand-purple font-medium">{analytics.accuracyScore || 0}%</span> ·
-              Speed: <span className="text-cyan-400 font-medium">{analytics.speedScore || 0}</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs text-muted-foreground">
+              <BarChart3 className="h-3.5 w-3.5 text-primary" />
+              Learning analytics
+            </div>
+            <h1 className="mt-4 text-3xl font-display font-bold tracking-tight sm:text-4xl">
+              Progress that actually moves
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Skill completion, roadmap pace, and assessment accuracy in one focused view.
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${recentTrend >= 0 ? "bg-green-500/10 text-green-300" : "bg-red-500/10 text-red-300"}`}>
-              <TrendingUp className="h-3 w-3" />
-              {recentTrend >= 0 ? "+" : ""}{recentTrend}% trend
-            </div>
+          <div className="flex gap-2">
+            <Link to="/roadmap" className="rounded-xl border border-border px-4 py-2.5 text-sm hover:bg-surface-elevated">
+              Roadmaps
+            </Link>
+            <Link to="/assessment" className="inline-flex items-center gap-2 rounded-xl bg-gradient-brand px-4 py-2.5 text-sm text-primary-foreground">
+              Practice <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-        </div>
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Skill Growth - takes 2 columns */}
-        <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white/90">Skill Growth Over Time</h3>
-              <p className="text-xs text-white/50 mt-0.5">Cumulative skills completed</p>
-            </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-brand-purple/10 text-brand-purple text-[10px] font-medium">
-              <TrendingUp className="h-3 w-3" />
-              {chartData.length > 0 && chartData[chartData.length - 1]?.completed || 0} total
-            </div>
-          </div>
-          {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="skillGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={"#3b82f6"} stopOpacity={0.4} />
-                    <stop offset="100%" stopColor={"#3b82f6"} stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="skillLine" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor={"#3b82f6"} />
-                    <stop offset="100%" stopColor={"#8b5cf6"} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
-                  axisLine={false}
-                  tickLine={false}
-                  dy={8}
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
-                  axisLine={false}
-                  tickLine={false}
-                  dx={-8}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "rgba(15,15,26,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "12px",
-                    fontSize: "12px",
-                    color: "white",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-                  }}
-                  labelStyle={{ color: "rgba(255,255,255,0.6)", marginBottom: 4 }}
-                  formatter={(value) => [<span className="font-semibold text-brand-purple">{value} skills</span>, "Completed"]}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="completed"
-                  stroke="url(#skillLine)"
-                  strokeWidth={3}
-                  fill="url(#skillGrad)"
-                  dot={{ r: 4, fill: "#3b82f6", strokeWidth: 2, stroke: "#0f0f1a" }}
-                  activeDot={{ r: 6, fill: "#8b5cf6", strokeWidth: 2, stroke: "#0f0f1a" }}
-                  name="Completed"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-12">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <TrendingUp className="h-5 w-5 text-white/30" />
-              </div>
-              <p className="text-xs text-white/50">Complete more skills to see growth charts</p>
-            </div>
-          )}
         </div>
 
-        {/* Skill Distribution Donut */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
-          <h3 className="text-sm font-semibold text-white/90 mb-1">Skill Distribution</h3>
-          <p className="text-xs text-white/50 mb-4">Progress breakdown</p>
-          {analytics.totalSkills > 0 ? (
-            <div className="flex flex-col items-center">
-              <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                  <defs>
-                    <linearGradient id="donutPurple" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor={"#3b82f6"} />
-                      <stop offset="100%" stopColor={"#8b5cf6"} />
-                    </linearGradient>
-                    <linearGradient id="donutGray" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
-                      <stop offset="100%" stopColor="rgba(255,255,255,0.05)" />
-                    </linearGradient>
-                  </defs>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={55}
-                    outerRadius={80}
-                    paddingAngle={3}
-                    dataKey="value"
-                    stroke="none"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell
-                        key={index}
-                        fill={index === 0 ? "url(#donutPurple)" : "url(#donutGray)"}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      background: "rgba(15,15,26,0.95)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      borderRadius: "12px",
-                      fontSize: "12px",
-                      color: "white",
-                    }}
-                    formatter={(value) => [<span className="font-semibold">{value}</span>, ""]}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="flex items-center justify-center gap-6 mt-2">
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-gradient-to-br from-brand-purple to-brand-pink" />
-                  <span className="text-xs text-white/60">Done</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full bg-white/10" />
-                  <span className="text-xs text-white/60">Remaining</span>
-                </div>
-              </div>
-              <div className="mt-3 text-center">
-                <div className="text-2xl font-display font-bold text-white">
-                  {Math.round((analytics.completedSkills / Math.max(1, analytics.totalSkills)) * 100)}%
-                </div>
-                <div className="text-[10px] text-white/50 uppercase tracking-wider">Complete</div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-8">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <Target className="h-5 w-5 text-white/30" />
-              </div>
-              <p className="text-xs text-white/50">Start a roadmap to track progress</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Roadmap & Assessment Charts */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Roadmap Completion */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white/90">Roadmap Progress</h3>
-              <p className="text-xs text-white/50 mt-0.5">Completion by roadmap</p>
-            </div>
-            <BookOpen className="h-4 w-4 text-white/30" />
-          </div>
-          {roadmapData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={roadmapData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="roadmapLine" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor={"#06b6d4"} />
-                    <stop offset="100%" stopColor={COLORS.cyan} />
-                  </linearGradient>
-                  <linearGradient id="roadmapArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={"#06b6d4"} stopOpacity={0.35} />
-                    <stop offset="100%" stopColor={"#06b6d4"} stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="name"
-                  tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
-                  axisLine={false}
-                  tickLine={false}
-                  dy={8}
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
-                  axisLine={false}
-                  tickLine={false}
-                  dx={-8}
-                  domain={[0, 100]}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "rgba(15,15,26,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "12px",
-                    fontSize: "12px",
-                    color: "white",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-                  }}
-                  formatter={(value) => [<span className="font-semibold text-brand-purple">{value}%</span>, "Progress"]}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="progress"
-                  stroke="url(#roadmapLine)"
-                  strokeWidth={3}
-                  fill="url(#roadmapArea)"
-                  dot={{ r: 4, fill: "#06b6d4", strokeWidth: 2, stroke: "#0f0f1a" }}
-                  activeDot={{ r: 6, fill: COLORS.cyan, strokeWidth: 2, stroke: "#0f0f1a" }}
-                  name="Progress %"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-10">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <BookOpen className="h-5 w-5 text-white/30" />
-              </div>
-              <p className="text-xs text-white/50">Start a roadmap to see progress</p>
-            </div>
-          )}
-        </div>
-
-        {/* Assessment Scores */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white/90">Assessment Scores</h3>
-              <p className="text-xs text-white/50 mt-0.5">Accuracy over time</p>
-            </div>
-            <ClipboardCheck className="h-4 w-4 text-white/30" />
-          </div>
-          {assessmentData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={assessmentData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={"#8b5cf6"} stopOpacity={0.3} />
-                    <stop offset="100%" stopColor={"#8b5cf6"} stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }}
-                  axisLine={false}
-                  tickLine={false}
-                  dy={8}
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fill: "rgba(255,255,255,0.4)" }}
-                  axisLine={false}
-                  tickLine={false}
-                  dx={-8}
-                  domain={[0, 100]}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "rgba(15,15,26,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "12px",
-                    fontSize: "12px",
-                    color: "white",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-                  }}
-                  formatter={(value) => [<span className="font-semibold text-brand-pink">{value}%</span>, "Accuracy"]}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="accuracy"
-                  stroke={"#8b5cf6"}
-                  strokeWidth={3}
-                  dot={{ r: 4, fill: "#8b5cf6", strokeWidth: 2, stroke: "#0f0f1a" }}
-                  activeDot={{ r: 6, fill: "#fff", strokeWidth: 2, stroke: "#8b5cf6" }}
-                  name="Accuracy %"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-10">
-              <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                <ClipboardCheck className="h-5 w-5 text-white/30" />
-              </div>
-              <p className="text-xs text-white/50">Take assessments to see score trends</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Activity Heatmap-style Cards */}
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-sm font-semibold text-white/90">Recent Activity</h3>
-            <p className="text-xs text-white/50 mt-0.5">Latest assessments and progress</p>
-          </div>
-          <Trophy className="h-4 w-4 text-white/30" />
-        </div>
-        {assessments.length > 0 || roadmaps.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {[...assessments.slice(-4).reverse(), ...roadmaps.slice(-2).reverse()].map((item, idx) => (
-              <div
-                key={idx}
-                className="rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-all hover:border-white/10 hover:bg-white/[0.04]"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${item.type === "assessment" ? "bg-brand-purple/20 text-brand-purple" : "bg-brand-pink/20 text-brand-pink"}`}>
-                    {item.type === "assessment" ? "Assessment" : "Roadmap"}
-                  </span>
-                  <span className="text-[10px] text-white/40">
-                    {(() => {
-                      const d = item.date || item.createdAt;
-                      if (!d) return "Unknown";
-                      const parsed = new Date(d);
-                      if (Number.isNaN(parsed.getTime())) return "Unknown";
-                      return parsed.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-                    })()}
-                  </span>
-                </div>
-                <div className="text-sm font-medium text-white/90 mb-1">
-                  {item.type === "assessment" ? `${item.accuracy}% accuracy` : `${item.progress || 0}% complete`}
-                </div>
-                <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-brand-purple to-brand-pink transition-all"
-                    style={{ width: `${item.type === "assessment" ? item.accuracy : item.progress || 0}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-8">
-            <div className="h-12 w-12 rounded-full bg-white/5 flex items-center justify-center mb-3">
-              <Flame className="h-5 w-5 text-white/30" />
-            </div>
-            <p className="text-xs text-white/50">No activity yet. Start learning to see insights</p>
+        {error && (
+          <div className="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {error}
           </div>
         )}
+
+        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard icon={Target} label="Overall Progress" value={`${completionPercent}%`} detail={`${completedSkills} of ${totalSkills} skills`} tone="blue" />
+          <StatCard icon={ClipboardCheck} label="Assessment Accuracy" value={`${accuracyScore}%`} detail={`${analytics?.assessmentCount || 0} assessments saved`} tone="purple" />
+          <StatCard icon={Flame} label="Learning Streak" value={`${analytics?.streak || 0} days`} detail="Based on recent activity" tone="amber" />
+          <StatCard icon={Clock} label="Study Time" value={`${analytics?.weeklyHours || 0}h`} detail={`${analytics?.monthlyHours || 0}h this month`} tone="green" />
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
+          <section className="rounded-2xl border border-border bg-surface p-5">
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-semibold">Skill Momentum</h2>
+                <p className="text-xs text-muted-foreground">Cumulative skills completed from roadmap activity.</p>
+              </div>
+              <TrendingUp className="h-5 w-5 text-primary" />
+            </div>
+            {skillChart.length ? (
+              <ResponsiveContainer width="100%" height={280}>
+                <AreaChart data={skillChart}>
+                  <defs>
+                    <linearGradient id="skillMomentum" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.45} />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Area type="monotone" dataKey="cumulative" name="Skills" stroke="#3b82f6" strokeWidth={2} fill="url(#skillMomentum)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <EmptyState icon={BookOpen} text="Complete roadmap skills to build your momentum chart." to="/roadmap" label="Open roadmaps" />
+            )}
+          </section>
+
+          <section className="rounded-2xl border border-border bg-surface p-5">
+            <div className="mb-5">
+              <h2 className="text-lg font-semibold">Completion Mix</h2>
+              <p className="text-xs text-muted-foreground">Completed vs remaining skills.</p>
+            </div>
+            {totalSkills ? (
+              <>
+                <ResponsiveContainer width="100%" height={220}>
+                  <PieChart>
+                    <Pie data={pieData} dataKey="value" innerRadius={62} outerRadius={88} paddingAngle={3} stroke="none">
+                      <Cell fill="#3b82f6" />
+                      <Cell fill="rgba(255,255,255,0.1)" />
+                    </Pie>
+                    <Tooltip content={<ChartTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="text-center">
+                  <div className="text-3xl font-display font-bold">{completionPercent}%</div>
+                  <div className="text-xs text-muted-foreground">complete</div>
+                </div>
+              </>
+            ) : (
+              <EmptyState icon={Target} text="Start a roadmap to unlock completion tracking." to="/roadmap" label="Choose a roadmap" />
+            )}
+          </section>
+        </div>
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <section className="rounded-2xl border border-border bg-surface p-5">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold">Roadmap Progress</h2>
+                <p className="text-xs text-muted-foreground">Your most active paths.</p>
+              </div>
+              <BookOpen className="h-5 w-5 text-primary" />
+            </div>
+            {roadmapChart.length ? (
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={roadmapChart} layout="vertical" margin={{ left: 20, right: 12 }}>
+                  <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" horizontal={false} />
+                  <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                  <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Bar dataKey="progress" name="Progress %" fill="#06b6d4" radius={[0, 6, 6, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <EmptyState icon={BookOpen} text="No roadmap progress yet." to="/roadmap" label="Start learning" />
+            )}
+          </section>
+
+          <section className="rounded-2xl border border-border bg-surface p-5">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold">Assessment Trend</h2>
+                <p className="text-xs text-muted-foreground">Recent accuracy average: {averageAssessment}%.</p>
+              </div>
+              <ClipboardCheck className="h-5 w-5 text-primary" />
+            </div>
+            {recentAssessments.length ? (
+              <ResponsiveContainer width="100%" height={260}>
+                <AreaChart data={recentAssessments}>
+                  <defs>
+                    <linearGradient id="assessmentTrend" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.45} />
+                      <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Area type="monotone" dataKey="accuracy" name="Accuracy %" stroke="#8b5cf6" strokeWidth={2} fill="url(#assessmentTrend)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <EmptyState icon={ClipboardCheck} text="Take an assessment to see accuracy trends." to="/assessment" label="Take assessment" />
+            )}
+          </section>
+        </div>
+
+        <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Recent Activity</h2>
+              <p className="text-xs text-muted-foreground">Latest assessment and roadmap updates.</p>
+            </div>
+            <CheckCircle2 className="h-5 w-5 text-primary" />
+          </div>
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            {[...recentAssessments.slice(-4).reverse(), ...roadmapChart.slice(0, 4)].slice(0, 8).map((item, index) => {
+              const isAssessment = item.type;
+              const percent = clampPercent(isAssessment ? item.accuracy : item.progress);
+              return (
+                <div key={`${isAssessment ? "assessment" : "roadmap"}-${index}`} className="rounded-xl border border-border bg-background/40 p-4">
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="text-xs text-muted-foreground">{isAssessment ? titleCase(item.type) : "Roadmap"}</span>
+                    <span className="text-xs font-semibold">{percent}%</span>
+                  </div>
+                  <div className="truncate text-sm font-medium">{isAssessment ? item.date : item.name}</div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-elevated">
+                    <div className="h-full rounded-full bg-gradient-brand" style={{ width: `${percent}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function EmptyState({ icon: Icon, text, to, label }) {
+  return (
+    <div className="grid min-h-52 place-items-center rounded-xl border border-dashed border-border bg-background/30 p-6 text-center">
+      <div>
+        <Icon className="mx-auto h-7 w-7 text-muted-foreground" />
+        <p className="mt-3 text-sm text-muted-foreground">{text}</p>
+        <Link to={to} className="mt-4 inline-flex items-center gap-2 rounded-xl border border-border px-3 py-2 text-xs hover:bg-surface-elevated">
+          {label} <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
       </div>
     </div>
   );

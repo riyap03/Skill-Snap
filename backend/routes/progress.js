@@ -5,6 +5,17 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+const updateLearningProfile = async (userId, updates) => {
+  const user = await User.findById(userId);
+  if (!user) return;
+  user.hasTakenTest = true;
+  user.learningProfile = {
+    ...(user.learningProfile?.toObject?.() || user.learningProfile || {}),
+    ...updates,
+  };
+  await user.save();
+};
+
 /**
  * SAVE PROGRESS (test attempt)
  */
@@ -28,14 +39,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     await progress.save();
 
-    await User.findByIdAndUpdate(req.userId, {
-      hasTakenTest: true,
-      learningProfile: {
-        accuracyScore: accuracy,
-        speedScore,
-        level,
-      },
-    });
+    await updateLearningProfile(req.userId, { accuracyScore: accuracy, speedScore, level });
 
     res.json({ message: "Progress saved", level, accuracy, speedScore });
   } catch (err) {
@@ -57,13 +61,7 @@ router.post("/submit", authMiddleware, async (req, res) => {
     if (accuracy > 80) level = "advanced";
     else if (accuracy > 50) level = "intermediate";
 
-    await User.findByIdAndUpdate(req.userId, {
-      learningProfile: {
-        accuracyScore: accuracy,
-        speedScore,
-        level,
-      },
-    });
+    await updateLearningProfile(req.userId, { accuracyScore: accuracy, speedScore, level });
 
     res.json({ level, accuracy, speedScore });
   } catch (err) {

@@ -50,6 +50,30 @@ const userSchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
+      currentRole: {
+        type: String,
+        default: "",
+      },
+      targetRole: {
+        type: String,
+        default: "",
+      },
+      knownSkills: {
+        type: [String],
+        default: [],
+      },
+      weeklyStudyHours: {
+        type: Number,
+        default: 10,
+      },
+      learningStyle: {
+        type: String,
+        default: "",
+      },
+      onboardingCompleted: {
+        type: Boolean,
+        default: false,
+      },
     },
 
     completedSkills: {

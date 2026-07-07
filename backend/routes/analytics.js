@@ -7,6 +7,16 @@ import Roadmap from "../models/Roadmap.js";
 
 const router = express.Router();
 
+const getSkillEntries = (skills) => {
+  if (!skills) return [];
+  if (typeof skills.entries === "function") return Array.from(skills.entries());
+  if (skills instanceof Map) return Array.from(skills.entries());
+  if (Array.isArray(skills)) return skills.map((skill, index) => [String(index), skill]);
+  return Object.entries(skills);
+};
+
+const isSkillCompleted = (skill) => !!(skill?.completed || skill?.status);
+
 const computeStreak = (activities) => {
   if (!activities.length) return 0;
   const dates = Array.from(new Set(activities.map((a) => {
@@ -60,32 +70,13 @@ router.get("/overview", authMiddleware, async (req, res) => {
     const learningProfile = user?.learningProfile || {};
     const completedSkills = user?.completedSkills || [];
 
-const totalProgressSkills = Array.isArray(roadmaps)
-  ? roadmaps.reduce((acc, r) => {
-      const skills = r.skills;
-      if (!skills) return acc;
-      const entries = typeof skills.entries === "function" ? Array.from(skills.entries()) : [];
-      entries.forEach(([name, skill]) => {
-        if (skill?.status || skill?.completed) acc += 1;
-      });
-      return acc;
-    }, 0)
-  : 0;
+    const completedFromRoadmaps = Array.isArray(roadmaps)
+      ? roadmaps.reduce((acc, r) => acc + getSkillEntries(r.skills).filter(([, skill]) => isSkillCompleted(skill)).length, 0)
+      : 0;
 
-const totalSkills = Array.isArray(roadmaps)
-  ? roadmaps.reduce((acc, r) => {
-      const skills = r.skills;
-      if (!skills) return acc;
-      if (typeof skills.size === "number") {
-        return acc + skills.size;
-      }
-      if (Array.isArray(skills)) {
-        return acc + skills.length;
-      }
-      const keys = Object.keys(skills || {});
-      return acc + keys.length;
-    }, 0)
-  : completedSkills.length || 0;
+    const totalSkills = Array.isArray(roadmaps)
+      ? roadmaps.reduce((acc, r) => acc + getSkillEntries(r.skills).length, 0)
+      : completedSkills.length || 0;
 
     const allActivities = [
       ...(Array.isArray(progresses)
@@ -117,7 +108,7 @@ const totalSkills = Array.isArray(roadmaps)
 
     const overview = {
       streak,
-      completedSkills: completedSkills.length + totalProgressSkills,
+      completedSkills: Math.max(completedSkills.length, completedFromRoadmaps),
       totalSkills,
       assessmentCount: Array.isArray(assessments) ? assessments.length : 0,
       weeklyHours: Math.round(weeklyMinutes / 60),
@@ -161,7 +152,7 @@ router.get("/skills", authMiddleware, async (req, res) => {
 
     (roadmaps || []).forEach((r) => {
       if (!r.skills) return;
-      const entries = typeof r.skills.entries === "function" ? Array.from(r.skills.entries()) : [];
+      const entries = getSkillEntries(r.skills);
       entries.forEach(([name, skill]) => {
         const date = skill?.completedAt || skill?.startedAt;
         const day = date ? new Date(date).toISOString().split("T")[0] : null;
@@ -197,10 +188,10 @@ router.get("/roadmap", authMiddleware, async (req, res) => {
       const skills = r.skills;
       let latestDate = null;
       if (skills) {
-        const entries = typeof skills.entries === "function" ? Array.from(skills.entries()) : [];
+        const entries = getSkillEntries(skills);
         total = entries.length || 0;
         entries.forEach(([name, skill]) => {
-          if (skill?.status || skill?.completed) completed += 1;
+          if (isSkillCompleted(skill)) completed += 1;
           const skillDate = skill?.completedAt || skill?.startedAt;
           if (skillDate) {
             const d = new Date(skillDate);
