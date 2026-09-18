@@ -20,11 +20,13 @@ import SkillTest from "./pages/SkillTest";
 function App() {
   const location = useLocation();
   const hideNav = location.pathname === "/login";
+  const isApp = ["/dashboard", "/roadmap", "/portfolio", "/test", "/assessment", "/coach", "/readiness", "/projects", "/analytics", "/onboarding"].some((p) => location.pathname.startsWith(p));
 
   return (
     <>
       {!hideNav && <Navbar />}
 
+      <main className={isApp ? "app-main" : ""}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -48,6 +50,7 @@ function App() {
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
+      </main>
     </>
   );
 }
